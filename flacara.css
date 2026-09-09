@@ -220,12 +220,19 @@ a:hover { text-decoration-thickness: 2px; }
   content: attr(data-file) " 4  pending";
   font-family: var(--fl-mono); font-size: 0.75rem; letter-spacing: 0.02em;
   color: var(--fl-on-mat-muted); text-align: center; padding: 8px;
+  /* a filename is one long token; without this it sets the slot's min-content
+     width and pushes narrow layouts sideways. */
+  overflow-wrap: anywhere; min-width: 0;
 }
+.fl-plate.is-pending, .fl-slot, .fl-slider__img.is-pending { overflow: hidden; min-width: 0; }
 .fl-plate.is-pending { aspect-ratio: var(--ph, 1 / 1); display: grid; place-items: center; }
 /* a pending slot that is not itself a plate: sits inside one, or under the
    tracking pins. */
 .fl-slot { aspect-ratio: var(--ph, 1 / 1); background: var(--fl-mat-raised); border-radius: 2px;
   box-shadow: inset 0 0 0 1px var(--fl-mat-edge); display: grid; place-items: center; }
+/* height:100% here would depend on the parent, which depends on the image:
+   let aspect-ratio set the box and object-fit crop into it. */
+img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-slider__img.is-pending { background: var(--fl-mat-raised); display: grid; place-items: center;
   box-shadow: inset 0 0 0 1px var(--fl-mat-edge); }
 
@@ -281,6 +288,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .fl-slider__tag--left { left: 12px; }
 .fl-slider__tag--right { right: 12px; }
+
 .fl-slider__input {
   position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0;
   cursor: ew-resize; -webkit-appearance: none; appearance: none;

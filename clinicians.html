@@ -127,7 +127,7 @@
             <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
           </div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">FIG. 1: Resolution target, same target, same session, same working distance</figcaption>
+        <figcaption class="fl-caption" style="margin-top:12px">Resolution target, same target, same session, same working distance</figcaption>
       </figure>
 
       <div data-reveal="right" style="--fl-reveal-delay:100ms">
@@ -184,24 +184,19 @@
           sits under it. One button alternates them without moving the housing, so both frames share
           a single geometry.</p>
       </div>
-      <div class="fl-tile" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
-        <svg viewBox="0 0 400 300" aria-hidden="true">
-          <defs>
-            <clipPath id="halfL"><rect x="0" y="0" width="200" height="300"/></clipPath>
-            <clipPath id="halfR"><rect x="200" y="0" width="200" height="300"/></clipPath>
-          </defs>
-          <g fill="none" stroke="#BBBDBE" stroke-width="1">
-            <circle cx="200" cy="150" r="96"/><circle cx="200" cy="150" r="72"/><circle cx="200" cy="150" r="48"/>
-          </g>
-          <g clip-path="url(#halfL)"><circle cx="200" cy="150" r="96" fill="#DB9D91" opacity=".55"/></g>
-          <g clip-path="url(#halfR)">
-            <circle cx="200" cy="150" r="96" fill="none" stroke="#959798" stroke-width="1" stroke-dasharray="2 4"/>
-          </g>
-          <line x1="200" y1="30" x2="200" y2="270" stroke="#959798" stroke-width="1"/>
-          <text x="104" y="284" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">XP</text>
-          <text x="296" y="284" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">NON-XP</text>
-        </svg>
-        <span class="fl-label fl-tile__label">Fig. A — one aperture, two modes</span>
+      <div class="fl-align" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
+        <figure>
+          <div class="fl-plate">
+            <img src="images/light-nonxp.jpg" alt="The scene under unpolarized light" width="702" height="768">
+          </div>
+          <figcaption>Unpolarized · the surface</figcaption>
+        </figure>
+        <figure>
+          <div class="fl-plate">
+            <img src="images/light-xp.jpg" alt="The same scene under cross-polarized light" width="702" height="768">
+          </div>
+          <figcaption>Cross-polarized · under it</figcaption>
+        </figure>
       </div>
     </div>
   </div>
@@ -251,11 +246,10 @@
           <div><span class="k">Rotation</span><span class="v">4.2°</span></div>
           <div><span class="k">Corrected</span><span class="v">Before shutter</span></div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">FIG. B: the same spot on two dates,
+        <figcaption class="fl-caption" style="margin-top:12px">The same spot on two dates,
           each held in the frame the other used. Drag to move between them; neither image has been
           altered and nothing has been blended.</figcaption>
       </figure>
-    </div>
     </div>
   </div>
 </section>
@@ -276,22 +270,21 @@
         <div class="fl-plate">
           <div class="fl-rooms">
             <div class="fl-rooms__row">
-              <figure><div class="fl-slot is-pending" data-file="col-kitchen-raw.jpg" style="--ph:4/3"></div><figcaption>Kitchen</figcaption></figure>
-              <figure><div class="fl-slot is-pending" data-file="col-window-raw.jpg" style="--ph:4/3"></div><figcaption>Window</figcaption></figure>
-              <figure><div class="fl-slot is-pending" data-file="col-clinic-raw.jpg" style="--ph:4/3"></div><figcaption>Clinic</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-kitchen-raw.jpg" alt="Kitchen lighting, as shot" width="1383" height="677"><figcaption>Kitchen</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-window-raw.jpg" alt="Window lighting, as shot" width="1383" height="677"><figcaption>Window</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-clinic-raw.jpg" alt="Clinic lighting, as shot" width="1383" height="677"><figcaption>Clinic</figcaption></figure>
             </div>
             <div class="fl-rooms__rule">Normalised to a known white</div>
             <div class="fl-rooms__row">
-              <figure><div class="fl-slot is-pending" data-file="col-kitchen-fix.jpg" style="--ph:4/3"></div><figcaption>Kitchen</figcaption></figure>
-              <figure><div class="fl-slot is-pending" data-file="col-window-fix.jpg" style="--ph:4/3"></div><figcaption>Window</figcaption></figure>
-              <figure><div class="fl-slot is-pending" data-file="col-clinic-fix.jpg" style="--ph:4/3"></div><figcaption>Clinic</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-kitchen-fix.jpg" alt="Kitchen lighting, normalised" width="1383" height="677"><figcaption>Kitchen</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-window-fix.jpg" alt="Window lighting, normalised" width="1383" height="677"><figcaption>Window</figcaption></figure>
+              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-clinic-fix.jpg" alt="Clinic lighting, normalised" width="1383" height="677"><figcaption>Clinic</figcaption></figure>
             </div>
           </div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">FIG. C: one subject, three room lights,
-          before and after the reference in frame is applied</figcaption>
+        <figcaption class="fl-caption" style="margin-top:12px">Three lighting environments, each shown
+          as the room gave it and again after the reference in frame is applied</figcaption>
       </figure>
-    </div>
     </div>
   </div>
 </section>
@@ -318,10 +311,9 @@
             <div class="fl-pin" style="--x:64%;--y:78%"><span class="fl-pin__dot"></span><span class="fl-pin__date">05 Dec</span></div>
           </div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">FIG. D: five captures, each pinned to
+        <figcaption class="fl-caption" style="margin-top:12px">Five captures, each pinned to
           where it was taken and when</figcaption>
       </figure>
-    </div>
     </div>
   </div>
 </section>
