@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flacara — Lockup Studies</title>
+
+<!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --fl-ink:#151616; --fl-muted:#5F6060; --fl-accent:#1E3352;
+  --fl-ground:linear-gradient(135deg,#FCFCFC 0%,#ECECEC 100%);
+
+  --sp:linear-gradient(135deg,#C9DAF8 0%,#CECBDF 35%,#DB9D91 100%);
+  /* 01 splits one ramp across the lockup: the disc takes 0→20%, the wordmark
+     takes 20%→100%, so the two elements read as one painted surface. */
+  --sp-tail:linear-gradient(135deg,#CCD1EA 0%,#CECBDF 18.75%,#DB9D91 100%);
+
+  --fl-display:'Zalando Sans SemiExpanded',system-ui,sans-serif;
+  --fl-text:'Geist',system-ui,sans-serif;
+  --fl-mono:'Geist Mono',ui-monospace,monospace;
+
+  --lift-ico:drop-shadow(0 9px 14px rgba(148,153,158,.42));
+  --lift-txt:drop-shadow(0 9px 14px rgba(148,153,158,.38));
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:#F4F4F4;color:var(--fl-ink);
+  font-family:var(--fl-text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ---------- lockup ---------- */
+.lock{display:flex;align-items:center;gap:.2em;font-size:var(--s,4rem)}
+.lock .ico{width:.88em;height:.88em;flex:none;overflow:visible;filter:var(--lift-ico)}
+.lock .logo{font-family:var(--fl-display);font-weight:600;font-size:1em;line-height:1;
+  letter-spacing:-.02em;margin:0;filter:var(--lift-txt);
+  background:var(--word,var(--sp));-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent}
+.lock .logo.solid{background:none;color:var(--word-solid);-webkit-text-fill-color:var(--word-solid)}
+
+/* ---------- specimen sheet ---------- */
+header{padding:64px 40px 8px;max-width:1240px;margin:0 auto}
+h1{font-family:var(--fl-text);font-weight:500;font-size:1.1875rem;letter-spacing:-.01em;margin:0}
+header p{color:var(--fl-muted);max-width:64ch;margin:8px 0 0}
+
+.sheet{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;
+  max-width:1240px;margin:0 auto;padding:32px 40px 96px}
+
+.cell{background:var(--fl-ground);border-radius:6px;padding:44px 40px 36px;
+  display:grid;justify-items:start;gap:30px}
+.cell .label{font-family:var(--fl-mono);font-weight:500;font-size:.6875rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--fl-muted);margin:0}
+.cell .note{font-family:var(--fl-text);font-size:.875rem;color:var(--fl-muted);
+  margin:0;max-width:44ch}
+.row{display:grid;justify-items:start;gap:22px;width:100%}
+
+/* ===================== the six ===================== */
+
+/* 01 · CONTINUOUS — one ramp spanning icon and wordmark */
+#v1{--disc:url(#grad-head); --flame:#F4F4F4; --word:var(--sp-tail)}
+
+/* 02 · MARK CARRIES — colour lives in the disc, wordmark anchors in navy */
+#v2{--disc:url(#grad-full); --flame:#F4F4F4}
+
+/* 03 · TEXT CARRIES — navy disc, wordmark carries the colour */
+#v3{--disc:#1E3352; --flame:#F4F4F4; --word:var(--sp)}
+
+/* 04 · INVERTED MARK — gradient appears once, small, inside the flames */
+#v4{--disc:#1E3352; --flame:url(#grad-full)}
+
+/* 05 · CUT FLAMES — gradient disc, flames become the dark element */
+#v5{--disc:url(#grad-full); --flame:#1E3352}
+
+/* 06 · INK — gradient disc, neutral wordmark so colour appears exactly once */
+#v6{--disc:url(#grad-full); --flame:#F4F4F4}
+
+#v2,#v4,#v5{--word-solid:#1E3352}
+#v6{--word-solid:#151616}
+
+@media (max-width:900px){
+  .sheet{grid-template-columns:1fr;padding:24px 20px 64px}
+  header{padding:44px 20px 4px}
+  .cell{padding:34px 26px 28px}
+  .lock{--s:2.75rem !important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAF8"/>
+      <stop offset="0.35" stop-color="#CECBDF"/>
+      <stop offset="1" stop-color="#DB9D91"/>
+    </linearGradient>
+    <!-- the 0→20% slice of the same ramp, for the continuous lockup -->
+    <linearGradient id="grad-head" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAF8"/>
+      <stop offset="1" stop-color="#CCD1EA"/>
+    </linearGradient>
+    <filter id="flame-lift" x="-15%" y="-15%" width="135%" height="135%">
+      <feDropShadow dx="10.5" dy="10.5" stdDeviation="14.8" flood-color="#000" flood-opacity="0.30"/>
+    </filter>
+  </defs>
+
+  <symbol id="fl-icon" viewBox="120 0 720 720">
+    <path style="fill:var(--disc,#1E3352)" d="m120.01899 360.0058c0 -198.82452 161.17914 -360.00366 360.00366 -360.00366c95.47894 0 187.04724 37.92885 254.56104 105.442635c67.513794 67.51379 105.44263 159.08212 105.44263 254.56104c0 198.82452 -161.17914 360.00366 -360.00366 360.00366c-198.82452 0 -360.00366 -161.17914 -360.00366 -360.00366z" fill-rule="evenodd"/>
+    <g style="fill:var(--flame,#F4F4F4)" filter="url(#flame-lift)">
+      <path d="m445.8429 94.95954c-0.6315918 3.6528778 7.0509033 19.400146 8.310394 28.343979c1.259491 8.943825 0.3157959 17.193275 -0.753479 25.319008c-1.0692749 8.125717 -2.387848 14.931 -5.66214 23.435303c-3.274292 8.504303 -6.6760254 17.259766 -13.983643 27.590515c-7.3075867 10.330734 -20.602386 24.567368 -29.862 34.393936c-9.259644 9.826584 -16.436127 15.619858 -25.69574 24.565536c-9.259613 8.945679 -20.790771 19.470337 -29.86203 29.10852c-9.071228 9.638214 -16.816528 18.768585 -24.565521 28.720734c-7.7489624 9.952148 -15.754639 19.843384 -21.928345 30.992218c-6.173706 11.148865 -11.902344 26.452911 -15.113831 35.90091c-3.2115173 9.447998 -2.8329163 14.109192 -4.1552124 20.787079c-1.3222656 6.6778564 -3.4626465 10.524628 -3.7784424 19.28009c-0.3157959 8.755463 0.37304688 23.300507 1.883667 33.252655c1.5106506 9.952179 4.659363 19.02713 7.1802063 26.460297c2.520813 7.433197 5.2355347 12.657654 7.9447327 18.138824c2.7091675 5.4811707 5.098877 9.645599 8.310394 14.748169c3.2114868 5.1026 7.2411194 11.080566 10.958618 15.86731c3.7175293 4.786804 7.0620117 8.1922 11.346466 12.853455c4.284485 4.661194 10.328888 11.270691 14.360352 15.113831c4.0314636 3.8430786 6.554138 5.1727295 9.82843 7.944702c3.274292 2.7719727 6.480255 6.0426025 9.817352 8.687134c3.3370972 2.6445923 5.7323303 4.408203 10.20517 7.180176c4.4728394 2.7719727 10.899536 6.3639526 16.631866 9.451721c5.7323303 3.0877686 11.713959 6.051819 17.762085 9.074951c6.048126 3.0231323 12.101776 6.607666 18.526642 9.063843c6.424835 2.4561768 13.597626 3.6565552 20.022491 5.673218c6.4248657 2.0166626 17.455536 7.1192627 18.526642 6.426697c1.071106 -0.6925049 -8.8237915 -7.4940796 -12.099945 -10.581848c-3.276123 -3.0878296 -4.659363 -4.66864 -7.5569153 -7.944763c-2.8975525 -3.276123 -6.8680725 -7.680664 -9.82843 -11.712097c-2.9603271 -4.031494 -5.5402527 -8.003845 -7.933655 -12.476685c-2.3933716 -4.4728394 -4.85141 -10.014954 -6.426697 -14.360352c-1.5752869 -4.345398 -2.2068787 -8.435974 -3.0249634 -11.712158c-0.81811523 -3.276123 -1.1283875 -4.4802246 -1.8836975 -7.944702c-0.7553406 -3.4645386 -1.9538574 -6.921631 -2.6482544 -12.842346c-0.69436646 -5.9206543 -1.8319702 -15.248657 -1.5180359 -22.681824c0.31396484 -7.433197 2.014801 -15.304047 3.4017334 -21.917267c1.3869019 -6.6132507 1.8947754 -10.140533 4.919739 -17.762085c3.024994 -7.6215515 8.631744 -19.337372 13.230164 -27.967255c4.598419 -8.629883 7.49411 -13.985474 14.360352 -23.812042c6.8662415 -9.826569 18.460144 -24.31253 26.837036 -35.14743c8.376862 -10.8349 16.11847 -19.970795 23.424225 -29.862c7.3057556 -9.891235 14.678009 -19.909882 20.410309 -29.48529c5.732361 -9.575409 10.328918 -19.023407 13.983643 -27.967255c3.6547241 -8.943817 5.8652954 -18.264404 7.944763 -25.69574c2.0794067 -7.4313354 3.5881958 -9.88382 4.5319214 -18.892288c0.94366455 -9.008469 1.3813477 -26.842575 1.130188 -35.15851c-0.25115967 -8.315933 -1.6934814 -10.138672 -2.637146 -14.737091c-0.9437256 -4.598419 -0.94555664 -6.869934 -3.0249634 -12.853409c-2.0794678 -5.98349 -5.734192 -16.18126 -9.451721 -23.0475c-3.7175293 -6.866226 -8.380554 -12.668732 -12.853394 -18.149887c-4.4728394 -5.4811707 -8.755463 -9.761948 -13.983643 -14.737106c-5.2281494 -4.9751587 -12.282745 -11.019585 -17.385345 -15.113838c-5.1025696 -4.0942535 -8.884735 -6.5541306 -13.230133 -9.451683c-4.3454285 -2.8975601 -8.685272 -5.540268 -12.842316 -7.933655c-4.1570435 -2.3933945 -11.468353 -10.07959 -12.099945 -6.4267044z" fill-rule="evenodd"/>
+      <path d="m586.52856 229.0182c-0.57250977 3.6048737 -0.48199463 15.917175 -1.0526733 23.745575c-0.5706177 7.8283844 -0.7885742 15.571823 -2.3712158 23.224777c-1.5826416 7.652954 -4.2216797 15.965179 -7.124756 22.692902c-2.9031372 6.727722 -5.852356 10.990051 -10.293823 17.673462c-4.4414673 6.68338 -11.25415 16.094452 -16.354858 22.426971c-5.100708 6.3325195 -9.455383 10.729645 -14.249573 15.568146c-4.7941284 4.8384705 -9.0177 7.878235 -14.515442 13.46283c-5.4978027 5.5845947 -11.699219 12.788757 -18.471252 20.044678c-6.772064 7.25589 -16.09262 16.146149 -22.161072 23.490692c-6.0684204 7.3445435 -9.499695 12.485901 -14.249542 20.576538c-4.7498474 8.090637 -10.820129 19.34845 -14.249573 27.967255c-3.4294128 8.618805 -4.8772583 14.334503 -6.3269653 23.745575c-1.449707 9.411041 -3.0748596 20.84616 -2.3712463 32.720795c0.7036133 11.874634 3.4275818 27.488892 6.592926 38.526978c3.1653442 11.038025 6.858856 18.993835 12.399109 27.701294c5.5402527 8.7074585 13.497925 17.41858 20.842468 24.543396c7.3445435 7.124756 19.353973 15.830383 23.224792 18.205261c3.8707886 2.374939 0.17541504 -2.5041504 0 -3.9557495c-0.17544556 -1.4515381 -0.83291626 -2.378601 -1.0526733 -4.75354c-0.21975708 -2.374939 -0.17727661 -6.197693 -0.26593018 -9.495972c-0.08862305 -3.2983398 -0.44137573 -5.6326294 -0.26593018 -10.293823c0.17544556 -4.661194 0.08679199 -10.681641 1.318573 -17.673462c1.2318115 -6.9918213 3.6104126 -16.799927 6.0721436 -24.277405c2.461731 -7.477539 5.3999023 -14.035339 8.698181 -20.587646c3.2983398 -6.552246 6.5615234 -12.218079 11.091614 -18.726074c4.5300903 -6.507965 9.536682 -13.152588 16.088928 -20.321686c6.552307 -7.169098 15.571838 -15.217255 23.224792 -22.692902c7.652954 -7.475647 15.525635 -14.993805 22.692932 -22.161041c7.1672363 -7.167267 14.0224 -13.014099 20.310608 -20.842468c6.288208 -7.8283997 13.021423 -18.519257 17.41858 -26.1279c4.3970947 -7.608612 6.5892334 -13.411102 8.964111 -19.523865c2.374939 -6.1127625 4.0979614 -11.303986 5.2854004 -17.152649c1.1875 -5.848694 1.6196289 -12.574554 1.8394165 -17.939392c0.21972656 -5.364807 0.049865723 -9.721313 -0.520813 -14.249542c-0.5706177 -4.5282593 -1.6269531 -7.6880493 -2.9030762 -12.919891c-1.276123 -5.2318726 -2.114563 -11.917114 -4.75354 -18.471252c-2.639038 -6.5541077 -7.5181274 -14.521027 -11.080566 -20.853546c-3.562378 -6.3325195 -6.600281 -11.734253 -10.293762 -17.141571c-3.6935425 -5.4072876 -8.482178 -11.080521 -11.867249 -15.3022c-3.3851318 -4.2216797 -5.6289062 -6.905014 -8.443359 -10.027878c-2.8144531 -3.1228485 -6.639099 -6.905014 -8.443359 -8.70929c-1.8043213 -1.8042755 -1.8098145 -5.721237 -2.3823242 -2.1163788z" fill-rule="evenodd"/>
+      <path d="m673.3801 395.08917c-2.7479248 0.5964966 -5.974243 13.492371 -10.393494 20.421417c-4.4193115 6.929016 -10.029724 14.3437195 -16.122192 21.15271c-6.092407 6.8089905 -13.503479 13.669678 -20.432495 19.701172c-6.929016 6.031494 -14.631836 11.409241 -21.141602 16.487823c-6.5098267 5.078583 -10.98822 7.712036 -17.917236 13.983612c-6.929016 6.271576 -16.727905 14.149841 -23.656921 23.645844c-6.929016 9.496033 -13.677063 22.698486 -17.917236 33.3302c-4.2401123 10.631775 -6.2697144 18.932922 -7.5236206 30.460388c-1.2539673 11.527466 -1.911438 33.507507 0 38.704285c1.911377 5.1967773 4.83844 -3.045288 11.468323 -7.5236816c6.629822 -4.4783936 20.365967 -14.031616 28.31073 -19.346619c7.944763 -5.3149414 12.249512 -7.704651 19.357666 -12.543152c7.1081543 -4.838501 16.543213 -10.932739 23.29126 -16.487793c6.748047 -5.5550537 12.179382 -11.525574 17.197021 -16.842407c5.017578 -5.3168335 8.188477 -8.367615 12.908813 -15.058411c4.720276 -6.690796 10.932739 -15.828552 15.412964 -25.086334c4.4802246 -9.257782 8.960449 -19.889557 11.468384 -30.460358c2.5078735 -10.570831 3.2816772 -23.34851 3.5789795 -32.96457c0.29736328 -9.616058 -0.48016357 -17.802704 -1.795044 -24.73172c-1.3148804 -6.9290466 -3.3463135 -17.438904 -6.0942993 -16.842407z" fill-rule="evenodd"/>
+    </g>
+  </symbol>
+</svg>
+
+<header>
+  <h1>Lockup studies — six ways to divide the gradient</h1>
+  <p>Same mark, same ramp, same wordmark at Zalando SemiExpanded 600. The only
+     variable is which element carries the colour. Each is shown at display
+     size and at 40px, the smallest the wordmark is permitted to run.</p>
+</header>
+
+<div class="sheet">
+
+  <!-- 01 -->
+  <div class="cell" id="v1">
+    <p class="label">01 · Continuous</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo">flacara</h1>
+      </div>
+    </div>
+    <p class="note">One ramp split across both elements — the disc takes the first
+      fifth, the wordmark finishes it. Not two gradients; one, interrupted.</p>
+  </div>
+
+  <!-- 02 -->
+  <div class="cell" id="v2">
+    <p class="label">02 · Mark carries</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+    </div>
+    <p class="note">Colour lives in the disc, wordmark holds still in navy. The
+      conventional split, and the one that survives being shrunk.</p>
+  </div>
+
+  <!-- 03 -->
+  <div class="cell" id="v3">
+    <p class="label">03 · Text carries</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo">flacara</h1>
+      </div>
+    </div>
+    <p class="note">The inverse. Navy disc reads as the instrument; the name is
+      the soft thing. Restores the flames' original contrast.</p>
+  </div>
+
+  <!-- 04 -->
+  <div class="cell" id="v4">
+    <p class="label">04 · Inverted mark</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+    </div>
+    <p class="note">Gradient appears once, small, inside the flames. Everything
+      else is navy. The most restrained option and the highest contrast.</p>
+  </div>
+
+  <!-- 05 -->
+  <div class="cell" id="v5">
+    <p class="label">05 · Cut flames</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+    </div>
+    <p class="note">Gradient disc with the flames cut in navy instead of page
+      colour. Figure and ground swap; the flames stop being holes.</p>
+  </div>
+
+  <!-- 06 -->
+  <div class="cell" id="v6">
+    <p class="label">06 · Ink</p>
+    <div class="row">
+      <div class="lock" style="--s:4rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+      <div class="lock" style="--s:2.5rem">
+        <svg class="ico"><use href="#fl-icon"/></svg><h1 class="logo solid">flacara</h1>
+      </div>
+    </div>
+    <p class="note">Like 02, but the wordmark drops the navy for ink. With no
+      second blue in the lockup the gradient is unambiguously the only colour.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

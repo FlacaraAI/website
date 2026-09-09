@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flacara · explorations · accent + heroes</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flacara.css">
+<style>
+/* ---------- sheet chrome (this file only, never ships) ---------- */
+body { background: var(--fl-ground); }
+.sheet { max-width: 1240px; margin: 0 auto; padding: 80px 40px 160px; }
+.sheet h1 { font-family: var(--fl-display); font-weight: 600; font-size: 3rem;
+  line-height: 1.02; letter-spacing: -.028em; margin: 12px 0 8px; }
+.sheet h2 { font-family: var(--fl-text); font-weight: 600; font-size: 1.375rem;
+  letter-spacing: -.015em; margin: 112px 0 6px; padding-top: 24px;
+  border-top: 1px solid var(--fl-rule-strong); }
+.sheet h3 { font-family: var(--fl-text); font-weight: 600; font-size: 1rem; margin: 0 0 4px; }
+.lede { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 68ch; margin: 0 0 40px; }
+.note { font-size: .8125rem; line-height: 1.55; color: var(--fl-muted); max-width: 54ch; margin: 8px 0 0; }
+.mono { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--fl-muted); }
+.spec { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted);
+  font-variant-numeric: tabular-nums; }
+
+/* a specimen is one bordered frame with a header strip */
+.spec-hd { display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; padding: 0 0 10px; border-bottom: 1px solid var(--fl-rule); margin-bottom: 20px; }
+.frame { border: 1px solid var(--fl-rule); background: var(--fl-surface); overflow: hidden; }
+
+/* ---------- §1 accent candidates ---------- */
+.cands { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.cand { display: grid; gap: 14px; align-content: start; }
+.chip { height: 96px; border: 1px solid var(--fl-rule); background: var(--fl-accent);
+  display: flex; align-items: flex-end; padding: 10px 12px; }
+.chip span { font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-on-accent); letter-spacing: .08em; }
+.cand .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cand .kicker { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-accent); }
+.cand .lnk { color: var(--fl-accent); font-size: .875rem; }
+.cand .quiet { background: var(--fl-accent-quiet); border: 1px solid var(--fl-rule);
+  padding: 8px 12px; font-size: .8125rem; }
+.cand .bandlet { background: var(--fl-accent); color: var(--fl-on-accent);
+  padding: 18px 16px; font-family: var(--fl-display); font-weight: 600;
+  font-size: 1.125rem; letter-spacing: -.02em; }
+.cand .ratio { display: flex; justify-content: space-between; font-family: var(--fl-mono);
+  font-size: .6875rem; color: var(--fl-muted); border-top: 1px solid var(--fl-rule); padding-top: 8px; }
+.cand .btn-sm { display: inline-block; background: var(--fl-accent); color: var(--fl-on-accent);
+  border-radius: 8px; padding: 9px 16px; font-size: .8125rem; font-weight: 500; text-decoration: none; }
+
+/* the three candidates, scoped. All derived from a point on --fl-ramp,
+   darkened until they clear the 7:1 the navy set. */
+.v-navy   { --fl-accent:#1E3352; --fl-accent-hover:#122644; --fl-accent-quiet:#C7CCD2; }
+.v-indigo { --fl-accent:#333056; --fl-accent-hover:#262346; --fl-accent-quiet:#CBCAD8; }
+.v-plum   { --fl-accent:#3B3350; --fl-accent-hover:#2C2540; --fl-accent-quiet:#D2CEDA; }
+.v-terra  { --fl-accent:#5C3330; --fl-accent-hover:#45241F; --fl-accent-quiet:#DAC9C6; }
+
+.rampbar { height: 28px; background: var(--fl-ramp); border: 1px solid var(--fl-rule); margin-bottom: 8px; }
+.rampmarks { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-bottom: 48px; }
+.rampmarks div { font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-muted); }
+
+/* ---------- §2 hero directions ---------- */
+.heroes { display: grid; gap: 64px; }
+.hero-demo { position: relative; height: 460px; padding: 48px; display: flex;
+  overflow: hidden; background: var(--fl-ground-lit); }
+.hero-demo .in { position: relative; z-index: 1; width: 100%; align-self: flex-end; }
+.hero-demo h4 { font-family: var(--fl-display); font-weight: 600; font-size: clamp(2.25rem,4.4vw,3.5rem);
+  line-height: 1.0; letter-spacing: -.030em; margin: 0; max-width: 16ch; color: var(--fl-ink); }
+.hero-demo p { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 46ch; margin: 18px 0 0; }
+.pillet { height: 10px; width: 60px; border-radius: 999px; background: var(--fl-ramp); margin-bottom: 24px; }
+
+/* C1 — the comparison IS the hero */
+.h-compare { align-items: stretch; padding: 0; }
+.h-compare .plates { position: absolute; inset: 0 0 0 46%; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 1px; background: var(--fl-rule); }
+.h-compare .plates figure { margin: 0; background: var(--fl-mat); overflow: hidden; position: relative; }
+.h-compare .plates img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.h-compare .plates figcaption { position: absolute; left: 10px; bottom: 10px;
+  font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .1em;
+  color: #C9CBCD; text-transform: uppercase; }
+.h-compare .in { padding: 48px; width: 46%; }
+.h-compare::after { content: ""; position: absolute; top: 0; bottom: 0; left: 46%;
+  width: 1px; background: var(--fl-rule-strong); }
+
+/* C2 — spec header: headline over a measured rule */
+.h-spec { flex-direction: column; justify-content: flex-end; gap: 28px; }
+.h-spec .ticks { height: 26px; width: 100%; border-top: 1px solid var(--fl-rule-strong);
+  background: repeating-linear-gradient(90deg, var(--fl-rule) 0 1px, transparent 1px 24px); }
+.h-spec .cols { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 32px; width: 100%; }
+.h-spec .cols div { border-top: 1px solid var(--fl-rule); padding-top: 10px; }
+
+/* P1 — one plate, two dates */
+.h-dates .plate-wrap { position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 42%; }
+.h-dates figure { margin: 0; }
+.h-dates .fl-plate { padding: 10px; }
+.h-dates img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.h-dates figcaption { font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-muted);
+  margin-top: 8px; letter-spacing: .06em; }
+.h-dates .in { width: 52%; }
+
+/* P2 — plain sentence, nothing else */
+.h-quiet { align-items: center; justify-content: center; text-align: center; background: var(--fl-surface); }
+.h-quiet .in { align-self: center; display: grid; justify-items: center; }
+.h-quiet h4 { font-size: clamp(2rem,3.6vw,2.75rem); max-width: 20ch; }
+.h-quiet p { text-align: center; }
+
+/* H2 — split light */
+.h-split .aperture { position: absolute; right: -6%; top: 50%; transform: translateY(-50%);
+  width: 460px; height: 460px; border-radius: 50%; background: var(--fl-ramp);
+  -webkit-mask: radial-gradient(circle, #000 46%, transparent 47%);
+          mask: radial-gradient(circle, #000 46%, transparent 47%); opacity: .9; }
+.h-split .aperture::after { content: ""; position: absolute; inset: 26%;
+  border-radius: 50%; background: var(--fl-ground-lit); box-shadow: inset 0 0 0 1px var(--fl-rule); }
+.h-split .in { width: 58%; }
+
+@media (max-width: 1000px) {
+  .cands { grid-template-columns: repeat(2,1fr); }
+  .rampmarks { grid-template-columns: repeat(2,1fr); }
+  .sheet { padding: 48px 20px 96px; }
+  .h-compare .in, .h-dates .in, .h-split .in { width: 100%; }
+  .h-compare .plates, .h-dates .plate-wrap, .h-split .aperture { display: none; }
+  .h-compare::after { display: none; }
+}
+</style>
+</head>
+<body class="fl-lit">
+
+<div class="sheet">
+  <p class="mono">Flacara · explorations · round 02</p>
+  <h1>Accent &amp; heroes</h1>
+  <p class="lede">Two questions in one sheet. §1 answers "can the navy go?" — it can, but not by
+  using the ramp itself. §2 gives each page its own hero rather than the shared pill-plus-headline
+  block clinicians and patients currently share.</p>
+
+  <!-- ==================== §1 ==================== -->
+  <h2>§1 — Replacing the navy</h2>
+  <p class="lede">The ramp cannot become the UI accent: §2.6 fences it to four places, and a
+  blue-to-red gradient beside a lesion photograph reads as a severity scale, a claim the consumer
+  device is not cleared to make. What <em>is</em> available is a single flat accent taken from a
+  point <em>on</em> the ramp and darkened until it clears the 7:1 the navy set. One accent, new hue,
+  every rule intact.</p>
+
+  <div class="rampbar" aria-hidden="true"></div>
+  <div class="rampmarks">
+    <div>0% · #C9DAF8</div>
+    <div>35% · #CECBDF</div>
+    <div>~65% · midpoint</div>
+    <div>100% · #DB9D91</div>
+  </div>
+
+  <div class="cands">
+
+    <div class="cand v-navy">
+      <div class="spec-hd"><h3>A · Navy</h3><span class="mono">control</span></div>
+      <div class="chip"><span>#1E3352</span></div>
+      <div class="bandlet">Repeatable light.</div>
+      <div class="row"><a class="btn-sm" href="#">Pre-order</a><a class="lnk" href="#">Read the method</a></div>
+      <div class="kicker">01 — Comparison</div>
+      <div class="quiet">Selected row</div>
+      <div class="ratio"><span>ground</span><span>10.07:1</span></div>
+      <p class="note">Off the ramp entirely. Correct, cold, and the reason you asked.</p>
+    </div>
+
+    <div class="cand v-indigo">
+      <div class="spec-hd"><h3>B · Indigo</h3><span class="mono">ramp 0–35%</span></div>
+      <div class="chip"><span>#333056</span></div>
+      <div class="bandlet">Repeatable light.</div>
+      <div class="row"><a class="btn-sm" href="#">Pre-order</a><a class="lnk" href="#">Read the method</a></div>
+      <div class="kicker">01 — Comparison</div>
+      <div class="quiet">Selected row</div>
+      <div class="ratio"><span>ground</span><span>9.79:1</span></div>
+      <p class="note">The blue head of the ramp, darkened. Closest to today, so nothing already
+      approved needs re-approving. The safe move.</p>
+    </div>
+
+    <div class="cand v-plum">
+      <div class="spec-hd"><h3>C · Plum</h3><span class="mono">ramp 35%</span></div>
+      <div class="chip"><span>#3B3350</span></div>
+      <div class="bandlet">Repeatable light.</div>
+      <div class="row"><a class="btn-sm" href="#">Pre-order</a><a class="lnk" href="#">Read the method</a></div>
+      <div class="kicker">01 — Comparison</div>
+      <div class="quiet">Selected row</div>
+      <div class="ratio"><span>ground</span><span>9.36:1</span></div>
+      <p class="note">The ramp's own midpoint. Sits under the mark without competing with either
+      end of it — the only candidate the lockup cannot visually argue with.</p>
+    </div>
+
+    <div class="cand v-terra">
+      <div class="spec-hd"><h3>D · Terra</h3><span class="mono">ramp 100%</span></div>
+      <div class="chip"><span>#5C3330</span></div>
+      <div class="bandlet">Repeatable light.</div>
+      <div class="row"><a class="btn-sm" href="#">Pre-order</a><a class="lnk" href="#">Read the method</a></div>
+      <div class="kicker">01 — Comparison</div>
+      <div class="quiet">Selected row</div>
+      <div class="ratio"><span>ground</span><span>8.43:1</span></div>
+      <p class="note">Warmest, most distinctive, most exposed. A red-brown accent on a page of
+      skin photographs starts a conversation about skin tone you did not open. Bold, and I would
+      not ship it on <em>patients</em>.</p>
+    </div>
+
+  </div>
+
+  <p class="note" style="max-width:68ch;margin-top:32px">All four clear 7:1 on both ground and
+  surface, so <code>--fl-accent</code> keeps serving fills and text with no second token, the
+  property §2.1 warns you to re-derive. Whichever wins, it is three token swaps in
+  <code>flacara.css</code>; nothing else in the system moves.</p>
+
+  <!-- ==================== §2 ==================== -->
+  <h2>§2 — A hero per page</h2>
+  <p class="lede">Home already has one: the lockup on the lit ground with the outline tracing in.
+  It is doing its job and I would not replace it. Clinicians and patients share a pill, a headline
+  and a paragraph: a placeholder, not a hero. These are drafted at the real type scale against
+  the real stylesheet.</p>
+
+  <div class="heroes">
+
+    <div>
+      <div class="spec-hd"><h3>Home · alternate — Split light</h3><span class="mono">Dir. H2 · optional</span></div>
+      <div class="frame">
+        <div class="hero-demo h-split">
+          <div class="aperture" aria-hidden="true"></div>
+          <div class="in">
+            <div class="pillet" aria-hidden="true"></div>
+            <h4>Repeatable light.</h4>
+            <p>Cross-polarized and unpolarized, the same two exposures every visit, so the
+            second picture can be compared to the first.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">The ramp as an aperture rather than a bar: still the mark's gradient, still
+      §2.6's first permitted place. Only worth building if the outline trace ever gets cut. The
+      current hero is better.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Clinicians · C1 — Two plates</h3><span class="mono">recommended</span></div>
+      <div class="frame">
+        <div class="hero-demo h-compare">
+          <div class="plates" aria-hidden="true">
+            <figure><img src="images/lesion-01-flacara.JPG" alt=""><figcaption>Fig. 1 — Flacara</figcaption></figure>
+            <figure><img src="images/lesion-01-dl4.jpg" alt=""><figcaption>Fig. 2 — DL4</figcaption></figure>
+          </div>
+          <div class="in">
+            <h4>Side by side.</h4>
+            <p>Same lesion, same working distance, same session. Image quality was comparable;
+            that has not been quantified.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">The argument is the comparison, so the comparison is the hero. No scroll
+      before the evidence. The mat surround stays flat, and there is no ramp on the page at all,
+      which is what §2.6 prefers next to imagery.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Clinicians · C2 — Spec header</h3><span class="mono">alternate</span></div>
+      <div class="frame">
+        <div class="hero-demo h-spec">
+          <div class="in" style="align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;gap:28px">
+            <h4>Side by side.</h4>
+            <div class="ticks" aria-hidden="true"></div>
+            <div class="cols">
+              <div><span class="mono">Stage</span><br><span class="spec">Prototype → pilot</span></div>
+              <div><span class="mono">Reference</span><br><span class="spec">DermLite DL4</span></div>
+              <div><span class="mono">Modes</span><br><span class="spec">XP / non-XP</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Instrument datasheet, not marketing page. Loads instantly and states the
+      company's actual stage above the fold. Honest, and the coldest thing here. Weaker if the
+      clinician has never heard of you.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Patients · P1 — One spot, two dates</h3><span class="mono">recommended</span></div>
+      <div class="frame">
+        <div class="hero-demo h-dates">
+          <div class="plate-wrap" aria-hidden="true">
+            <figure><div class="fl-plate"><img src="images/sample-01.JPG" alt=""></div><figcaption>12 MAR</figcaption></figure>
+            <figure><div class="fl-plate"><img src="images/sample-01.JPG" alt=""></div><figcaption>14 SEP</figcaption></figure>
+          </div>
+          <div class="in">
+            <h4>Find it again.</h4>
+            <p>A clear picture of a spot on your skin, and another one later, so you can see
+            whether anything changed. It does not tell you what it is.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">Shows the product's whole promise in one glance without asserting a result.
+      Two dates, identical framing, no verdict. Needs a real second photograph before it ships:
+      the same file twice is a placeholder and would be dishonest live.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Patients · P2 — Plain sentence</h3><span class="mono">alternate</span></div>
+      <div class="frame">
+        <div class="hero-demo h-quiet">
+          <div class="in">
+            <div class="pillet" aria-hidden="true"></div>
+            <h4>A record, not a verdict.</h4>
+            <p>Flacara takes a clear picture of a spot on your skin. Nothing more, and nothing
+            you have to interpret alone.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">No imagery above the fold at all. The safest hero to put in front of someone
+      who is frightened, and the one that most needs legal to read the line first.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

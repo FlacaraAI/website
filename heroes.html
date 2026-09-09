@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flacara — Five Hero Studies</title>
+
+<!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --fl-ground:#E3E5E6; --fl-surface:#F2F4F5; --fl-sunken:#D5D7D8;
+  --fl-rule:#BBBDBE; --fl-rule-strong:#959798;
+  --fl-ink:#151616; --fl-muted:#5F6060;
+  --fl-accent:#1E3352; --fl-accent-hover:#122644; --fl-accent-quiet:#C7CCD2; --fl-on-accent:#F5FBFF;
+  --fl-mat:#2A2D30; --fl-mat-edge:#404346; --fl-mat-deep:#1F2225; --fl-mat-raised:#35383B;
+  --fl-on-mat:#EAECED; --fl-on-mat-muted:#979A9C; --fl-accent-on-mat:#7D96BB;
+
+  --fl-sheen:linear-gradient(163deg,#F2F4F5 0%,#E3E5E6 40%,#DCDEDF 66%,#EAECED 100%);
+  --fl-sheen-dark:linear-gradient(163deg,#35383B 0%,#2A2D30 44%,#232629 70%,#303336 100%);
+  --fl-brushed:repeating-linear-gradient(178deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);
+  --fl-spectrum:linear-gradient(90deg,#4ECBE0 0%,#7B6FE0 52%,#C86FC0 100%);
+
+  --fl-display:'Zalando Sans SemiExpanded',system-ui,sans-serif;
+  --fl-text:'Geist',system-ui,sans-serif;
+  --fl-mono:'Geist Mono',ui-monospace,monospace;
+  --fl-ease:cubic-bezier(.2,0,0,1); --fl-dur:150ms;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--fl-ground); color:var(--fl-ink);
+  font-family:var(--fl-text); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--fl-accent)}
+:focus-visible{outline:2px solid var(--fl-accent); outline-offset:2px}
+
+/* ---------- shared type ---------- */
+.d-xl{font-family:var(--fl-display);font-weight:600;font-size:clamp(2.5rem,5.4vw,4rem);line-height:1.0;letter-spacing:-.03em;max-width:16ch;margin:0}
+.d-l {font-family:var(--fl-display);font-weight:600;font-size:clamp(2rem,4vw,3rem);line-height:1.02;letter-spacing:-.028em;max-width:16ch;margin:0}
+.d-m {font-family:var(--fl-display);font-weight:600;font-size:clamp(1.9rem,2.9vw,2.25rem);line-height:1.06;letter-spacing:-.024em;max-width:16ch;margin:0}
+.lead{font-size:1.125rem;line-height:1.6;color:var(--fl-muted);max-width:52ch;margin:0}
+.label{font-family:var(--fl-mono);font-weight:500;font-size:.6875rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fl-muted);margin:0}
+.data{font-family:var(--fl-mono);font-size:.8125rem;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.cap{font-family:var(--fl-mono);font-size:.75rem;letter-spacing:.02em;color:var(--fl-muted)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-block;font-family:var(--fl-text);font-weight:500;font-size:.9375rem;
+  padding:11px 19px;border-radius:4px;text-decoration:none;border:1px solid transparent;
+  transition:background var(--fl-dur) var(--fl-ease),color var(--fl-dur) var(--fl-ease)}
+.btn-p{background:var(--fl-accent);color:var(--fl-on-accent)}
+.btn-p:hover{background:var(--fl-accent-hover)}
+.btn-s{background:var(--fl-accent-quiet);color:var(--fl-ink);border-color:var(--fl-rule)}
+.btn-s:hover{background:var(--fl-sunken)}
+.btn-t{color:var(--fl-accent);padding-left:0;padding-right:0}
+.btn-t span{border-bottom:1px solid var(--fl-rule-strong);padding-bottom:2px;transition:border-color var(--fl-dur)}
+.btn-t:hover span{border-bottom-color:var(--fl-accent)}
+
+/* ---------- image plate ---------- */
+.plate{background:var(--fl-mat);box-shadow:inset 0 0 0 1px var(--fl-mat-edge);
+  border-radius:2px;padding:24px;display:grid;place-items:center}
+.plate.dark{box-shadow:inset 0 0 0 1px #4A4E52}
+.specimen{width:100%;aspect-ratio:1;border-radius:50%;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 42% 34% at 36% 30%,rgba(203,166,140,.85),transparent 62%),
+    radial-gradient(ellipse 34% 30% at 68% 62%,rgba(74,42,32,.75),transparent 58%),
+    radial-gradient(ellipse 62% 58% at 52% 52%,#95654C 0%,#6B3C2B 52%,#42231A 78%,#2A140F 100%)}
+.specimen::after{content:"";position:absolute;inset:0;mix-blend-mode:overlay;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.plate-note{margin-top:10px}
+
+/* ---------- section chrome ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;
+  padding:120px 40px;overflow:hidden}
+.wrap{width:100%;max-width:1200px;margin:0 auto}
+.tag{position:absolute;top:26px;right:32px;font-family:var(--fl-mono);font-size:.625rem;
+  letter-spacing:.16em;color:var(--fl-muted);opacity:.6}
+
+/* ---------- reveal ---------- */
+.r{opacity:0;transform:translateY(14px);transition:opacity .62s var(--fl-ease),transform .62s var(--fl-ease);transition-delay:var(--d,0ms)}
+.in .r{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.r{transition:none;opacity:1;transform:none}html{scroll-behavior:auto}}
+
+/* ---------- index nav ---------- */
+.idx{position:fixed;left:24px;bottom:24px;z-index:40;display:flex;flex-direction:column;gap:5px;
+  font-family:var(--fl-mono);font-size:.625rem;letter-spacing:.1em}
+.idx a{color:var(--fl-muted);text-decoration:none;padding:2px 7px;border-radius:3px;
+  background:rgba(227,229,230,.72);backdrop-filter:blur(6px);transition:color var(--fl-dur)}
+.idx a:hover{color:var(--fl-ink)}
+.idx a.on{color:var(--fl-on-accent);background:var(--fl-accent)}
+
+/* ===================== 01 · PANEL ===================== */
+#h1{background:var(--fl-sheen)}
+#h1 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:40px;align-items:center}
+#h1 .copy{grid-column:1/7}
+#h1 .art{grid-column:8/13;transform:translateY(-28px)}
+#h1 .d-xl{margin:18px 0 22px}
+#h1 .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+#h1 .strip{margin-top:84px;border-top:1px solid var(--fl-rule);padding-top:16px;
+  display:flex;gap:56px;flex-wrap:wrap;color:var(--fl-muted)}
+#h1 .strip b{display:block;font-weight:400;color:var(--fl-ink);margin-top:3px}
+
+/* ===================== 02 · PLATE FIRST ===================== */
+#h2{padding:0;flex-direction:column;justify-content:flex-start}
+#h2 .band{width:100%;min-height:60vh;background:var(--fl-sheen-dark);position:relative;
+  display:grid;place-items:center;padding:72px 40px 56px}
+#h2 .band::after{content:"";position:absolute;inset:0;background:var(--fl-brushed);pointer-events:none}
+#h2 .band .inner{position:relative;z-index:1;text-align:center;max-width:420px;width:100%}
+#h2 .plate{background:var(--fl-mat-raised)}
+#h2 .band .cap{color:var(--fl-on-mat-muted);margin-top:14px}
+#h2 .foot{flex:1;display:grid;place-items:center;padding:64px 40px 96px;width:100%}
+#h2 .foot .inner{max-width:760px;text-align:center;display:grid;justify-items:center;gap:20px}
+#h2 .d-l{max-width:18ch}
+
+/* ===================== 03 · INSTRUMENT FACE ===================== */
+#h3{background:
+    radial-gradient(ellipse 70% 58% at 50% 42%,#F4F6F7 0%,#E3E5E6 58%,#D9DBDC 100%);
+  text-align:center}
+#h3 .wrap{max-width:840px;display:grid;justify-items:center;gap:0}
+#h3 .spectrum{width:72px;height:2px;background:var(--fl-spectrum);margin:22px 0 30px}
+#h3 .d-l{max-width:15ch}
+#h3 .lead{margin:26px auto 0}
+#h3 .cta{margin-top:38px}
+#h3 .foot{margin-top:96px;border-top:1px solid var(--fl-rule);padding-top:18px;width:100%;
+  display:flex;justify-content:center;gap:44px;flex-wrap:wrap;color:var(--fl-muted)}
+
+/* ===================== 04 · COMPARISON ===================== */
+#h4{background:var(--fl-surface)}
+#h4 .top{display:grid;grid-template-columns:repeat(12,1fr);gap:40px;align-items:end;margin-bottom:52px}
+#h4 .top .copy{grid-column:1/6}
+#h4 .top .aside{grid-column:8/13;padding-bottom:6px}
+#h4 .pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:34px;align-items:start}
+#h4 .div{background:var(--fl-rule-strong);align-self:stretch}
+#h4 .head{display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--fl-rule)}
+#h4 .specimen.later{background:
+    radial-gradient(ellipse 46% 38% at 34% 28%,rgba(203,166,140,.8),transparent 62%),
+    radial-gradient(ellipse 40% 36% at 71% 66%,rgba(58,30,22,.85),transparent 56%),
+    radial-gradient(ellipse 68% 62% at 50% 52%,#8E5C43 0%,#5F3324 50%,#3A1D15 78%,#241109 100%)}
+
+/* ===================== 05 · SPEC SHEET ===================== */
+#h5{background:var(--fl-sheen);position:relative}
+#h5::before{content:"";position:absolute;inset:0;background:var(--fl-brushed);pointer-events:none}
+#h5 .wrap{position:relative;z-index:1}
+#h5 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:40px;align-items:start}
+#h5 .copy{grid-column:1/7}
+#h5 .art{grid-column:1/6;margin-top:44px}
+#h5 .spec{grid-column:8/13;grid-row:1/3;border-top:1px solid var(--fl-rule-strong)}
+#h5 .spec .hd{background:var(--fl-sunken);padding:9px 14px;display:flex;justify-content:space-between}
+#h5 .spec .row{display:flex;justify-content:space-between;gap:24px;padding:11px 14px;
+  border-bottom:1px solid var(--fl-rule)}
+#h5 .spec .row span:first-child{color:var(--fl-muted)}
+#h5 .spec .row span:last-child{text-align:right}
+#h5 .note{margin-top:16px;padding:0 14px;color:var(--fl-muted);max-width:40ch}
+#h5 .d-m{margin-bottom:20px}
+
+/* ---------- short viewports (13" laptops) ---------- */
+@media (min-width:921px) and (max-height:820px){
+  .hero{padding:64px 40px}
+  .d-xl{font-size:clamp(2.25rem,4.4vw,3.25rem)}
+  .d-l{font-size:clamp(1.85rem,3.4vw,2.5rem)}
+  .lead{font-size:1.0625rem}
+  #h1 .d-xl{margin:14px 0 18px}
+  #h1 .cta{margin-top:24px}
+  #h1 .strip{margin-top:30px}
+  #h1 .art{transform:translateY(-14px)}
+  #h2 .band{min-height:48vh;padding:56px 40px 40px}
+  #h2 .band .inner{max-width:320px}
+  #h2 .foot{padding:44px 40px 60px}
+  #h3 .foot{margin-top:56px}
+  #h4 .top{margin-bottom:34px}
+  #h5 .art{margin-top:28px}
+  .plate{padding:18px}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:920px){
+  .hero{padding:96px 24px}
+  #h1 .grid,#h4 .top,#h5 .grid{grid-template-columns:1fr;gap:36px}
+  #h1 .copy,#h1 .art,#h4 .top .copy,#h4 .top .aside,#h5 .copy,#h5 .art,#h5 .spec{grid-column:1/-1}
+  #h1 .art{transform:none;max-width:420px}
+  #h5 .spec{grid-row:auto}
+  #h5 .art{max-width:380px;margin-top:0}
+  #h4 .pair{grid-template-columns:1fr;gap:32px}
+  #h4 .div{display:none}
+  #h1 .strip{gap:32px;margin-top:56px}
+  .idx{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="idx" aria-label="Hero studies">
+  <a href="#h1" class="on">01 PANEL</a>
+  <a href="#h2">02 PLATE FIRST</a>
+  <a href="#h3">03 INSTRUMENT</a>
+  <a href="#h4">04 COMPARISON</a>
+  <a href="#h5">05 SPEC SHEET</a>
+</nav>
+
+<!-- ============ 01 · PANEL ============ -->
+<section class="hero" id="h1">
+  <span class="tag">01 / PANEL</span>
+  <div class="wrap">
+    <div class="grid">
+      <div class="copy">
+        <p class="label r" style="--d:0ms">Polarized / Unpolarized</p>
+        <h1 class="d-xl r" style="--d:70ms">A clear picture, and a way to notice change.</h1>
+        <p class="lead r" style="--d:140ms">The device that visualizes the lesion is the device that
+          images it. There is no added lens. The resolution comes from the phone's own sensor and
+          the software behind it.</p>
+        <div class="cta r" style="--d:210ms">
+          <a class="btn btn-p" href="#h4">See the images</a>
+          <a class="btn btn-s" href="#h5">Read the method</a>
+        </div>
+      </div>
+      <div class="art r" style="--d:150ms">
+        <div class="plate"><div class="specimen"></div></div>
+        <p class="cap plate-note">FIG. 1 — Lesion, polarized, 0 mo</p>
+      </div>
+    </div>
+
+    <div class="strip data r" style="--d:300ms">
+      <div>Resolution<b>≈40 μm</b></div>
+      <div>Lighting<b>2 modes</b></div>
+      <div>Charging<b>USB&#8209;C</b></div>
+      <div>Added optics<b>None</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · PLATE FIRST ============ -->
+<section class="hero" id="h2">
+  <span class="tag" style="color:var(--fl-on-mat-muted)">02 / PLATE FIRST</span>
+  <div class="band">
+    <div class="inner">
+      <div class="plate dark r" style="--d:60ms"><div class="specimen"></div></div>
+      <p class="cap r" style="--d:150ms">FIG. 1 — Lesion, polarized, 0 mo · iPhone sensor, no added lens</p>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="inner">
+      <p class="label r" style="--d:200ms">Before you say anything about it</p>
+      <h1 class="d-l r" style="--d:260ms">Send your dermatologist something worth looking at.</h1>
+      <p class="lead r" style="--d:330ms">The consumer device produces the same class of image as the
+        one in the exam room. That is the whole offer, and it is enough.</p>
+      <a class="btn btn-p r" style="--d:400ms" href="#h1">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 · INSTRUMENT FACE ============ -->
+<section class="hero" id="h3">
+  <span class="tag">03 / INSTRUMENT</span>
+  <div class="wrap">
+    <p class="label r" style="--d:0ms">Flacara</p>
+    <div class="spectrum r" style="--d:90ms" aria-hidden="true"></div>
+    <h1 class="d-l r" style="--d:150ms">The device that shows it also records it.</h1>
+    <p class="lead r" style="--d:230ms">One instrument, two lighting modes, and a record that holds
+      still between visits. Nothing is interpreted for you.</p>
+    <a class="btn btn-t r" style="--d:300ms" href="#h5"><span>Read the method</span></a>
+    <div class="foot data r" style="--d:380ms">
+      <span>≈40 μm</span><span>Polarized + unpolarized</span><span>USB&#8209;C</span><span>FDA pre-sub in progress</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 · COMPARISON ============ -->
+<section class="hero" id="h4">
+  <span class="tag">04 / COMPARISON</span>
+  <div class="wrap">
+    <div class="top">
+      <div class="copy">
+        <p class="label r" style="--d:0ms">Same lesion, same frame</p>
+        <h2 class="d-m r" style="--d:70ms">Fourteen months, without the friction.</h2>
+      </div>
+      <div class="aside">
+        <p class="lead r" style="--d:140ms">Comparing a lesion across visits is usually enough work
+          that it doesn't happen. Here it is the default view.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="r" style="--d:200ms">
+        <div class="head"><span class="label">Visit 01</span><span class="data">0 mo</span></div>
+        <div class="plate"><div class="specimen"></div></div>
+        <p class="cap plate-note">FIG. 1 — Polarized · 2025-04-11</p>
+      </div>
+      <div class="div r" style="--d:240ms" aria-hidden="true"></div>
+      <div class="r" style="--d:290ms">
+        <div class="head"><span class="label">Visit 04</span><span class="data">14 mo</span></div>
+        <div class="plate"><div class="specimen later"></div></div>
+        <p class="cap plate-note">FIG. 2 — Polarized · 2026-06-08</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 · SPEC SHEET ============ -->
+<section class="hero" id="h5">
+  <span class="tag">05 / SPEC SHEET</span>
+  <div class="wrap">
+    <div class="grid">
+      <div class="copy">
+        <p class="label r" style="--d:0ms">For the exam room</p>
+        <h2 class="d-m r" style="--d:70ms">≈40 microns, from the sensor you already own.</h2>
+        <p class="lead r" style="--d:140ms">Both lighting modes, meant to be used as a working
+          diagnostic instrument. Side by side against a DermLite DL4, image quality was comparable.
+          That has not been quantified, and we don't claim more than has been measured.</p>
+      </div>
+
+      <div class="art r" style="--d:210ms">
+        <div class="plate"><div class="specimen"></div></div>
+        <p class="cap plate-note">FIG. 1 — Lesion, unpolarized, 0 mo</p>
+      </div>
+
+      <div class="spec data r" style="--d:170ms">
+        <div class="hd"><span class="label" style="color:var(--fl-ink)">Specification</span><span class="label" style="color:var(--fl-ink)">Value</span></div>
+        <div class="row"><span>Resolution</span><span>≈40 μm</span></div>
+        <div class="row"><span>Magnification optics</span><span>None</span></div>
+        <div class="row"><span>Illumination</span><span>Polarized + unpolarized</span></div>
+        <div class="row"><span>Mode switching</span><span>Single button</span></div>
+        <div class="row"><span>Charging</span><span>USB&#8209;C</span></div>
+        <div class="row"><span>Mounting</span><span>Over camera array</span></div>
+        <div class="row"><span>Lesion location</span><span>Spatial body map</span></div>
+        <div class="row"><span>Regulatory</span><span>FDA pre-sub in progress</span></div>
+        <p class="cap note">Values are from prototype units currently with clinicians. Anything not
+          listed here has not been measured yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Reveal on enter; keep the index nav in sync.
+var secs = document.querySelectorAll('.hero');
+var links = document.querySelectorAll('.idx a');
+
+var reveal = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.12 });
+
+var active = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if (!e.isIntersecting) return;
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); });
+  });
+}, { threshold: 0.5 });
+
+secs.forEach(function(s){ reveal.observe(s); active.observe(s); });
+</script>
+
+</body>
+</html>

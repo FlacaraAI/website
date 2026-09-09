@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flacara · explorations · naming + brand heroes</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flacara.css">
+<style>
+/* ---------- sheet chrome (this file only, never ships) ---------- */
+body { background: var(--fl-ground); }
+.sheet { max-width: 1240px; margin: 0 auto; padding: 80px 40px 160px; }
+.sheet h1 { font-family: var(--fl-display); font-weight: 600; font-size: 3rem;
+  line-height: 1.02; letter-spacing: -.028em; margin: 12px 0 8px; }
+.sheet h2 { font-family: var(--fl-text); font-weight: 600; font-size: 1.375rem;
+  letter-spacing: -.015em; margin: 112px 0 6px; padding-top: 24px;
+  border-top: 1px solid var(--fl-rule-strong); }
+.sheet h3 { font-family: var(--fl-text); font-weight: 600; font-size: 1rem; margin: 0 0 4px; }
+.lede { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 68ch; margin: 0 0 40px; }
+.note { font-size: .8125rem; line-height: 1.55; color: var(--fl-muted); max-width: 56ch; margin: 8px 0 0; }
+.mono { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--fl-muted); }
+.spec-hd { display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; padding: 0 0 10px; border-bottom: 1px solid var(--fl-rule); margin-bottom: 20px; }
+.frame { border: 1px solid var(--fl-rule); background: var(--fl-surface); overflow: hidden; }
+.stack { display: grid; gap: 64px; }
+
+/* ---------- §1 naming ---------- */
+.faults { list-style: none; margin: 0 0 56px; padding: 0; border-top: 1px solid var(--fl-rule); }
+.faults li { border-bottom: 1px solid var(--fl-rule); padding: 18px 0;
+  display: grid; grid-template-columns: 132px 1fr; gap: 28px; align-items: baseline; }
+.faults h4 { font-family: var(--fl-text); font-weight: 600; font-size: .9375rem; margin: 0 0 4px; }
+.faults p { font-size: .875rem; line-height: 1.6; color: var(--fl-muted); max-width: 70ch; margin: 0; }
+.faults .mono { padding-top: 3px; }
+
+.names { display: grid; gap: 1px; background: var(--fl-rule); border: 1px solid var(--fl-rule); }
+.name-row { background: var(--fl-surface); padding: 28px 32px;
+  display: grid; grid-template-columns: 46px 1fr 1.05fr; gap: 32px; align-items: start; }
+.name-row.is-pick { background: var(--fl-accent-quiet); }
+.name-row .idx { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted); padding-top: 6px; }
+.pair { display: grid; gap: 14px; }
+.dev { display: flex; align-items: baseline; gap: .34em; }
+.dev .wm { font-family: var(--fl-display); font-weight: 600; font-size: 1.75rem;
+  letter-spacing: -.02em; color: var(--fl-ink); line-height: 1; }
+.dev .sfx { font-family: var(--fl-text); font-weight: 500; font-size: 1.0625rem;
+  letter-spacing: .01em; color: var(--fl-accent); line-height: 1; }
+.dev .who { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-muted); margin-left: 10px; }
+
+/* ---------- heroes ---------- */
+.demo { position: relative; height: 480px; overflow: hidden; display: flex;
+  background: var(--fl-ground-lit); padding: 56px; }
+.demo .in { position: relative; z-index: 2; align-self: flex-end; }
+.demo h4 { font-family: var(--fl-display); font-weight: 600;
+  font-size: clamp(2.25rem, 4.2vw, 3.375rem); line-height: 1; letter-spacing: -.030em;
+  margin: 0; max-width: 15ch; color: var(--fl-ink); }
+.demo p { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 44ch; margin: 18px 0 0; }
+.pillet { height: 10px; width: 60px; border-radius: 999px; background: var(--fl-ramp); margin-bottom: 24px; }
+
+/* the outline, injected once and cloned into each demo that wants it */
+.demo .outline { color: #F4F4F4; filter: var(--lift-outline); }
+.demo .stage { position: absolute; z-index: 1; pointer-events: none; overflow: visible;
+  transform: translate(-50%, -50%); }
+
+/* --- H1 Aperture: the brand as light, no hardware at all --- */
+.h-aper { align-items: center; justify-content: center; }
+.h-aper .in { align-self: center; display: grid; justify-items: center; text-align: center; }
+.h-aper .ring { position: absolute; z-index: 0; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); width: 620px; height: 620px; border-radius: 50%;
+  background: var(--fl-ramp); opacity: .8;
+  -webkit-mask: radial-gradient(circle, transparent 58%, #000 58.6%, #000 61%, transparent 61.6%);
+          mask: radial-gradient(circle, transparent 58%, #000 58.6%, #000 61%, transparent 61.6%); }
+.h-aper .ring--2 { width: 780px; height: 780px; opacity: .34; }
+.h-aper .lock { display: flex; align-items: center; gap: .2em; font-size: 4.5rem; }
+.h-aper .lock .ico { width: .88em; height: .88em; flex: none; overflow: visible; filter: var(--lift-ico); --disc: url(#ramp-head); }
+.h-aper .lock .wm { font-family: var(--fl-display); font-weight: 600; font-size: 1em;
+  line-height: 1; letter-spacing: -.02em; filter: var(--lift-txt);
+  background: var(--fl-ramp-tail); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; }
+.h-aper .tag { font-family: var(--fl-text); font-weight: 500; text-transform: uppercase;
+  letter-spacing: .24em; font-size: .8125rem; color: var(--fl-muted); margin: 26px 0 0; }
+
+/* --- H2 The fork: home routes, it does not sell --- */
+.h-fork { flex-direction: column; justify-content: space-between; padding: 48px 0 0; }
+.h-fork .top { padding: 0 56px; }
+.h-fork .doors { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--fl-rule); border-top: 1px solid var(--fl-rule); margin-top: auto; }
+.h-fork .door { background: var(--fl-surface); padding: 32px 36px 36px; min-height: 190px;
+  display: grid; align-content: end; gap: 10px; text-decoration: none; }
+.h-fork .door:hover { background: var(--fl-ground); }
+.h-fork .door .t { font-family: var(--fl-display); font-weight: 600; font-size: 1.75rem;
+  letter-spacing: -.022em; color: var(--fl-ink); line-height: 1; }
+.h-fork .door .d { font-size: .875rem; line-height: 1.55; color: var(--fl-muted); max-width: 34ch; }
+.h-fork .door .go { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-accent); }
+.h-fork .lockrow { display: flex; align-items: center; gap: .2em; font-size: 3rem; }
+.h-fork .lockrow .ico { width: .88em; height: .88em; flex: none; overflow: visible; --disc: url(#ramp-head); filter: var(--lift-ico); }
+.h-fork .lockrow .wm { font-family: var(--fl-display); font-weight: 600; font-size: 1em; line-height: 1;
+  letter-spacing: -.02em; background: var(--fl-ramp-tail); -webkit-background-clip: text;
+  background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: var(--lift-txt); }
+.h-fork .claim { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
+  letter-spacing: -.024em; line-height: 1.06; margin: 28px 0 0; max-width: 15ch; }
+
+/* --- H3 Wordmark alone --- */
+.h-bare { align-items: flex-end; }
+.h-bare .lockrow { display: flex; align-items: center; gap: .2em; font-size: clamp(3.5rem, 9vw, 6.5rem); }
+.h-bare .lockrow .ico { width: .88em; height: .88em; flex: none; overflow: visible; --disc: url(#ramp-head); filter: var(--lift-ico); }
+.h-bare .lockrow .wm { font-family: var(--fl-display); font-weight: 600; font-size: 1em; line-height: 1;
+  letter-spacing: -.02em; background: var(--fl-ramp-tail); -webkit-background-clip: text;
+  background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: var(--lift-txt); }
+.h-bare .tag { font-family: var(--fl-text); font-weight: 500; text-transform: uppercase;
+  letter-spacing: .24em; font-size: .8125rem; color: var(--fl-muted); margin: 24px 0 0 1.08em;
+  font-size: .8125rem; }
+
+/* --- C1 Dark instrument --- */
+.h-dark { background: var(--fl-mat-deep); }
+.h-dark .stage { left: 74%; top: 50%; width: 560px; height: 560px; }
+.h-dark .outline { color: var(--fl-on-mat); filter: none; opacity: .92; }
+.h-dark h4 { color: var(--fl-on-mat); }
+.h-dark p { color: var(--fl-on-mat-muted); }
+.h-dark .rail { display: flex; gap: 40px; margin-top: 32px; padding-top: 18px;
+  border-top: 1px solid var(--fl-mat-raised); }
+.h-dark .rail div { display: grid; gap: 4px; }
+.h-dark .rail .k { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-on-mat-muted); }
+.h-dark .rail .v { font-family: var(--fl-mono); font-size: .8125rem; color: var(--fl-on-mat);
+  font-variant-numeric: tabular-nums; }
+.h-dark .in { width: 54%; }
+
+/* --- C2 Elevation --- */
+.h-elev .stage { left: 76%; top: 48%; width: 520px; height: 520px; }
+.h-elev .dims { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.h-elev .dims .vline { position: absolute; top: 12%; bottom: 12%; left: 76%;
+  border-left: 1px dashed var(--fl-rule-strong); }
+.h-elev .dims .hline { position: absolute; left: 56%; right: 4%; top: 48%;
+  border-top: 1px dashed var(--fl-rule-strong); }
+.h-elev .dims span { position: absolute; font-family: var(--fl-mono); font-size: .625rem;
+  letter-spacing: .1em; color: var(--fl-muted); background: var(--fl-surface); padding: 2px 6px; }
+.h-elev .in { width: 54%; }
+.h-elev .strip { display: flex; gap: 36px; margin-top: 30px; padding-top: 16px;
+  border-top: 1px solid var(--fl-rule); }
+.h-elev .strip div { display: grid; gap: 3px; }
+.h-elev .strip .k { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-muted); }
+.h-elev .strip .v { font-family: var(--fl-mono); font-size: .8125rem; color: var(--fl-ink); }
+
+/* --- P1 In the hand --- */
+.h-hand .stage { left: 78%; top: 54%; width: 420px; height: 420px; }
+.h-hand .in { width: 52%; }
+.h-hand .scalebar { display: flex; align-items: center; gap: 12px; margin-top: 30px; }
+.h-hand .scalebar i { display: block; height: 1px; width: 84px; background: var(--fl-rule-strong); }
+.h-hand .scalebar span { font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-muted); letter-spacing: .08em; }
+
+/* --- P2 Two dates --- */
+.h-dates .wrapg { position: absolute; right: 56px; top: 50%; transform: translateY(-50%);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 40%; z-index: 1; }
+.h-dates figure { margin: 0; }
+.h-dates .fl-plate { padding: 10px; }
+.h-dates img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.h-dates figcaption { font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-muted);
+  margin-top: 8px; letter-spacing: .06em; }
+.h-dates .in { width: 52%; }
+
+@media (max-width: 1000px) {
+  .sheet { padding: 48px 20px 96px; }
+  .name-row { grid-template-columns: 1fr; gap: 20px; }
+  .faults li { grid-template-columns: 1fr; gap: 8px; }
+  .demo .stage, .h-dates .wrapg, .h-elev .dims { display: none; }
+  .h-dark .in, .h-elev .in, .h-hand .in, .h-dates .in { width: 100%; }
+  .h-fork .doors { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="fl-lit">
+
+<!-- the mark's <defs> and the product outline, fetched rather than duplicated -->
+<div id="mark-slot"></div>
+<div id="outline-src" hidden></div>
+<script>
+Promise.all([
+  fetch('partials/mark.html').then(r => r.text()),
+  fetch('partials/outline.html').then(r => r.text())
+]).then(([mark, outline]) => {
+  document.getElementById('mark-slot').innerHTML = mark;
+  document.getElementById('outline-src').innerHTML = outline;
+  const src = document.querySelector('#outline-src svg');
+  document.querySelectorAll('[data-outline]').forEach(slot => slot.appendChild(src.cloneNode(true)));
+});
+</script>
+
+<div class="sheet">
+  <p class="mono">Flacara · explorations · round 03</p>
+  <h1>Naming &amp; the brand hero</h1>
+  <p class="lede">Plum <code>#3B3350</code> is in. <code>flacara.css</code> and the token tables in
+  <code>DESIGN_SYSTEM.md</code> both carry it now, so everything below is drawn in the new accent.
+  This sheet covers the two new questions: what the devices are called, and what home looks like
+  once the hardware leaves it.</p>
+
+  <!-- ==================== §1 ==================== -->
+  <h2>§1 — “flacara unulC” / “flacara unulP”</h2>
+  <p class="lede">The instinct is right: one brand, two devices, a shared first name. The origin is
+  right too: <em>flacără</em> is a flame and <em>unul</em> is one, so the first generation names
+  itself. What does not survive contact is the trailing capital.</p>
+
+  <ul class="faults">
+    <li><span class="mono">01 · Collision</span><div>
+      <h4>C means the opposite thing to each audience</h4>
+      <p>Internally C is Clinical and P is Patient. To a dermatologist reading a purchase order,
+      C is Consumer. The one letter carrying the whole distinction is the one letter that inverts
+      depending on who is holding the box. A naming scheme cannot have its load-bearing character
+      be ambiguous.</p>
+    </div></li>
+    <li><span class="mono">02 · Rank</span><div>
+      <h4>It brands the patient device as the lesser SKU</h4>
+      <p>unulC and unulP are visibly the same product with a different letter, which invites the
+      question “what did I not get?”, and the honest answer is a different regulatory class, not a
+      worse camera. Tiering by letter forces you to keep answering that question.</p>
+    </div></li>
+    <li><span class="mono">03 · Speech</span><div>
+      <h4>Nobody can say it, spell it, or search it</h4>
+      <p>“OO-nool see” or “UN-ul pee”; screen readers say “unul cee”; support calls will hear
+      “unulsee”, “unal C”, “Unil-P”. Lowercase word plus trailing capital also breaks every
+      house style guide and most procurement systems.</p>
+    </div></li>
+    <li><span class="mono">04 · Roadmap</span><div>
+      <h4>Counting in Romanian stops working at three</h4>
+      <p>Unul, doi, trei, then <em>patru</em>, and “Flacara PatruC” is not a product. Worse, doiC
+      does not read as a successor to unulC to anyone who does not speak Romanian; it reads as an
+      unrelated device.</p>
+    </div></li>
+    <li><span class="mono">05 · Mark</span><div>
+      <h4>Only one word here is registrable</h4>
+      <p>Single letters and generic numerals are weak marks. You would be protecting “Flacara”
+      and “Unul” and nothing else, which means the C/P distinction, the part doing all the
+      work, is the part you cannot defend.</p>
+    </div></li>
+  </ul>
+
+  <p class="lede" style="margin-bottom:24px">Five alternatives, each shown as the pair. The test I
+  applied: can a receptionist say it down a phone, does the clinical one obviously outrank the
+  consumer one without insulting it, and does it still work at generation four.</p>
+
+  <div class="names">
+
+    <div class="name-row is-pick">
+      <span class="idx">01</span>
+      <div class="pair">
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">Pro</span><span class="who">specialist</span></div>
+        <div class="dev"><span class="wm">flacara</span><span class="who">consumer</span></div>
+      </div>
+      <div>
+        <h3>Pro, and the unsuffixed brand</h3>
+        <p class="note">The consumer device is simply <em>Flacara</em>. That is the strongest
+        available signal that the brand is the brand and the professional unit is a variant of it,
+        not the other way round. Pro is understood in every market without translation, and it
+        never has to be explained on a phone call. Roadmap is Pro 2, Pro 3, on forever.</p>
+        <p class="note"><strong>Cost:</strong> it is the least distinctive option on this sheet.
+        “Pro” is what everyone does. You are trading ownership for zero friction, which is the
+        right trade for a company between prototype and pilot.</p>
+      </div>
+    </div>
+
+    <div class="name-row">
+      <span class="idx">02</span>
+      <div class="pair">
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">Clinic</span><span class="who">specialist</span></div>
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">Home</span><span class="who">consumer</span></div>
+      </div>
+      <div>
+        <h3>Named for where it lives</h3>
+        <p class="note">Says setting, not rank, so neither device is the lesser one. It also does
+        regulatory work for free: <em>Home</em> quietly implies not-diagnostic without a
+        disclaimer, and Clinic sets the expectation that the other unit is a professional
+        instrument. Best fit for the “a record, not a verdict” line.</p>
+        <p class="note"><strong>Cost:</strong> boxes you in if the consumer unit ever gets used in
+        a clinic, or the pro unit in a house call. Both happen.</p>
+      </div>
+    </div>
+
+    <div class="name-row">
+      <span class="idx">03</span>
+      <div class="pair">
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">XP</span><span class="who">specialist</span></div>
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">One</span><span class="who">consumer</span></div>
+      </div>
+      <div>
+        <h3>The spec becomes the name</h3>
+        <p class="note">XP is cross-polarization: a real capability, already the word clinicians
+        use, and it earns the pro position by describing a feature rather than asserting a tier.
+        <em>One</em> is “unul” in English — the origin story survives translation.</p>
+        <p class="note"><strong>Cost:</strong> only works if XP genuinely stays exclusive to the
+        clinical unit. If the consumer device ships cross-polarized too, the name is a lie and you
+        cannot take it back.</p>
+      </div>
+    </div>
+
+    <div class="name-row">
+      <span class="idx">04</span>
+      <div class="pair">
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">Unul</span><span class="who">specialist</span></div>
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">Lumen</span><span class="who">consumer</span></div>
+      </div>
+      <div>
+        <h3>Keep the Romanian, drop the letter</h3>
+        <p class="note">If “unul” is non-negotiable, make it a name rather than a stem. Two real
+        words distinguish the devices instead of one character, and both belong to the same
+        world: flame, one, light. The most ownable pair here by a distance.</p>
+        <p class="note"><strong>Cost:</strong> nothing tells a buyer which one outranks the other.
+        You would be spending marketing budget to teach the hierarchy that option 01 gets for
+        free.</p>
+      </div>
+    </div>
+
+    <div class="name-row">
+      <span class="idx">05</span>
+      <div class="pair">
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">100</span><span class="who">specialist</span></div>
+        <div class="dev"><span class="wm">flacara</span><span class="sfx">10</span><span class="who">consumer</span></div>
+      </div>
+      <div>
+        <h3>An instrument series</h3>
+        <p class="note">How the category actually names itself — DermLite runs DL1 through DL5.
+        Numbers rank without insulting, scale forever, and read as equipment rather than as a
+        gadget. Sits comfortably beside a spec table.</p>
+        <p class="note"><strong>Cost:</strong> cold, forgettable, and hostile to the consumer
+        product. A frightened person does not want to buy a Flacara 10.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note" style="max-width:70ch;margin-top:28px">If it were mine: <strong>01</strong> for
+  what ships, with <strong>Unul</strong> kept as the internal generation codename, so the story
+  stays available for the brand page without being load-bearing on a box. <strong>02</strong> is
+  the close second and the better answer if legal wants the consumer device to disclaim itself in
+  its own name. Whatever you pick, decide it before the pre-order form goes live. A SKU name in
+  someone's order confirmation is very expensive to change.</p>
+
+  <!-- ==================== §2 ==================== -->
+  <h2>§2 — Home, with the hardware taken out</h2>
+  <p class="lede">Agreed on removing the outline: once there are two devices, a picture of one of
+  them on the home page is a claim about which one matters. What replaces it depends on what you
+  think home is <em>for</em>. Three answers, in increasing order of how much work the page does.</p>
+
+  <div class="stack">
+
+    <div>
+      <div class="spec-hd"><h3>Home · H1 — Aperture</h3><span class="mono">brand as light</span></div>
+      <div class="frame">
+        <div class="demo h-aper">
+          <div class="ring" aria-hidden="true"></div>
+          <div class="ring ring--2" aria-hidden="true"></div>
+          <div class="in">
+            <div class="lock">
+              <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+              <span class="wm">flacara</span>
+            </div>
+            <p class="tag">Repeatable light.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">The ramp becomes concentric apertures rather than a bar: still the mark's own
+      gradient, still §2.6's first permitted place, and it says “optics” without drawing a single
+      piece of hardware. Closest in spirit to what the page has now, minus the device.</p>
+      <p class="note"><strong>Against it:</strong> a centred lockup on a glowing ring is the most
+      generic composition in this document. It is beautiful and it is also what every seed-stage
+      hardware company's home page looks like. If you build it, the concentric rings have to be
+      geometrically derived from the mark, not decorative, or it reads as wallpaper.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Home · H2 — The fork</h3><span class="mono">recommended</span></div>
+      <div class="frame">
+        <div class="demo h-fork">
+          <div class="top">
+            <div class="lockrow">
+              <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+              <span class="wm">flacara</span>
+            </div>
+            <p class="claim">Repeatable light, for two very different rooms.</p>
+          </div>
+          <div class="doors">
+            <a class="door" href="clinicians.html">
+              <span class="go">For specialists</span>
+              <span class="t">Clinicians</span>
+              <span class="d">The professional instrument, and the comparison against a DermLite DL4.</span>
+            </a>
+            <a class="door" href="patients.html">
+              <span class="go">For everyone else</span>
+              <span class="t">Patients</span>
+              <span class="d">A clear picture of a spot on your skin, and another one later.</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <p class="note">Once the devices live on their own pages, home's real job is the brand plus
+      the fork, and a visitor who lands here is already one of two people. This is the only
+      direction that admits that. It also solves the naming problem structurally: the two doors do
+      the tiering, so the product names can stay quiet.</p>
+      <p class="note"><strong>Against it:</strong> a page that only routes is a page that sells
+      nothing, and you lose the full-bleed brand moment entirely. Mitigation is to let the lockup
+      occupy the top two-thirds and keep the doors as a band at the fold, which is what is drawn
+      here, but it needs the outline trace or something equivalent above it or the top half is
+      empty.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Home · H3 — Wordmark alone</h3><span class="mono">maximum restraint</span></div>
+      <div class="frame">
+        <div class="demo h-bare">
+          <div class="in">
+            <div class="pillet" aria-hidden="true"></div>
+            <div class="lockrow">
+              <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+              <span class="wm">flacara</span>
+            </div>
+            <p class="tag">Repeatable light.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">The current hero with the drawing deleted and nothing put back. Costs an hour,
+      cannot be wrong, and the enormous empty field is a legitimate choice for an instrument brand.
+      It reads as confidence rather than as an unfinished page, but only if the type is set at
+      the size drawn here.</p>
+      <p class="note"><strong>Against it:</strong> it is a placeholder that happens to look good.
+      Ship it as a stopgap while H2 gets built, not as the answer.</p>
+    </div>
+
+  </div>
+
+  <!-- ==================== §3 ==================== -->
+  <h2>§3 — Clinicians, and what “pro” actually means here</h2>
+  <p class="lede">The reflex for a pro device is a dark hero, and §2.2 fences dark surfaces to
+  image-viewing contexts: the mat exists so a photograph is judged under a known condition, not
+  so marketing can look serious. C1 breaks that rule on purpose; C2 gets the same read without
+  touching it. Both are drawn so you can decide whether the rule is worth an exception.</p>
+
+  <div class="stack">
+
+    <div>
+      <div class="spec-hd"><h3>Clinicians · C1 — Dark instrument</h3><span class="mono">breaks §2.2</span></div>
+      <div class="frame">
+        <div class="demo h-dark" data-outline>
+          <div class="in">
+            <h4>Built for the exam room.</h4>
+            <p>Cross-polarized and unpolarized in one pass, at a fixed working distance, so the
+            image you take today can be compared to the one you take in six months.</p>
+            <div class="rail">
+              <div><span class="k">Modes</span><span class="v">XP / non-XP</span></div>
+              <div><span class="k">Reference</span><span class="v">DermLite DL4</span></div>
+              <div><span class="k">Stage</span><span class="v">Prototype → pilot</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">The outline in near-white on <code>--fl-mat-deep</code>, which is exactly how
+      the device will be seen when a clinician is actually looking at images. It is the most
+      convincingly professional thing in this document.</p>
+      <p class="note"><strong>Against it:</strong> §2.2 says dark is a viewing condition, not a
+      mood. Use it here and the mat stops meaning “controlled surround” and starts meaning
+      “premium”, which quietly devalues it everywhere it does real work. If you want this, amend
+      §2.2 explicitly to permit one dark hero on the clinical page. Do not just do it.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Clinicians · C2 — Elevation</h3><span class="mono">recommended</span></div>
+      <div class="frame">
+        <div class="demo h-elev" data-outline>
+          <div class="dims" aria-hidden="true">
+            <div class="vline"></div><div class="hline"></div>
+            <span style="left:57%;top:44%">working distance</span>
+          </div>
+          <div class="in">
+            <h4>Built for the exam room.</h4>
+            <p>A fixed geometry, two lighting modes, and the same framing every visit. The
+            repeatability is the instrument.</p>
+            <div class="strip">
+              <div><span class="k">Modes</span><span class="v">XP / non-XP</span></div>
+              <div><span class="k">Reference</span><span class="v">DermLite DL4</span></div>
+              <div><span class="k">Stage</span><span class="v">Prototype → pilot</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Pro by measurement rather than by darkness: the outline treated as an
+      engineering elevation, dimension lines called out, a mono spec strip under the headline.
+      Specialists respond to the drawing being <em>dimensioned</em>: it signals the thing was
+      designed to a tolerance. Stays entirely inside the system.</p>
+      <p class="note"><strong>Against it:</strong> it is quieter than C1 and will lose a side-by-side
+      first-impression test. It wins the second look, which is the one that places an order.</p>
+    </div>
+
+  </div>
+
+  <!-- ==================== §4 ==================== -->
+  <h2>§4 — Patients</h2>
+  <p class="lede">Same outline, opposite handling. On the clinical page it is an instrument drawn to
+  a dimension; here it should be an object of a known, unthreatening size, or absent entirely.</p>
+
+  <div class="stack">
+
+    <div>
+      <div class="spec-hd"><h3>Patients · P1 — In the hand</h3><span class="mono">recommended</span></div>
+      <div class="frame">
+        <div class="demo h-hand" data-outline>
+          <div class="in">
+            <div class="pillet" aria-hidden="true"></div>
+            <h4>A clear picture.</h4>
+            <p>It photographs a spot on your skin, closely and the same way each time. It does not
+            tell you what the spot is.</p>
+            <div class="scalebar"><i></i><span>ACTUAL SIZE · FITS IN ONE HAND</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">The device drawn smaller than on the clinical page, with a scale rule instead
+      of dimension lines, the same asset saying “this is small and it is yours” rather than “this
+      is calibrated”. The size difference between the two pages is doing the tiering work that the
+      product names then do not have to.</p>
+      <p class="note"><strong>Against it:</strong> a scale bar is still instrument language. If
+      user testing says it reads clinical, cut the bar and let the drawing sit at hand size on its
+      own.</p>
+    </div>
+
+    <div>
+      <div class="spec-hd"><h3>Patients · P2 — One spot, two dates</h3><span class="mono">alternate · needs real imagery</span></div>
+      <div class="frame">
+        <div class="demo h-dates">
+          <div class="wrapg" aria-hidden="true">
+            <figure><div class="fl-plate"><img src="images/sample-01.JPG" alt=""></div><figcaption>12 MAR</figcaption></figure>
+            <figure><div class="fl-plate"><img src="images/sample-01.JPG" alt=""></div><figcaption>14 SEP</figcaption></figure>
+          </div>
+          <div class="in">
+            <div class="pillet" aria-hidden="true"></div>
+            <h4>Find it again.</h4>
+            <p>A clear picture now, and another one later, so you can see whether anything changed.
+            No score, no verdict.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">Carried over from round 02 and still the strongest statement of what the
+      product is for. Shows the outcome instead of the hardware, which is arguably more correct for
+      this audience than P1.</p>
+      <p class="note"><strong>Against it:</strong> the two plates are the same file. It cannot ship
+      until there is a genuine second photograph of the same lesion, and faking one would be
+      exactly the claim the page spends its next section disowning.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

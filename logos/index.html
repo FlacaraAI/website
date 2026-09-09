@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flacara · logo concepts</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fl-ground:#E3E5E6; --fl-surface:#F2F4F5; --fl-rule:#BBBDBE; --fl-rule-strong:#959798;
+    --fl-ink:#151616; --fl-muted:#5F6060; --fl-accent:#1E3352; --fl-mat-deep:#1F2225;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fl-ground);color:var(--fl-ink);
+       font-family:'Geist',system-ui,sans-serif;font-size:16px;line-height:1.6;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1200px;margin:0 auto;padding:96px 48px}
+  .label{font-family:'Geist Mono',ui-monospace,monospace;font-weight:500;font-size:11px;
+         letter-spacing:.14em;text-transform:uppercase;color:var(--fl-muted)}
+  h1{font-family:'Zalando Sans SemiExpanded',system-ui,sans-serif;font-weight:600;
+     font-size:48px;line-height:1.02;letter-spacing:-.028em;margin:12px 0 48px;max-width:16ch}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--fl-rule);
+        border:1px solid var(--fl-rule)}
+  .cell{background:var(--fl-surface);padding:32px}
+  .cell .head{display:flex;justify-content:space-between;gap:16px;margin-bottom:24px}
+  .cell .note{font-size:14px;line-height:1.55;color:var(--fl-muted);max-width:52ch}
+  object{display:block;width:100%;height:auto;max-width:460px}
+  .lock{margin-bottom:24px}
+  .sizes{display:flex;align-items:center;gap:32px;margin-top:24px;
+         border-top:1px solid var(--fl-rule);padding-top:20px}
+  .sizes object{width:auto}
+  .s40{height:40px} .s24{height:24px}
+  .dark{background:var(--fl-mat-deep);padding:12px 16px;display:inline-block}
+  .dark object{filter:invert(1) grayscale(1) brightness(1.6)}
+  h2{font-family:'Geist',system-ui,sans-serif;font-weight:600;font-size:24px;
+     letter-spacing:-.015em;margin:96px 0 24px}
+  ol{padding-left:0;list-style:none;margin:0;border-top:1px solid var(--fl-rule)}
+  ol li{border-bottom:1px solid var(--fl-rule);padding:20px 0;display:grid;
+        grid-template-columns:64px 1fr;gap:24px;align-items:baseline}
+  .tag{font-family:'Zalando Sans SemiExpanded',system-ui,sans-serif;font-weight:600;
+       font-size:36px;line-height:1.06;letter-spacing:-.024em}
+  .tagnote{font-size:14px;color:var(--fl-muted);margin-top:6px;max-width:56ch}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:48px 20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="label">Flacara · identity · round 01</p>
+  <h1>Ten marks</h1>
+
+  <div class="grid">
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 01 · Two lights</span><span class="label">Metaphor fusion</span></div>
+      <div class="lock"><object data="01-two-lights.svg" type="image/svg+xml"></object></div>
+      <p class="note">Two circles, two lighting modes; the overlap is the image. The intersection is a vesica, so the flame in the name survives without being drawn.</p>
+      <div class="sizes">
+        <object class="s40" data="01-two-lights.svg" type="image/svg+xml"></object>
+        <object class="s24" data="01-two-lights.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="01-two-lights.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 02 · Seat</span><span class="label">Product action</span></div>
+      <div class="lock"><object data="02-seat.svg" type="image/svg+xml"></object></div>
+      <p class="note">The housing seated over the camera array: one lens, one emitter, one plate. The most literal mark here, and the most obviously hardware.</p>
+      <div class="sizes">
+        <object class="s40" data="02-seat.svg" type="image/svg+xml"></object>
+        <object class="s24" data="02-seat.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="02-seat.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 03 · Vesica</span><span class="label">Negative space</span></div>
+      <div class="lock"><object data="03-vesica.svg" type="image/svg+xml"></object></div>
+      <p class="note">A lens in section, pointed at both ends, with the aperture cut out of the centre. Reads as an optic and as an eye, and holds the flame in the name without drawing one.</p>
+      <div class="sizes">
+        <object class="s40" data="03-vesica.svg" type="image/svg+xml"></object>
+        <object class="s24" data="03-vesica.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="03-vesica.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 04 · Locus</span><span class="label">Product action</span></div>
+      <div class="lock"><object data="04-locus.svg" type="image/svg+xml"></object></div>
+      <p class="note">A lesion located rather than described. The patented spatial mapping, reduced to a registration mark. Reads as an instrument reticle, not a target.</p>
+      <div class="sizes">
+        <object class="s40" data="04-locus.svg" type="image/svg+xml"></object>
+        <object class="s24" data="04-locus.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="04-locus.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 05 · Beam F</span><span class="label">Monogram + meaning</span></div>
+      <div class="lock"><object data="05-beam-f.svg" type="image/svg+xml"></object></div>
+      <p class="note">An F cut out of a solid plate, its upper arm running off the edge as emitted light. Works as an app icon at any size and tiles as a pattern.</p>
+      <div class="sizes">
+        <object class="s40" data="05-beam-f.svg" type="image/svg+xml"></object>
+        <object class="s24" data="05-beam-f.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="05-beam-f.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 06 · Two plates</span><span class="label">Product action</span></div>
+      <div class="lock"><object data="06-two-plates.svg" type="image/svg+xml"></object></div>
+      <p class="note">The same lesion, twice, at identical size: the comparison view that friction currently prevents. Says what the product does and claims nothing about the result.</p>
+      <div class="sizes">
+        <object class="s40" data="06-two-plates.svg" type="image/svg+xml"></object>
+        <object class="s24" data="06-two-plates.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="06-two-plates.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 07 · Two modes</span><span class="label">Metaphor fusion</span></div>
+      <div class="lock"><object data="07-two-modes.svg" type="image/svg+xml"></object></div>
+      <p class="note">One aperture, half lit: polarized and unpolarized, the button that alternates them. The most compact mark of the set and the strongest at 16px.</p>
+      <div class="sizes">
+        <object class="s40" data="07-two-modes.svg" type="image/svg+xml"></object>
+        <object class="s24" data="07-two-modes.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="07-two-modes.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 08 · Scale F</span><span class="label">Construction geometry</span></div>
+      <div class="lock"><object data="08-scale-f.svg" type="image/svg+xml"></object></div>
+      <p class="note">The F as a measurement rule, ticks alternating long and short. Argues resolution without stating a figure the brand has not yet quantified.</p>
+      <div class="sizes">
+        <object class="s40" data="08-scale-f.svg" type="image/svg+xml"></object>
+        <object class="s24" data="08-scale-f.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="08-scale-f.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 09 · Logotype</span><span class="label">No mark</span></div>
+      <div class="lock"><object data="09-logotype.svg" type="image/svg+xml"></object></div>
+      <p class="note">Wordmark and a caliper rule, nothing else. The quietest option and the hardest to get wrong; needs a separate app icon, for which Fig. 05 is the natural partner.</p>
+      <div class="sizes">
+        <object class="s40" data="09-logotype.svg" type="image/svg+xml"></object>
+        <object class="s24" data="09-logotype.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="09-logotype.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="head"><span class="label">Fig. 10 · f monogram</span><span class="label">Monogram + meaning</span></div>
+      <div class="lock"><object data="10-f-monogram.svg" type="image/svg+xml"></object></div>
+      <p class="note">A drawn lowercase f whose terminal ends in a light source. Softer than the rest, included as the warm end of the range for the consumer product.</p>
+      <div class="sizes">
+        <object class="s40" data="10-f-monogram.svg" type="image/svg+xml"></object>
+        <object class="s24" data="10-f-monogram.svg" type="image/svg+xml"></object>
+        <span class="dark"><object class="s24" data="10-f-monogram.svg" type="image/svg+xml"></object></span>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>Taglines</h2>
+  <ol>
+    <li><span class="label">A</span><div>
+      <div class="tag">Repeatable light.</div>
+      <p class="tagnote">The engineering claim, and the only one the product has actually been designed for. Reads as a spec to a clinician and as a promise of consistency to everyone else.</p>
+    </div></li>
+    <li><span class="label">B</span><div>
+      <div class="tag">Find it again.</div>
+      <p class="tagnote">Spatial mapping and follow-up in three words. No interpretation, no verdict, and the same sentence works in an exam room and on a patient's arm.</p>
+    </div></li>
+    <li><span class="label">C</span><div>
+      <div class="tag">The same light, every visit.</div>
+      <p class="tagnote">Repeatability said plainly. Longer, warmer, and the safest line to put in front of someone who is frightened.</p>
+    </div></li>
+    <li><span class="label">D</span><div>
+      <div class="tag">A record, not a verdict.</div>
+      <p class="tagnote">States the regulatory limit as the offer rather than the disclaimer. Strongest line for the consumer product; check it with counsel before it ships.</p>
+    </div></li>
+    <li><span class="label">E</span><div>
+      <div class="tag">Made to be compared.</div>
+      <p class="tagnote">Points at the image quality argument without asserting a number. Works next to a DermLite without naming one.</p>
+    </div></li>
+  </ol>
+</div>
+</body>
+</html>

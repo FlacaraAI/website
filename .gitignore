@@ -1,0 +1,5 @@
+*.blend1
+*.blend2
+.impeccable/
+Thumbs.db
+.DS_Store

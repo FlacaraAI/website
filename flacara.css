@@ -1,0 +1,576 @@
+/* flacara.css — foundation. Values come from DESIGN_SYSTEM.md; section numbers
+   in comments are the authority. Fonts: prototype loads Google Fonts; production
+   must self-host (§3.7). */
+
+:root {
+  /* surfaces */
+  --fl-ground:        #E3E5E6;
+  --fl-surface:       #F2F4F5;
+  --fl-sunken:        #D5D7D8;
+  --fl-rule:          #BBBDBE;
+  --fl-rule-strong:   #959798;
+
+  /* text */
+  --fl-ink:           #151616;
+  --fl-muted:         #5F6060;
+
+  /* accent */
+  /* The ramp's own 35% stop, flat. This is a SURFACE colour, not a text colour:
+     1.26:1 on the ground, 11.42:1 under --fl-ink. Fills, bands and cards take
+     it; accent text on light does not exist, it is --fl-ink with an underline.
+     Darker derivatives are reserved for a future dark mode. */
+  --fl-accent:        #CECBDF;
+  --fl-accent-hover:  #BFBBD2;
+  --fl-accent-quiet:  #E7E5EE;
+  --fl-on-accent:     #151616;
+  /* focus must clear 3:1 against every ground it lands on; the accent cannot. */
+  --fl-focus:         #151616;
+
+  /* imagery */
+  --fl-mat:           #2A2D30;
+  --fl-mat-edge:      #404346;
+  --fl-mat-deep:      #1F2225;
+  --fl-mat-raised:    #35383B;
+  --fl-on-mat:        #EAECED;
+  --fl-on-mat-muted:  #979A9C;
+  --fl-accent-on-mat: #CECBDF;   /* the same value: on a dark surface it clears 8.73:1 */
+
+  /* fenced: form validation only — see §2.4 */
+  --fl-invalid:       #8C2F2F;
+
+  /* the permitted gradients — see §2.4, §2.5, §2.6. There are no others. */
+  --fl-sheen:      linear-gradient(163deg, #F2F4F5 0%, #E3E5E6 40%, #DCDEDF 66%, #EAECED 100%);
+  --fl-sheen-dark: linear-gradient(163deg, #35383B 0%, #2A2D30 44%, #232629 70%, #303336 100%);
+  --fl-brushed:    repeating-linear-gradient(178deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+  --fl-ground-lit: linear-gradient(135deg, #FCFCFC 0%, #ECECEC 100%);
+  --fl-ramp:       linear-gradient(135deg, #C9DAF8 0%, #CECBDF 35%, #DB9D91 100%);
+  --fl-ramp-tail:  linear-gradient(135deg, #CCD1EA 0%, #CECBDF 18.75%, #DB9D91 100%);
+
+  /* fenced shadows — brand layer only, see §4 */
+  --lift-ico: drop-shadow(0 9px 14px rgba(148,153,158,.42));
+  --lift-txt: drop-shadow(0 9px 14px rgba(148,153,158,.38));
+  --lift-outline: drop-shadow(-1.5px -1.5px 0 rgba(255,255,255,.95))
+                  drop-shadow(0 3px 5px rgba(178,184,192,.52))
+                  drop-shadow(0 12px 26px rgba(178,184,192,.34));
+  /* the cloud edge — cards, bands, and the nav. One value, diffuse, down-right. */
+  --lift-card:    0 24px 48px -12px rgba(148,153,158,.28), 0 2px 6px rgba(148,153,158,.10);
+  --fl-radius-card: 16px;
+
+  /* type */
+  --fl-display: 'Zalando Sans SemiExpanded', system-ui, sans-serif;
+  --fl-text:    'Geist', system-ui, sans-serif;
+  --fl-mono:    'Geist Mono', ui-monospace, monospace;
+
+  /* motion */
+  --fl-ease: cubic-bezier(0.2, 0, 0, 1);
+  --fl-dur:  150ms;
+}
+
+/* tokens hero.html defines that §7.1 does not */
+:root {
+  /* single source of truth for lockup scale — the tagline indent derives
+     from it so it always aligns to the wordmark, not the icon */
+  --lock-size: clamp(2.75rem, 7.6vw, 5.75rem);
+  --icon-span: 1.08em; /* .88em disc + .20em gap */
+
+  /* outline timing - --swap is derived, never set it by hand */
+  --d0: 140ms; --trace: 2.2s; --hold: .35s;
+  --swap: calc(var(--d0) + var(--trace) + var(--hold));
+}
+
+/* ---------- base ---------- */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--fl-ground);
+  color: var(--fl-ink);
+  font-family: var(--fl-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body { margin: 0; }
+
+/* marketing pages: the lit ground (§2.5). App and clinical stay flat. */
+body.fl-lit { background: var(--fl-ground-lit); background-attachment: fixed; }
+
+/* focus is never removed (§5.2) */
+:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+
+img { display: block; max-width: 100%; height: auto; }
+
+h1, h2, h3, h4, p, figure { margin: 0; }
+
+/* links in prose (§5.4): no color change on hover, thicker underline instead */
+a { color: var(--fl-ink); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+/* ---------- type (§3.3, §7.1) ---------- */
+/* display — 32px and above only */
+.fl-display-xl { font-family: var(--fl-display); font-weight: 600; font-size: 4rem;    line-height: 1.00; letter-spacing: -0.030em; max-width: 16ch; }
+.fl-display-l  { font-family: var(--fl-display); font-weight: 600; font-size: 3rem;    line-height: 1.02; letter-spacing: -0.028em; max-width: 16ch; }
+.fl-display-m  { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem; line-height: 1.06; letter-spacing: -0.024em; max-width: 16ch; }
+
+/* below 32px it is Geist, never SemiExpanded */
+.fl-title      { font-family: var(--fl-text); font-weight: 600; font-size: 1.5rem;   line-height: 1.20; letter-spacing: -0.015em; }
+.fl-subtitle   { font-family: var(--fl-text); font-weight: 600; font-size: 1.1875rem; line-height: 1.30; letter-spacing: -0.010em; }
+.fl-body       { font-size: 1rem; line-height: 1.6; max-width: 68ch; }
+.fl-body--l    { font-size: 1.125rem; }
+.fl-small      { font-family: var(--fl-text); font-size: 0.875rem; line-height: 1.55; }
+
+/* mono — sparingly (§3.5) */
+.fl-label   { font-family: var(--fl-mono); font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fl-muted); }
+.fl-data    { font-family: var(--fl-mono); font-size: 0.8125rem; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+.fl-caption { font-family: var(--fl-mono); font-weight: 400; font-size: 0.75rem; line-height: 1.55; letter-spacing: 0.02em; color: var(--fl-muted); }
+
+@media (max-width: 640px) {
+  .fl-display-xl { font-size: 2.5rem; }
+  .fl-display-l  { font-size: 2rem; }
+}
+
+/* ---------- layout (§4) ---------- */
+.fl-wrap    { max-width: 1200px; margin: 0 auto; padding: 0 72px; }
+.fl-section { padding: 96px 0; }
+.fl-section--tall { padding: 128px 0; }
+.fl-prose   { max-width: 680px; }
+.fl-prose > * + * { margin-top: 16px; }
+
+@media (max-width: 640px) {
+  .fl-wrap { padding: 0 20px; }
+  .fl-section, .fl-section--tall { padding: 48px 0; }
+}
+
+/* ---------- the mark (§5.0; rules copied from hero.html) ---------- */
+.fl-lock { display: flex; align-items: center; gap: .2em; font-size: var(--lock-size); }
+.fl-lock .ico { width: .88em; height: .88em; flex: none; overflow: visible; filter: var(--lift-ico); }
+.fl-lock .logo {
+  font-family: var(--fl-display); font-weight: 600; font-size: 1em; line-height: 1;
+  letter-spacing: -.02em; margin: 0; filter: var(--lift-txt);
+  background: var(--fl-ramp-tail); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+/* the disc takes the head of the ramp when the wordmark follows it */
+.fl-lock .ico { --disc: url(#ramp-head); }
+/* a mark standing on its own carries the whole ramp */
+.ico.solo { --disc: url(#ramp-full); }
+
+/* tagline — sits under the wordmark, not under the icon */
+.fl-tagline {
+  font-family: var(--fl-text); font-weight: 500; text-transform: uppercase;
+  letter-spacing: .24em; font-size: clamp(.75rem, 1.05vw, .8125rem); line-height: 1.4;
+  color: var(--fl-muted); margin: 22px 0 0;
+  margin-left: calc(var(--lock-size) * 1.08);
+}
+
+/* accent pill — once per viewport, never interactive (§2.6) */
+.fl-pill { height: 10px; width: 60px; border-radius: 999px; background: var(--fl-ramp); margin-bottom: 26px; }
+
+/* flat wordmark: same face, no ramp, no lift. max() keeps it at or above the
+   32px switch point (§3.2, §5.0) whatever the inherited size. */
+.fl-wordmark--flat {
+  font-family: var(--fl-display); font-weight: 600; font-size: max(2rem, 1em); line-height: 1;
+  letter-spacing: -.02em; color: var(--fl-ink); text-decoration: none; filter: none; background: none;
+}
+.fl-wordmark--flat:hover { text-decoration: none; }
+
+@media (max-width: 920px) {
+  .fl-lock { gap: .16em; }
+  .fl-pill { height: 9px; width: 52px; }
+}
+
+/* ---------- image plate (§5.1) ---------- */
+.fl-plate {
+  background: var(--fl-mat);
+  /* inset 1px rim in --fl-mat-edge. This is a rim, not a shadow: no blur, no
+     offset, no spread beyond 1px. §4's no-shadow rule is not touched. */
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge);
+  border-radius: 2px;
+  padding: 24px;
+}
+.fl-plate img { display: block; max-width: 100%; width: 100%; height: auto; }
+.fl-plate + .fl-caption { display: block; margin-top: 12px; }
+
+/* pending slot: same mat, square, filename in mono */
+.fl-plate.is-pending { aspect-ratio: 1 / 1; display: grid; place-items: center; }
+.fl-plate.is-pending::after {
+  content: attr(data-file) " \2014  pending";
+  font-family: var(--fl-mono); font-size: 0.75rem; letter-spacing: 0.02em;
+  color: var(--fl-on-mat-muted); text-align: center;
+}
+
+@media (max-width: 640px) { .fl-plate { padding: 16px; } }
+
+/* ---------- comparison (§5.1) ---------- */
+/* two figures, identical width, one strong rule between. No transition
+   between the images: nothing animates here, ever. */
+.fl-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; align-items: start; }
+.fl-compare > figure { min-width: 0; }
+/* the two sources differ in orientation; §5.1 wants identical size */
+.fl-compare .fl-plate img { aspect-ratio: 4 / 3; object-fit: cover; }
+.fl-compare > figure:first-child { position: relative; }
+.fl-compare > figure:first-child::after {
+  content: ""; position: absolute; top: 0; bottom: 0; right: -24px; width: 1px;
+  background: var(--fl-rule-strong);
+}
+@media (max-width: 720px) {
+  .fl-compare { grid-template-columns: 1fr; gap: 48px 0; }
+  .fl-compare > figure:first-child::after { top: auto; right: 0; left: 0; bottom: -24px; width: auto; height: 1px; }
+}
+
+/* ---------- fork (index.html two-panel section) ---------- */
+.fl-fork { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; align-items: start; }
+.fl-fork > div { min-width: 0; }
+.fl-fork > div:first-child { position: relative; }
+.fl-fork > div:first-child::after {
+  content: ""; position: absolute; top: 0; bottom: 0; right: -24px; width: 1px;
+  background: var(--fl-rule);
+}
+@media (max-width: 719.98px) {
+  .fl-fork { grid-template-columns: 1fr; gap: 48px 0; }
+  .fl-fork > div:first-child::after { top: auto; right: 0; left: 0; bottom: -24px; width: auto; height: 1px; }
+}
+
+/* ---------- buttons (§5.2) ---------- */
+.fl-btn {
+  display: inline-block; font-family: var(--fl-text); font-weight: 500; font-size: 0.9375rem; line-height: 1.2;
+  padding: 10px 18px; border-radius: 4px; border: 1px solid transparent; box-shadow: none;
+  text-decoration: none; cursor: pointer; background: none; color: inherit;
+  transition: background-color var(--fl-dur) var(--fl-ease), color var(--fl-dur) var(--fl-ease);
+}
+.fl-btn:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+.fl-btn--primary   { background: var(--fl-accent); color: var(--fl-on-accent); }
+.fl-btn--primary:hover { background: var(--fl-accent-hover); }
+.fl-btn--secondary { background: var(--fl-accent-quiet); color: var(--fl-ink); border-color: var(--fl-rule); }
+.fl-btn--secondary:hover { background: var(--fl-sunken); }
+.fl-btn--tertiary  { background: transparent; color: var(--fl-ink); padding-left: 0; padding-right: 0; }
+.fl-btn--tertiary:hover { text-decoration: underline; text-underline-offset: 2px; }
+.fl-btn--tertiary::after { content: " →"; }
+
+/* ---------- spec table (§5.3) ---------- */
+.fl-table-wrap { overflow-x: auto; }
+.fl-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.fl-table th, .fl-table td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--fl-rule); vertical-align: top; }
+.fl-table thead th { background: var(--fl-sunken); font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; }
+.fl-table tbody th { font-family: var(--fl-text); font-weight: 400; font-size: 0.875rem; line-height: 1.55; color: var(--fl-muted); }
+.fl-table td { font-family: var(--fl-mono); font-size: 0.8125rem; line-height: 1.5; letter-spacing: 0.02em; white-space: nowrap; }
+.fl-table .num { text-align: right; }
+
+/* ---------- nav (Stage 1 §8) — floating glass pill ----------
+   Strict reading of the system: the glass is translucency + backdrop blur,
+   which §4 does not speak to. It carries NO outer shadow and NO specular
+   highlight gradient, so §4 (no shadows on functional UI) and §7.1 (the
+   permitted gradients, there are no others) are both untouched. Separation
+   from the content beneath comes from a 1px inset rim in --fl-rule — a rim,
+   not a shadow, the same device .fl-plate already uses.
+   Radius is 8px: §1.2's ceiling for functional elements, not the 10px the
+   augen reference uses. */
+.fl-nav {
+  position: sticky; top: 16px; z-index: 10;
+  margin: 16px auto 0;
+  padding: 0 24px;           /* keeps the pill off the window edge */
+  background: none; border: 0; box-shadow: none;
+}
+.fl-nav .fl-wrap {
+  /* fits its contents rather than the 1200px column: the bar is a pill, not a
+     band, so there is no empty middle to explain. */
+  width: max-content; max-width: 100%; margin-inline: auto;
+  height: 56px; padding: 0 8px 0 12px;
+  display: flex; align-items: center; gap: 14px;
+  border-radius: var(--fl-radius-card);
+  background: rgba(242, 244, 245, 0.46);          /* --fl-surface, translucent */
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+          backdrop-filter: blur(28px) saturate(1.8);
+  /* the rim the note above promises: a 1px inset, not a shadow (§4) */
+  box-shadow: inset 0 0 0 1px var(--fl-rule);
+}
+/* no blur support: fall back to the opaque surface the bar always had */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fl-nav .fl-wrap { background: var(--fl-surface); }
+}
+.fl-nav .ico.solo { width: 32px; height: 32px; display: block; overflow: visible; --flame: var(--fl-surface); }
+.fl-nav__mark { display: flex; align-items: center; text-decoration: none; }
+
+/* the three destinations are one control, not four competing ones: an inset
+   track with the current page filled. Reads as a mode switch, so the single
+   filled CTA beside it stays the only "action" on the bar. */
+.fl-nav__links {
+  display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 3px;
+  border-radius: 999px; background: rgba(213, 215, 216, 0.5);   /* --fl-sunken, translucent */
+  box-shadow: inset 0 0 0 1px var(--fl-rule);
+}
+.fl-nav__links a:not(.fl-btn) {
+  display: block; padding: 6px 14px; border-radius: 999px;
+  font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem;
+  color: var(--fl-muted); text-decoration: none;
+  transition: color .15s var(--fl-ease), background-color .15s var(--fl-ease);
+}
+.fl-nav__links a:not(.fl-btn):hover { color: var(--fl-ink); text-decoration: none; }
+.fl-nav__links a[aria-current="page"] { color: var(--fl-ink); background: var(--fl-surface); }
+.fl-nav .fl-btn { flex: none; }
+@media (max-width: 640px) {
+  /* ponytail: the track plus the button cannot share 335px with the mark. Let
+     the row wrap; the pill grows rather than the content shrinking. */
+  .fl-nav { padding: 0 12px; margin-top: 12px; top: 12px; }
+  .fl-nav .fl-wrap { width: auto; height: auto; min-height: 56px; flex-wrap: wrap;
+                     justify-content: center; gap: 10px; padding: 10px; }
+  .fl-nav__links a:not(.fl-btn) { padding: 6px 11px; }
+}
+
+/* ---------- footer (Stage 1 §9) ---------- */
+.fl-footer { border-top: 1px solid var(--fl-rule); padding: 64px 0; }
+.fl-footer .fl-wrap { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
+.fl-footer__right { display: grid; gap: 16px; justify-items: end; text-align: right; max-width: 60ch; }
+.fl-footer__links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+.fl-footer__links a { color: var(--fl-ink); text-decoration: none; }
+.fl-footer__links a:hover { text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 640px) {
+  .fl-footer .fl-wrap { flex-direction: column; gap: 32px; }
+  .fl-footer__right { justify-items: start; text-align: left; }
+}
+
+/* ---------- form (Stage 1 §11) ----------
+   text-only validation. `--fl-invalid` is barred from pages with lesion
+   imagery (§2.4); two of three pages have it, so validation is text-only on
+   all three for consistency. */
+.fl-form { display: grid; gap: 16px; max-width: 480px; }
+.fl-form__field { display: grid; gap: 8px; }
+.fl-form label { font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; }
+.fl-form input[type="text"], .fl-form input[type="email"] {
+  font-family: var(--fl-text); font-size: 1rem; line-height: 1.5; color: var(--fl-ink);
+  background: var(--fl-surface); border: 1px solid var(--fl-rule); border-radius: 4px; padding: 10px 12px;
+  width: 100%; box-shadow: none;
+}
+.fl-form input:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+.fl-form fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.fl-form legend { font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; padding: 0; margin-bottom: 8px; }
+.fl-form input[type="radio"] { margin: 0 8px 0 0; accent-color: var(--fl-ink); }
+.fl-form fieldset label { font-weight: 400; display: flex; align-items: center; }
+.fl-form__error { font-family: var(--fl-text); font-size: 0.875rem; line-height: 1.55; color: var(--fl-muted); }
+.fl-form__error:empty { display: none; }
+
+/* ---------- surfaces: panel, card, band (§4, §2.6) ----------
+   The cloud edge: no outline, one diffuse shadow, 16px radius. Buttons,
+   inputs, and plates keep their own radius and stay shadowless. */
+.fl-panel, .fl-card {
+  background: var(--fl-surface);
+  border-radius: var(--fl-radius-card);
+  box-shadow: var(--lift-card);
+}
+.fl-panel { padding: 64px; }
+.fl-card  { padding: 32px; }
+.fl-card > * + * { margin-top: 16px; }
+.fl-card .fl-table-wrap { margin: 0 -32px; }
+.fl-card .fl-table th:first-child, .fl-card .fl-table td:first-child { padding-left: 32px; }
+.fl-card .fl-table th:last-child,  .fl-card .fl-table td:last-child  { padding-right: 32px; }
+.fl-card .fl-table tr:last-child th, .fl-card .fl-table tr:last-child td { border-bottom: 0; }
+.fl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+
+/* kicker: the mono label as a section opener (§3.5) */
+.fl-kicker { display: block; margin-bottom: 24px; }
+
+/* spec list: label over value */
+.fl-specs { margin: 0; display: grid; gap: 24px; }
+.fl-specs dd { margin: 4px 0 0; }
+
+/* the accent band — the fourth place the ramp may appear (§2.6). Marketing
+   pages with no clinical imagery only. The ramp is a wash, not a fill: it
+   enters from one corner and is gone before the copy. */
+.fl-band {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: var(--fl-accent); color: var(--fl-on-accent);
+  border-radius: var(--fl-radius-card); box-shadow: var(--lift-card);
+  padding: 96px 64px;
+}
+.fl-band::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--fl-ramp); opacity: .55;
+  -webkit-mask: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
+          mask: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
+}
+.fl-band .fl-label, .fl-band .fl-caption, .fl-band .fl-small { color: var(--fl-muted); }
+.fl-band .fl-form label, .fl-band .fl-form legend { color: var(--fl-on-accent); }
+.fl-band .fl-form__error { color: var(--fl-muted); }
+.fl-band .fl-btn--primary { background: var(--fl-ink); color: var(--fl-surface); }
+.fl-band .fl-btn--primary:hover { background: #2E2F2F; }
+.fl-band .fl-form input:focus-visible { outline-color: var(--fl-on-accent); }
+.fl-band .fl-form input[type="radio"] { accent-color: var(--fl-ink); }
+.fl-band .fl-card { color: var(--fl-ink); }
+.fl-band .fl-card .fl-caption, .fl-band .fl-card .fl-small { color: var(--fl-muted); }
+.fl-band .fl-card .fl-label { color: var(--fl-muted); }
+
+@media (max-width: 640px) {
+  .fl-panel, .fl-band { padding: 32px 20px; }
+  .fl-card { padding: 24px; }
+  .fl-card .fl-table-wrap { margin: 0 -24px; }
+  .fl-card .fl-table th:first-child, .fl-card .fl-table td:first-child { padding-left: 24px; }
+  .fl-card .fl-table th:last-child,  .fl-card .fl-table td:last-child  { padding-right: 24px; }
+}
+
+/* ---------- scroll reveal (§4) ----------
+   CSS scroll-driven, no script. Browsers without view() timelines simply
+   show everything. */
+@supports (animation-timeline: view()) {
+  .fl-section > .fl-wrap, .fl-section--tall > .fl-wrap {
+    animation: fl-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+  @keyframes fl-reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fl-section > .fl-wrap, .fl-section--tall > .fl-wrap { animation: none; } }
+}
+
+/* ---------- motion (§4) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ======================================================================
+   Stage 2 — one device, two audiences, one page for it.
+   ====================================================================== */
+
+/* ---------- aperture hero (home) ----------
+   The ramp as concentric apertures. §2.6 place 1: this is the mark's own
+   gradient reading as the optic it came from, not a decorative wash. */
+.fl-hero-aper {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: calc(100vh - 72px);
+  display: grid; place-items: center;
+  padding: 64px 24px 88px;
+  background: var(--fl-ground-lit);
+}
+.fl-aper {
+  position: absolute; left: 50%; top: 50%; z-index: -1;
+  transform: translate(-50%, -50%) scale(var(--k, 1));
+  width: min(78vmin, 720px); aspect-ratio: 1; border-radius: 50%;
+  background: var(--fl-ramp); opacity: var(--o, .8); pointer-events: none;
+  -webkit-mask: radial-gradient(circle, transparent 58%, #000 58.7%, #000 60.8%, transparent 61.5%);
+          mask: radial-gradient(circle, transparent 58%, #000 58.7%, #000 60.8%, transparent 61.5%);
+  animation: fl-aper-in 1.5s var(--fl-ease) var(--d, 0ms) both;
+}
+@keyframes fl-aper-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(calc(var(--k, 1) * .82)); }
+}
+.fl-hero-aper__in { position: relative; display: grid; justify-items: center; text-align: center; }
+.fl-hero-aper .fl-lock { font-size: clamp(3rem, 11vw, 6.5rem); }
+.fl-hero-aper .fl-tagline { margin-left: 0; margin-top: 28px; }
+.fl-hero-aper .fl-pill { margin: 0 0 28px; }
+
+/* one staggered page load, nothing else moves */
+.fl-rise { opacity: 0; animation: fl-rise .8s var(--fl-ease) var(--d, 0ms) forwards; }
+@keyframes fl-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .fl-rise { animation: none; opacity: 1; transform: none; }
+  .fl-aper { animation: none; opacity: var(--o, .8); }
+}
+
+/* ---------- devices (home) ---------- */
+.fl-devices { display: grid; justify-items: center; gap: 40px; }
+.fl-device {
+  background: var(--fl-surface); border-radius: var(--fl-radius-card);
+  box-shadow: var(--lift-card); padding: 48px; width: min(100%, 560px);
+  display: grid; justify-items: center; text-align: center; gap: 10px;
+  text-decoration: none; color: inherit;
+  transition: transform var(--fl-dur) var(--fl-ease);
+}
+.fl-device:hover { transform: translateY(-2px); text-decoration: none; }
+.fl-device__shot { width: min(100%, 380px); margin-bottom: 8px; }
+.fl-device__name { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
+  letter-spacing: -.024em; line-height: 1; }
+.fl-device__for { display: inline-block; background: var(--fl-accent-quiet); color: var(--fl-ink);
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
+  border-radius: 999px; padding: 6px 12px; }
+.fl-device__note { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 42ch; }
+@media (max-width: 640px) { .fl-device { padding: 32px 20px; } }
+
+/* ---------- dark hero, fading into the page (device page) ----------
+   §2.2 amended for exactly one surface: the device page's opening. It is the
+   condition the device is used in, and it hands off to the lit ground before
+   any photograph appears. */
+.fl-hero-mat {
+  position: relative; overflow: hidden; isolation: isolate;
+  color: var(--fl-on-mat);
+  /* the mat dissolves to nothing rather than to a colour: the body's lit ground
+     is background-attachment:fixed, so any hard-coded hand-off value would seam. */
+  background: linear-gradient(to bottom,
+    #1F2225 0%, #1F2225 52%, rgba(31,34,37,.86) 68%, rgba(31,34,37,.42) 85%, rgba(31,34,37,0) 100%);
+  /* starts at the top of the document; the nav pill floats on it */
+  margin-top: -72px;
+  padding: 216px 0 208px;
+}
+.fl-hero-mat > * { position: relative; z-index: 1; }
+.fl-hero-mat h1, .fl-hero-mat .fl-display-xl { color: var(--fl-on-mat); }
+.fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
+.fl-hero-mat .fl-label { color: var(--fl-accent-on-mat); }
+.fl-hero-mat__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+.fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none; width: 100%; height: auto; }
+.fl-rail { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; padding-top: 20px;
+  border-top: 1px solid var(--fl-mat-raised); }
+.fl-rail div { display: grid; gap: 4px; }
+.fl-rail .k { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-on-mat-muted); }
+.fl-rail .v { font-family: var(--fl-mono); font-size: .875rem;
+  color: var(--fl-on-mat); font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
+  .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
+  .fl-hero-mat .fl-outline { max-width: 340px; }
+}
+
+/* ---------- feature row ---------- */
+.fl-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.fl-feature > * { min-width: 0; }
+.fl-feature--flip > *:first-child { order: 2; }
+@media (max-width: 860px) {
+  .fl-feature { grid-template-columns: 1fr; gap: 32px; }
+  .fl-feature--flip > *:first-child { order: 0; }
+}
+
+/* a diagram tile: for illustrating a behaviour, never for showing a photograph */
+.fl-tile { position: relative; background: var(--fl-surface); border-radius: var(--fl-radius-card);
+  box-shadow: var(--lift-card); aspect-ratio: 4 / 3; overflow: hidden; display: grid; place-items: center; }
+.fl-tile svg { width: 100%; height: 100%; display: block; }
+.fl-tile__label { position: absolute; left: 20px; bottom: 16px; }
+
+/* ---------- pre-purchase panel ---------- */
+.fl-buy { display: grid; grid-template-columns: .95fr 1.05fr; align-items: stretch;
+  background: var(--fl-surface); border-radius: var(--fl-radius-card);
+  box-shadow: var(--lift-card); overflow: hidden; }
+.fl-buy__shot { background: var(--fl-accent-quiet); display: grid; justify-items: center;
+  align-content: start; padding: 56px; }
+/* the spec column is long; the device stays with the reader rather than
+   leaving a 1200px empty panel behind it */
+.fl-buy__shot img { width: 100%; max-width: 420px; position: sticky; top: 88px; }
+.fl-buy__body { padding: 56px; display: grid; align-content: start; gap: 24px; }
+.fl-buy__price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.fl-buy__price .amt { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
+  letter-spacing: -.024em; line-height: 1; }
+.fl-buy__price .qual { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted); }
+.fl-buy .fl-btn--primary { justify-self: start; font-size: 1.0625rem; padding: 15px 32px; border-radius: 8px; }
+.fl-note { border-top: 1px solid var(--fl-rule); padding-top: 16px; font-size: .875rem;
+  line-height: 1.6; color: var(--fl-muted); }
+@media (max-width: 860px) {
+  .fl-buy { grid-template-columns: 1fr; }
+  .fl-buy__shot, .fl-buy__body { padding: 32px 24px; }
+  .fl-buy__shot img { position: static; }
+}
+
+/* ---------- FAQ: native disclosure, no script ---------- */
+.fl-faq { border-top: 1px solid var(--fl-rule); }
+.fl-faq details { border-bottom: 1px solid var(--fl-rule); }
+.fl-faq summary { list-style: none; cursor: pointer; padding: 16px 0;
+  font-family: var(--fl-text); font-weight: 500; font-size: .9375rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.fl-faq summary::-webkit-details-marker { display: none; }
+.fl-faq summary::after { content: "+"; font-family: var(--fl-mono); color: var(--fl-muted); }
+.fl-faq details[open] summary::after { content: "\2212"; }
+.fl-faq details p { font-size: .875rem; line-height: 1.6; color: var(--fl-muted);
+  margin: 0 0 18px; max-width: 62ch; }
+
+/* ---------- the email step, revealed only after intent ---------- */
+.fl-modal { border: 0; padding: 0; background: transparent; max-width: min(92vw, 460px); }
+.fl-modal::backdrop { background: rgba(21, 22, 22, .55); }
+.fl-modal__in { background: var(--fl-surface); border-radius: var(--fl-radius-card);
+  padding: 40px; display: grid; gap: 20px; }
+.fl-modal h3 { font-family: var(--fl-text); font-weight: 600; font-size: 1.25rem; }
+.fl-modal .fl-form { max-width: none; }
+.fl-modal__row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }

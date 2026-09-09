@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 220" width="600" height="220" role="img" aria-label="flacara">
+  <style>@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&amp;display=swap');</style>
+  <g transform="translate(48,50)" fill="none" stroke="#1E3352" stroke-width="14" stroke-linecap="round">
+    <path d="M96 17 C74 12 59 24 59 48 V110"/>
+    <path d="M30 60 H92"/>
+  </g>
+  <text x="208" y="138" fill="#151616"
+        font-family="'Zalando Sans SemiExpanded', system-ui, sans-serif"
+        font-weight="600" font-size="78" letter-spacing="-2.3">flacara</text>
+</svg>
