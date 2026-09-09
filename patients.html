@@ -76,7 +76,7 @@
 
 <section class="fl-section">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>01 — The picture</span>
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
     <figure class="fl-prose" data-reveal="scale" style="--fl-reveal-delay:80ms">
       <div class="fl-plate">
         <img src="images/sample-01.JPG" alt="Close photograph of skin taken with the Flacara consumer device" width="1200" height="1200">
@@ -90,7 +90,7 @@
 <section class="fl-section">
   <div class="fl-wrap">
     <div class="fl-panel" data-reveal>
-      <span class="fl-label fl-kicker">02 — What it is not</span>
+      <div class="fl-pill" aria-hidden="true"></div>
       <div class="fl-prose">
         <!-- ≤16ch: "Not a diagnosis." (16) -->
         <h2 class="fl-display-m">Not a diagnosis.</h2>
@@ -102,7 +102,7 @@
 
 <section class="fl-section">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>03 — The device</span>
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
     <div class="fl-prose">
       <h2 class="fl-display-m" data-reveal>The device</h2>
       <div class="fl-card" data-reveal="scale" style="margin-top:32px;--fl-reveal-delay:80ms">
@@ -125,7 +125,7 @@
 <section class="fl-section--tall" id="pre-order">
   <div class="fl-wrap">
     <div class="fl-prose" data-reveal>
-      <span class="fl-label fl-kicker">04 — Pre-order</span>
+      <div class="fl-pill" aria-hidden="true"></div>
       <h2 class="fl-display-m">Pre-order</h2>
       <form class="fl-form" id="pre-order-form" action="#" method="post">
         <div class="fl-form__field">
@@ -170,7 +170,10 @@
 <!-- partials/footer.html — identical on every page -->
 <footer class="fl-footer">
   <div class="fl-wrap">
-    <a class="fl-wordmark--flat" href="index.html">flacara</a>
+    <a class="fl-lock" href="index.html" aria-label="Flacara home">
+      <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+      <span class="logo">flacara</span>
+    </a>
     <div class="fl-footer__right fl-small">
       <ul class="fl-footer__links">
         <li><a href="index.html">Home</a></li>

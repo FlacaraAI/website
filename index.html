@@ -82,20 +82,18 @@
 <!-- ============ devices ============ -->
 <section class="fl-section--tall" id="devices" aria-labelledby="devices-h">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>Devices</span>
-    <h2 class="fl-display-m" id="devices-h" data-reveal style="--fl-reveal-delay:60ms">One device.</h2>
-    <p class="fl-body fl-body--l" style="margin-top:16px;max-width:56ch;--fl-reveal-delay:120ms" data-reveal>It seats over your phone's
-      camera and supplies the light, polarized or not, at a fixed distance. The specialist edition
-      is the same instrument with a machined aluminium top.</p>
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
+    <h2 class="fl-display-m" id="devices-h" data-reveal style="--fl-reveal-delay:60ms">Devices</h2>
+    <p class="fl-body fl-body--l" style="margin-top:16px;max-width:56ch;--fl-reveal-delay:120ms" data-reveal>The only optics-free
+      instrument that comes close to the resolution the work needs. It seats over your phone's
+      camera and supplies the light, polarized or not, at a fixed distance.</p>
 
     <div class="fl-devices" style="margin-top:64px">
       <a class="fl-device" href="clinicians.html" data-reveal="scale" data-tilt style="--fl-reveal-delay:180ms">
         <div class="fl-device__frame">
-          <span class="fl-device__index">01 — home</span>
           <img class="fl-device__shot" src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
         </div>
         <div class="fl-device__body">
-          <span class="fl-device__for">For home</span>
           <span class="fl-device__name">flacara h1</span>
           <p class="fl-device__note">Polarized and unpolarized light, a fixed working distance, and a
             record of the same spot over time. Also an aluminium-top edition for specialists.</p>
@@ -111,7 +109,10 @@
 <!-- partials/footer.html — identical on every page -->
 <footer class="fl-footer">
   <div class="fl-wrap">
-    <a class="fl-wordmark--flat" href="index.html">flacara</a>
+    <a class="fl-lock" href="index.html" aria-label="Flacara home">
+      <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+      <span class="logo">flacara</span>
+    </a>
     <div class="fl-footer__right fl-small">
       <ul class="fl-footer__links">
         <li><a href="index.html">Home</a></li>

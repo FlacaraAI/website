@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flacara — section representations</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flacara.css">
+<style>
+/* page-local: the comparison scaffolding and the placeholder frames. The
+   placeholder itself is throwaway; every layout around it is shippable. */
+.op-set { padding: 48px 0 80px; border-top: 1px solid var(--fl-rule); margin-top: 40px; }
+.op-tag { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fl-ink); background: var(--fl-blue-quiet); border-radius: 999px; padding: 6px 12px;
+  display: inline-block; margin-bottom: 20px; }
+.op-note { font-size: .875rem; color: var(--fl-muted); max-width: 64ch; margin-top: 10px; }
+.op-frame { margin-top: 28px; }
+
+/* ---------- placeholder ----------
+   Everything with class .ph is a slot waiting for a photograph. data-ph is
+   the shot list: what to take, at what ratio. Swap for <img> and delete .ph. */
+.ph { position: relative; background: var(--fl-sunken); border-radius: 8px;
+  display: grid; place-items: center; align-content: center; gap: 6px; padding: 16px;
+  text-align: center; overflow: hidden; }
+.ph::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(255,255,255,.5) 0 10px, transparent 10px 20px);
+}
+.ph > * { position: relative; }
+.ph b { font-family: var(--fl-mono); font-weight: 500; font-size: .6875rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--fl-ink); }
+.ph span { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .06em; color: var(--fl-muted); }
+
+/* a photographic group sits on the mat, the way §5.1 asks: the plate is the
+   frame, the ramp never touches a capture. */
+.op-plate { background: var(--fl-mat); border-radius: var(--fl-radius-card);
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge); padding: 24px; }
+.op-plate .ph { background: var(--fl-mat-raised); }
+.op-plate .ph::before { background: repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 10px, transparent 10px 20px); }
+.op-plate .ph b { color: var(--fl-on-mat); }
+.op-plate .ph span { color: var(--fl-on-mat-muted); }
+.op-plate .fl-caption { color: var(--fl-on-mat-muted); }
+.op-scale { display: flex; align-items: center; gap: 8px; margin-top: 10px;
+  font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .1em; color: var(--fl-on-mat-muted); }
+.op-scale::before { content: ""; height: 1px; width: 40px; background: var(--fl-on-mat-muted); flex: none; }
+
+/* R1 — magnification ladder */
+.op-ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.op-ladder .ph { aspect-ratio: 1; }
+/* R2 — one capture, one pulled inset */
+.op-callout { position: relative; }
+.op-callout .op-wide { aspect-ratio: 16 / 10; }
+.op-callout .op-inset { position: absolute; right: -20px; bottom: -28px; width: 44%; aspect-ratio: 1;
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,.55); border: 2px solid var(--fl-on-mat); border-radius: 10px; }
+.op-callout .op-crop { position: absolute; left: 26%; top: 34%; width: 16%; aspect-ratio: 1;
+  border: 1.5px solid var(--fl-red); border-radius: 3px; }
+.op-callout-wrap { padding-bottom: 40px; padding-right: 20px; }
+
+/* A1 — three up, the third one overlaid */
+.op-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: end; }
+.op-three .ph { aspect-ratio: 1; }
+.op-three .op-sum { position: relative; }
+.op-three .op-sum::after {
+  content: "A + B"; position: absolute; left: 10px; top: 10px; z-index: 2;
+  font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .12em; color: var(--fl-on-mat);
+  background: rgba(0,0,0,.45); border-radius: 999px; padding: 3px 8px;
+}
+.op-delta { display: flex; gap: 24px; margin-top: 14px; }
+.op-delta div { display: grid; gap: 2px; }
+.op-delta .k { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--fl-on-mat-muted); }
+.op-delta .v { font-family: var(--fl-mono); font-size: .8125rem; color: var(--fl-on-mat);
+  font-variant-numeric: tabular-nums; }
+
+/* A2 / T2 — a phone screen, not a browser card */
+.op-phone { width: min(300px, 100%); margin: 0 auto; aspect-ratio: 9 / 19.5;
+  background: var(--fl-mat-deep); border-radius: 32px; padding: 10px;
+  box-shadow: inset 0 0 0 1.5px var(--fl-mat-edge); }
+.op-phone .ph { height: 100%; border-radius: 24px; }
+
+/* C1 — three rooms, above and below the line */
+.op-rooms { display: grid; gap: 14px; }
+.op-rooms .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.op-rooms .ph { aspect-ratio: 4 / 3; }
+.op-rooms .rule { display: flex; align-items: center; gap: 12px;
+  font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fl-on-mat-muted); }
+.op-rooms .rule::before, .op-rooms .rule::after { content: ""; height: 1px; background: var(--fl-mat-edge); flex: 1; }
+
+/* C2 — capture beside a measured swatch column */
+.op-swatch { display: grid; grid-template-columns: 1fr 132px; gap: 16px; align-items: stretch; }
+.op-swatch .ph { aspect-ratio: 4 / 3; }
+.op-swatch__col { display: grid; gap: 8px; align-content: start; }
+.op-swatch__col div { display: flex; align-items: center; gap: 8px;
+  font-family: var(--fl-mono); font-size: .6875rem; color: var(--fl-on-mat); }
+.op-swatch__col i { width: 22px; height: 22px; border-radius: 4px; flex: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+
+/* T1 — map on the left, a dated strip on the right */
+.op-map { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: stretch; }
+.op-map > .ph { aspect-ratio: 2 / 3; }
+.op-track { display: grid; align-content: space-between; gap: 14px; }
+.op-track__strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.op-track__strip figure { display: grid; gap: 6px; }
+.op-track__strip .ph { aspect-ratio: 1; }
+.op-track__strip figcaption { font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .08em;
+  color: var(--fl-on-mat-muted); text-align: center; }
+.op-track__line { position: relative; height: 1px; background: var(--fl-mat-edge); }
+.op-track__line span { position: absolute; top: -3px; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--fl-red); transform: translateX(-50%); }
+
+@media (max-width: 860px) {
+  .op-ladder, .op-three, .op-rooms .row { grid-template-columns: 1fr 1fr; }
+  .op-swatch, .op-map { grid-template-columns: 1fr; }
+  .op-callout .op-inset { position: static; width: 100%; margin-top: 12px; }
+  .op-callout-wrap { padding: 0; }
+}
+</style>
+</head>
+<body class="fl-lit">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ramp-full" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAF8"/>
+      <stop offset="0.35" stop-color="#CECBDF"/>
+      <stop offset="1" stop-color="#DB9D91"/>
+    </linearGradient>
+    <!-- 0→20% of the same ramp: the disc's share when a wordmark follows it -->
+    <linearGradient id="ramp-head" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAF8"/>
+      <stop offset="1" stop-color="#CCD1EA"/>
+    </linearGradient>
+    <filter id="flame-lift" x="-15%" y="-15%" width="135%" height="135%">
+      <feDropShadow dx="10.5" dy="10.5" stdDeviation="14.8" flood-color="#000" flood-opacity="0.30"/>
+    </filter>
+  </defs>
+
+  <symbol id="fl-icon" viewBox="120 0 720 720">
+    <path style="fill:var(--disc,url(#ramp-full))" d="m120.01899 360.0058c0 -198.82452 161.17914 -360.00366 360.00366 -360.00366c95.47894 0 187.04724 37.92885 254.56104 105.442635c67.513794 67.51379 105.44263 159.08212 105.44263 254.56104c0 198.82452 -161.17914 360.00366 -360.00366 360.00366c-198.82452 0 -360.00366 -161.17914 -360.00366 -360.00366z" fill-rule="evenodd"/>
+    <g style="fill:var(--flame,#F4F4F4)" filter="url(#flame-lift)">
+      <path d="m445.8429 94.95954c-0.6315918 3.6528778 7.0509033 19.400146 8.310394 28.343979c1.259491 8.943825 0.3157959 17.193275 -0.753479 25.319008c-1.0692749 8.125717 -2.387848 14.931 -5.66214 23.435303c-3.274292 8.504303 -6.6760254 17.259766 -13.983643 27.590515c-7.3075867 10.330734 -20.602386 24.567368 -29.862 34.393936c-9.259644 9.826584 -16.436127 15.619858 -25.69574 24.565536c-9.259613 8.945679 -20.790771 19.470337 -29.86203 29.10852c-9.071228 9.638214 -16.816528 18.768585 -24.565521 28.720734c-7.7489624 9.952148 -15.754639 19.843384 -21.928345 30.992218c-6.173706 11.148865 -11.902344 26.452911 -15.113831 35.90091c-3.2115173 9.447998 -2.8329163 14.109192 -4.1552124 20.787079c-1.3222656 6.6778564 -3.4626465 10.524628 -3.7784424 19.28009c-0.3157959 8.755463 0.37304688 23.300507 1.883667 33.252655c1.5106506 9.952179 4.659363 19.02713 7.1802063 26.460297c2.520813 7.433197 5.2355347 12.657654 7.9447327 18.138824c2.7091675 5.4811707 5.098877 9.645599 8.310394 14.748169c3.2114868 5.1026 7.2411194 11.080566 10.958618 15.86731c3.7175293 4.786804 7.0620117 8.1922 11.346466 12.853455c4.284485 4.661194 10.328888 11.270691 14.360352 15.113831c4.0314636 3.8430786 6.554138 5.1727295 9.82843 7.944702c3.274292 2.7719727 6.480255 6.0426025 9.817352 8.687134c3.3370972 2.6445923 5.7323303 4.408203 10.20517 7.180176c4.4728394 2.7719727 10.899536 6.3639526 16.631866 9.451721c5.7323303 3.0877686 11.713959 6.051819 17.762085 9.074951c6.048126 3.0231323 12.101776 6.607666 18.526642 9.063843c6.424835 2.4561768 13.597626 3.6565552 20.022491 5.673218c6.4248657 2.0166626 17.455536 7.1192627 18.526642 6.426697c1.071106 -0.6925049 -8.8237915 -7.4940796 -12.099945 -10.581848c-3.276123 -3.0878296 -4.659363 -4.66864 -7.5569153 -7.944763c-2.8975525 -3.276123 -6.8680725 -7.680664 -9.82843 -11.712097c-2.9603271 -4.031494 -5.5402527 -8.003845 -7.933655 -12.476685c-2.3933716 -4.4728394 -4.85141 -10.014954 -6.426697 -14.360352c-1.5752869 -4.345398 -2.2068787 -8.435974 -3.0249634 -11.712158c-0.81811523 -3.276123 -1.1283875 -4.4802246 -1.8836975 -7.944702c-0.7553406 -3.4645386 -1.9538574 -6.921631 -2.6482544 -12.842346c-0.69436646 -5.9206543 -1.8319702 -15.248657 -1.5180359 -22.681824c0.31396484 -7.433197 2.014801 -15.304047 3.4017334 -21.917267c1.3869019 -6.6132507 1.8947754 -10.140533 4.919739 -17.762085c3.024994 -7.6215515 8.631744 -19.337372 13.230164 -27.967255c4.598419 -8.629883 7.49411 -13.985474 14.360352 -23.812042c6.8662415 -9.826569 18.460144 -24.31253 26.837036 -35.14743c8.376862 -10.8349 16.11847 -19.970795 23.424225 -29.862c7.3057556 -9.891235 14.678009 -19.909882 20.410309 -29.48529c5.732361 -9.575409 10.328918 -19.023407 13.983643 -27.967255c3.6547241 -8.943817 5.8652954 -18.264404 7.944763 -25.69574c2.0794067 -7.4313354 3.5881958 -9.88382 4.5319214 -18.892288c0.94366455 -9.008469 1.3813477 -26.842575 1.130188 -35.15851c-0.25115967 -8.315933 -1.6934814 -10.138672 -2.637146 -14.737091c-0.9437256 -4.598419 -0.94555664 -6.869934 -3.0249634 -12.853409c-2.0794678 -5.98349 -5.734192 -16.18126 -9.451721 -23.0475c-3.7175293 -6.866226 -8.380554 -12.668732 -12.853394 -18.149887c-4.4728394 -5.4811707 -8.755463 -9.761948 -13.983643 -14.737106c-5.2281494 -4.9751587 -12.282745 -11.019585 -17.385345 -15.113838c-5.1025696 -4.0942535 -8.884735 -6.5541306 -13.230133 -9.451683c-4.3454285 -2.8975601 -8.685272 -5.540268 -12.842316 -7.933655c-4.1570435 -2.3933945 -11.468353 -10.07959 -12.099945 -6.4267044z" fill-rule="evenodd"/>
+      <path d="m586.52856 229.0182c-0.57250977 3.6048737 -0.48199463 15.917175 -1.0526733 23.745575c-0.5706177 7.8283844 -0.7885742 15.571823 -2.3712158 23.224777c-1.5826416 7.652954 -4.2216797 15.965179 -7.124756 22.692902c-2.9031372 6.727722 -5.852356 10.990051 -10.293823 17.673462c-4.4414673 6.68338 -11.25415 16.094452 -16.354858 22.426971c-5.100708 6.3325195 -9.455383 10.729645 -14.249573 15.568146c-4.7941284 4.8384705 -9.0177 7.878235 -14.515442 13.46283c-5.4978027 5.5845947 -11.699219 12.788757 -18.471252 20.044678c-6.772064 7.25589 -16.09262 16.146149 -22.161072 23.490692c-6.0684204 7.3445435 -9.499695 12.485901 -14.249542 20.576538c-4.7498474 8.090637 -10.820129 19.34845 -14.249573 27.967255c-3.4294128 8.618805 -4.8772583 14.334503 -6.3269653 23.745575c-1.449707 9.411041 -3.0748596 20.84616 -2.3712463 32.720795c0.7036133 11.874634 3.4275818 27.488892 6.592926 38.526978c3.1653442 11.038025 6.858856 18.993835 12.399109 27.701294c5.5402527 8.7074585 13.497925 17.41858 20.842468 24.543396c7.3445435 7.124756 19.353973 15.830383 23.224792 18.205261c3.8707886 2.374939 0.17541504 -2.5041504 0 -3.9557495c-0.17544556 -1.4515381 -0.83291626 -2.378601 -1.0526733 -4.75354c-0.21975708 -2.374939 -0.17727661 -6.197693 -0.26593018 -9.495972c-0.08862305 -3.2983398 -0.44137573 -5.6326294 -0.26593018 -10.293823c0.17544556 -4.661194 0.08679199 -10.681641 1.318573 -17.673462c1.2318115 -6.9918213 3.6104126 -16.799927 6.0721436 -24.277405c2.461731 -7.477539 5.3999023 -14.035339 8.698181 -20.587646c3.2983398 -6.552246 6.5615234 -12.218079 11.091614 -18.726074c4.5300903 -6.507965 9.536682 -13.152588 16.088928 -20.321686c6.552307 -7.169098 15.571838 -15.217255 23.224792 -22.692902c7.652954 -7.475647 15.525635 -14.993805 22.692932 -22.161041c7.1672363 -7.167267 14.0224 -13.014099 20.310608 -20.842468c6.288208 -7.8283997 13.021423 -18.519257 17.41858 -26.1279c4.3970947 -7.608612 6.5892334 -13.411102 8.964111 -19.523865c2.374939 -6.1127625 4.0979614 -11.303986 5.2854004 -17.152649c1.1875 -5.848694 1.6196289 -12.574554 1.8394165 -17.939392c0.21972656 -5.364807 0.049865723 -9.721313 -0.520813 -14.249542c-0.5706177 -4.5282593 -1.6269531 -7.6880493 -2.9030762 -12.919891c-1.276123 -5.2318726 -2.114563 -11.917114 -4.75354 -18.471252c-2.639038 -6.5541077 -7.5181274 -14.521027 -11.080566 -20.853546c-3.562378 -6.3325195 -6.600281 -11.734253 -10.293762 -17.141571c-3.6935425 -5.4072876 -8.482178 -11.080521 -11.867249 -15.3022c-3.3851318 -4.2216797 -5.6289062 -6.905014 -8.443359 -10.027878c-2.8144531 -3.1228485 -6.639099 -6.905014 -8.443359 -8.70929c-1.8043213 -1.8042755 -1.8098145 -5.721237 -2.3823242 -2.1163788z" fill-rule="evenodd"/>
+      <path d="m673.3801 395.08917c-2.7479248 0.5964966 -5.974243 13.492371 -10.393494 20.421417c-4.4193115 6.929016 -10.029724 14.3437195 -16.122192 21.15271c-6.092407 6.8089905 -13.503479 13.669678 -20.432495 19.701172c-6.929016 6.031494 -14.631836 11.409241 -21.141602 16.487823c-6.5098267 5.078583 -10.98822 7.712036 -17.917236 13.983612c-6.929016 6.271576 -16.727905 14.149841 -23.656921 23.645844c-6.929016 9.496033 -13.677063 22.698486 -17.917236 33.3302c-4.2401123 10.631775 -6.2697144 18.932922 -7.5236206 30.460388c-1.2539673 11.527466 -1.911438 33.507507 0 38.704285c1.911377 5.1967773 4.83844 -3.045288 11.468323 -7.5236816c6.629822 -4.4783936 20.365967 -14.031616 28.31073 -19.346619c7.944763 -5.3149414 12.249512 -7.704651 19.357666 -12.543152c7.1081543 -4.838501 16.543213 -10.932739 23.29126 -16.487793c6.748047 -5.5550537 12.179382 -11.525574 17.197021 -16.842407c5.017578 -5.3168335 8.188477 -8.367615 12.908813 -15.058411c4.720276 -6.690796 10.932739 -15.828552 15.412964 -25.086334c4.4802246 -9.257782 8.960449 -19.889557 11.468384 -30.460358c2.5078735 -10.570831 3.2816772 -23.34851 3.5789795 -32.96457c0.29736328 -9.616058 -0.48016357 -17.802704 -1.795044 -24.73172c-1.3148804 -6.9290466 -3.3463135 -17.438904 -6.0942993 -16.842407z" fill-rule="evenodd"/>
+    </g>
+  </symbol>
+
+</svg>
+
+
+<div class="fl-wrap" style="padding-top:64px">
+  <div class="fl-pill" aria-hidden="true"></div>
+  <h1 class="fl-display-m">Four things to show.</h1>
+  <p class="op-note">Two ways to represent each. Every grey hatched box is a slot: the label on it is
+    the shot to take and the ratio it needs. Send the photographs and they drop straight in.
+    Photographic groups sit on the dark plate, which is where §5.1 already puts captures; the ramp
+    stays off anything real.</p>
+</div>
+
+<!-- ==================== RESOLUTION ==================== -->
+<section class="op-set">
+  <div class="fl-wrap">
+    <span class="op-tag">Resolution</span>
+
+    <h2 class="fl-title">R1 — the magnification ladder</h2>
+    <p class="op-note">One capture, three crops, each deeper than the last, with the scale bar
+      shrinking under them. It proves the detail is there rather than asserting a number, and it
+      needs no competitor in the frame.</p>
+    <div class="op-frame">
+      <div class="fl-feature">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Read the fine print.</h3>
+          <p class="fl-body" style="margin-top:16px">No added lens. The resolving power comes from the
+            phone's own sensor and the software behind it, so what the housing contributes is light
+            and distance, held the same every time.</p>
+          <dl class="fl-stat-row" style="margin-top:32px">
+            <div><dt class="fl-label">Flacara resolves</dt><dd class="fl-stat-row__value">≈16 µm</dd></div>
+            <div><dt class="fl-label">Unaided eye</dt><dd class="fl-stat-row__value">≈100 µm</dd></div>
+          </dl>
+        </div>
+        <div class="op-plate">
+          <div class="op-ladder">
+            <div class="ph"><b>1×</b><span>full field · 1:1</span></div>
+            <div class="ph"><b>6×</b><span>crop of frame 1 · 1:1</span></div>
+            <div class="ph"><b>20×</b><span>crop of frame 2 · 1:1</span></div>
+          </div>
+          <div class="op-scale">5 MM · 800 µM · 250 µM</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="fl-title" style="margin-top:64px">R2 — one capture, one pulled inset</h2>
+    <p class="op-note">A single wide capture with a marked region and that region enlarged, lifted
+      off the corner. Reads as an instrument plate rather than a gallery, and it only costs two
+      photographs.</p>
+    <div class="op-frame">
+      <div class="fl-feature fl-feature--flip">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Read the fine print.</h3>
+          <p class="fl-body" style="margin-top:16px">Line pairs on a printed target resolve more than
+            six times finer than what the unaided eye can pick apart at reading distance, from a
+            housing with no glass of its own.</p>
+          <p class="fl-small fl-note" style="margin-top:24px;max-width:60ch">A resolution comparison on
+            a printed test target, not a clinical or diagnostic one.</p>
+        </div>
+        <div class="op-plate op-callout-wrap">
+          <div class="op-callout">
+            <div class="ph op-wide"><b>Wide capture</b><span>full frame · 16:10</span></div>
+            <div class="op-crop" aria-hidden="true"></div>
+            <div class="ph op-inset"><b>Enlarged region</b><span>same file, 20× crop · 1:1</span></div>
+          </div>
+          <p class="fl-caption" style="margin-top:52px">FIG. 1: the boxed region, at scale</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ALIGNMENT ==================== -->
+<section class="op-set">
+  <div class="fl-wrap">
+    <span class="op-tag">Alignment</span>
+
+    <h2 class="fl-title">A1 — two dates, then both at once</h2>
+    <p class="op-note">March, September, and the two laid over each other. The third frame is the
+      whole argument: if registration works, the overlay is sharp, and if it does not, it ghosts.
+      The offset readout underneath is what the app actually corrected.</p>
+    <div class="op-frame">
+      <div class="fl-feature">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">It finds the frame for you.</h3>
+          <p class="fl-body" style="margin-top:16px">Point the housing at a spot you have photographed
+            before and the app registers the new frame against the old one, correcting for rotation
+            and offset before the shutter fires. You are not asked to hold still and guess.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-three">
+            <div class="ph"><b>Frame A</b><span>first session · 1:1</span></div>
+            <div class="ph"><b>Frame B</b><span>six months on · 1:1</span></div>
+            <div class="ph op-sum"><b>Overlaid</b><span>A over B at 50% · 1:1</span></div>
+          </div>
+          <div class="op-delta">
+            <div><span class="k">Offset</span><span class="v">1.8 mm</span></div>
+            <div><span class="k">Rotation</span><span class="v">4.2°</span></div>
+            <div><span class="k">Corrected</span><span class="v">before shutter</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="fl-title" style="margin-top:64px">A2 — the viewfinder, mid-lock</h2>
+    <p class="op-note">A screen capture of the moment it happens: the previous frame ghosted over the
+      live view, the ring closing on it. Shows the feature as the person meets it instead of as a
+      diagram of itself.</p>
+    <div class="op-frame">
+      <div class="fl-feature fl-feature--flip">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">It finds the frame for you.</h3>
+          <p class="fl-body" style="margin-top:16px">The old frame sits under the live one while you
+            move, and the shutter waits until the two agree. Two images that can be laid over one
+            another, rather than two that merely show the same thing.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-phone">
+            <div class="ph"><b>Screen capture</b><span>viewfinder, ghost frame<br>and lock ring · 9:19.5</span></div>
+          </div>
+          <p class="fl-caption" style="margin-top:16px;text-align:center">FIG. B: the previous frame, under the live one</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== COLOUR ==================== -->
+<section class="op-set">
+  <div class="fl-wrap">
+    <span class="op-tag">Colour</span>
+
+    <h2 class="fl-title">C1 — three rooms, one result</h2>
+    <p class="op-note">The strongest of the eight, if you can shoot it. Same spot photographed under
+      three different room lights on the top row, visibly different; the same three normalised on the
+      bottom row, indistinguishable. Nothing has to be explained.</p>
+    <div class="op-frame">
+      <div class="fl-feature">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Colour you can trust twice.</h3>
+          <p class="fl-body" style="margin-top:16px">The housing supplies its own light, so the room
+            stops mattering. A known reference in the frame lets the app normalise every capture to
+            the same white point, which is the only way a colour difference between two dates means a
+            difference in the skin rather than a difference in the bulb overhead.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-rooms">
+            <div class="row">
+              <div class="ph"><b>Kitchen</b><span>as shot · 4:3</span></div>
+              <div class="ph"><b>Window</b><span>as shot · 4:3</span></div>
+              <div class="ph"><b>Clinic</b><span>as shot · 4:3</span></div>
+            </div>
+            <div class="rule">Normalised to a known white</div>
+            <div class="row">
+              <div class="ph"><b>Kitchen</b><span>corrected · 4:3</span></div>
+              <div class="ph"><b>Window</b><span>corrected · 4:3</span></div>
+              <div class="ph"><b>Clinic</b><span>corrected · 4:3</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="fl-title" style="margin-top:64px">C2 — the reference, and what it read</h2>
+    <p class="op-note">One capture with the reference chip visible in frame, and the values it
+      produced listed beside it. Cheapest to shoot, and it makes the measurement concrete without
+      claiming the measurement means anything.</p>
+    <div class="op-frame">
+      <div class="fl-feature fl-feature--flip">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Colour you can trust twice.</h3>
+          <p class="fl-body" style="margin-top:16px">A known reference sits in every frame, so every
+            capture can be pulled to the same white point. It reports what it measured, and nothing
+            beyond that.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-swatch">
+            <div class="ph"><b>Capture with reference in frame</b><span>chip visible at the edge · 4:3</span></div>
+            <div class="op-swatch__col">
+              <div><i style="background:#DFC3B4"></i>L* 82.4</div>
+              <div><i style="background:#C99C86"></i>L* 68.1</div>
+              <div><i style="background:#8E5F4C"></i>L* 45.7</div>
+              <div><i style="background:#5E3A2E"></i>L* 29.3</div>
+              <div><i style="background:#F2F4F5"></i>ref</div>
+            </div>
+          </div>
+          <p class="fl-caption" style="margin-top:14px">FIG. C: measured, not interpreted</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TRACKING ==================== -->
+<section class="op-set">
+  <div class="fl-wrap">
+    <span class="op-tag">Tracking</span>
+
+    <h2 class="fl-title">T1 — the map and the run of dates</h2>
+    <p class="op-note">A body map with pins on one side, and the captures for one pin laid out along
+      a dated line on the other. Shows both halves of what tracking is: where it was, and when.</p>
+    <div class="op-frame">
+      <div class="fl-feature">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Find it again.</h3>
+          <p class="fl-body" style="margin-top:16px">Every capture is pinned to a place on the body,
+            not to a filename. Months later the phone's camera shows you where a spot was, on the
+            skin in front of you, and takes the follow-up from the same position.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-map">
+            <div class="ph"><b>Body map</b><span>app screen, pins visible<br>2:3</span></div>
+            <div class="op-track">
+              <div class="op-track__strip">
+                <figure><div class="ph"><b>1:1</b></div><figcaption>14 MAR</figcaption></figure>
+                <figure><div class="ph"><b>1:1</b></div><figcaption>02 JUN</figcaption></figure>
+                <figure><div class="ph"><b>1:1</b></div><figcaption>19 SEP</figcaption></figure>
+                <figure><div class="ph"><b>1:1</b></div><figcaption>07 JAN</figcaption></figure>
+              </div>
+              <div class="op-track__line" aria-hidden="true">
+                <span style="left:12.5%"></span><span style="left:37.5%"></span>
+                <span style="left:62.5%"></span><span style="left:87.5%"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="fl-title" style="margin-top:64px">T2 — the marker on the skin</h2>
+    <p class="op-note">The AR view, held over an arm, with the marker sitting where the spot is and a
+      date chip on it. One photograph, and it is the only one of the eight that shows the product
+      being used.</p>
+    <div class="op-frame">
+      <div class="fl-feature fl-feature--flip">
+        <div>
+          <div class="fl-pill" aria-hidden="true"></div>
+          <h3 class="fl-display-m">Find it again.</h3>
+          <p class="fl-body" style="margin-top:16px">Point the phone at the area and the marker is
+            already there, on the skin in front of you, waiting to take the follow-up from the same
+            position. A map and a record, and nothing on the screen is a score or an opinion.</p>
+        </div>
+        <div class="op-plate">
+          <div class="op-phone">
+            <div class="ph"><b>AR screen capture</b><span>marker over skin,<br>date chip attached · 9:19.5</span></div>
+          </div>
+          <p class="fl-caption" style="margin-top:16px;text-align:center">FIG. D: the same place, months later</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="fl-wrap" style="padding-bottom:96px">
+  <p class="op-note">Shot list, if you want it flat: R1 needs one capture and two crops of it. R2
+    needs one wide capture and one deep crop. A1 needs the same spot on two dates plus an overlay.
+    A2 and T2 are screen recordings, one still each. C1 needs six captures, three lightings before
+    and after correction. C2 needs one capture with the reference chip in frame. T1 needs a map
+    screen and four dated captures of one spot.</p>
+</div>
+
+</body>
+</html>

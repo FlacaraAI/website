@@ -66,7 +66,7 @@
   <div class="fl-wrap">
     <div class="fl-hero-mat__grid">
       <div data-reveal="left">
-        <span class="fl-label fl-kicker">flacara h1 · aluminium edition</span>
+        <div class="fl-pill" aria-hidden="true"></div>
         <h1 class="fl-display-xl">Built to be repeated.</h1>
         <p class="fl-body fl-body--l" style="margin-top:24px;max-width:46ch">Two lighting modes, one
           fixed working distance, and the same framing every session. The photograph you take today
@@ -107,7 +107,7 @@
 <!-- ============ 01 resolution ============ -->
 <section class="fl-section" aria-labelledby="resolution">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>Resolution</span>
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
     <h2 class="fl-display-m" id="resolution" data-reveal>Read the fine print.</h2>
 
     <div class="fl-feature" style="margin-top:48px;align-items:start">
@@ -169,54 +169,20 @@
   </div>
 </section>
 
-<script>
-(function () {
-  var wrap = document.querySelector('[data-fl-slider]');
-  if (!wrap) return;
-  var input = wrap.querySelector('.fl-slider__input');
-  function set(v) { wrap.style.setProperty('--pos', v + '%'); }
-  input.addEventListener('input', function () { set(input.value); });
 
-  var played = false;
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (!entry.isIntersecting || played) return;
-      played = true;
-      if (reduceMotion) return;
-      var start = null;
-      var duration = 1100;
-      var from = 6, mid = 94, to = 50;
-      function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-      function frame(now) {
-        if (start === null) start = now;
-        var t = Math.min(1, (now - start) / duration);
-        var e = ease(t);
-        var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
-        set(v);
-        input.value = v;
-        if (t < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    });
-  }, { threshold: 0.5 });
-  io.observe(wrap);
-})();
-</script>
+
 
 <!-- ============ 02 lighting ============ -->
 <section class="fl-section" aria-labelledby="lighting">
   <div class="fl-wrap">
     <div class="fl-feature">
       <div data-reveal="left">
-        <span class="fl-label fl-kicker">Lighting</span>
+        <div class="fl-pill" aria-hidden="true"></div>
         <h2 class="fl-display-m" id="lighting">Two lights, one press.</h2>
         <p class="fl-body" style="margin-top:16px">Unpolarized light shows the surface: scale,
           texture, the way it catches. Cross-polarized light cuts the surface glare and shows what
           sits under it. One button alternates them without moving the housing, so both frames share
           a single geometry.</p>
-        <p class="fl-body" style="margin-top:16px">The home edition ships with both. Cross-polarized
-          light is as useful for tracking a skincare routine as it is for anything else.</p>
       </div>
       <div class="fl-tile" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
         <svg viewBox="0 0 400 300" aria-hidden="true">
@@ -246,32 +212,50 @@
   <div class="fl-wrap">
     <div class="fl-feature fl-feature--flip">
       <div data-reveal="right">
-        <span class="fl-label fl-kicker">Alignment</span>
+        <div class="fl-pill" aria-hidden="true"></div>
         <h2 class="fl-display-m" id="alignment">It finds the frame for you.</h2>
         <p class="fl-body" style="margin-top:16px">Point the housing at a spot you have photographed
           before and the app registers the new frame against the old one, correcting for rotation
           and offset before the shutter fires. You are not asked to hold still and guess.</p>
-        <p class="fl-body" style="margin-top:16px">The result is two images that can be laid over one
-          another, rather than two images that merely show the same thing.</p>
       </div>
-      <div class="fl-tile" data-reveal="left" data-tilt style="--fl-reveal-delay:100ms">
-        <svg viewBox="0 0 400 300" aria-hidden="true">
-          <g fill="none" stroke="#BBBDBE" stroke-width="1">
-            <rect x="86" y="66" width="168" height="168" transform="rotate(-9 170 150)"/>
-            <rect x="126" y="86" width="168" height="168" transform="rotate(5 210 170)"/>
-          </g>
-          <rect x="112" y="72" width="176" height="156" fill="none" stroke="#151616" stroke-width="1.4"/>
-          <g stroke="#151616" stroke-width="1.4">
-            <line x1="200" y1="132" x2="200" y2="168"/><line x1="182" y1="150" x2="218" y2="150"/>
-          </g>
-          <circle cx="200" cy="150" r="22" fill="none" stroke="#DB9D91" stroke-width="6"/>
-          <g stroke="#959798" stroke-width="1" stroke-dasharray="3 4">
-            <line x1="112" y1="150" x2="178" y2="150"/><line x1="222" y1="150" x2="288" y2="150"/>
-          </g>
-          <text x="200" y="264" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">REGISTERED</text>
-        </svg>
-        <span class="fl-label fl-tile__label">Fig. B — the new frame, matched to the old</span>
-      </div>
+      <figure data-reveal="left" data-tilt style="--fl-reveal-delay:100ms;margin:0">
+        <div class="fl-align">
+          <figure>
+            <div class="fl-plate is-pending" data-file="align-mar.jpg"></div>
+            <figcaption>A · 14 Mar</figcaption>
+          </figure>
+          <figure>
+            <div class="fl-plate is-pending" data-file="align-sep.jpg"></div>
+            <figcaption>B · 19 Sep</figcaption>
+          </figure>
+        </div>
+
+        <div class="fl-plate" style="margin-top:12px">
+          <div class="fl-slider" data-fl-slider style="--pos:50%;aspect-ratio:4/3;max-width:none">
+            <div class="fl-slider__img is-pending" data-file="align-sep.jpg"></div>
+            <div class="fl-slider__img fl-slider__img--reveal is-pending" data-file="align-mar.jpg" style="background:var(--fl-mat-deep)"></div>
+            <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span></div>
+            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">14 Mar</span>
+            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">19 Sep</span>
+            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to move between the March frame and the September frame of the same spot">
+          </div>
+        </div>
+
+        <div class="fl-delta">
+          <div><span class="k">Offset</span><span class="v">1.8 mm</span></div>
+          <div><span class="k">Rotation</span><span class="v">4.2°</span></div>
+          <div><span class="k">Corrected</span><span class="v">Before shutter</span></div>
+        </div>
+        <figcaption class="fl-caption" style="margin-top:12px">FIG. B: the same spot on two dates,
+          each held in the frame the other used. Drag to move between them; neither image has been
+          altered and nothing has been blended.</figcaption>
+      </figure>
+    </div>
     </div>
   </div>
 </section>
@@ -281,34 +265,33 @@
   <div class="fl-wrap">
     <div class="fl-feature">
       <div data-reveal="left">
-        <span class="fl-label fl-kicker">Colour</span>
+        <div class="fl-pill" aria-hidden="true"></div>
         <h2 class="fl-display-m" id="colour">Colour you can trust twice.</h2>
         <p class="fl-body" style="margin-top:16px">The housing supplies its own light, so the room
           stops mattering. A known reference in the frame lets the app normalise every capture to
           the same white point, which is the only way a colour difference between two dates means a
           difference in the skin rather than a difference in the bulb overhead.</p>
-        <p class="fl-body" style="margin-top:16px">It reports what it measured. It does not tell you
-          what the measurement means.</p>
       </div>
-      <div class="fl-tile" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
-        <svg viewBox="0 0 400 300" aria-hidden="true">
-          <g stroke="#BBBDBE" stroke-width="1">
-            <rect x="52" y="96" width="52" height="52" fill="#DFC3B4"/>
-            <rect x="112" y="96" width="52" height="52" fill="#C99C86"/>
-            <rect x="172" y="96" width="52" height="52" fill="#8E5F4C"/>
-            <rect x="232" y="96" width="52" height="52" fill="#5E3A2E"/>
-            <rect x="292" y="96" width="52" height="52" fill="#DB9D91"/>
-          </g>
-          <g stroke="#959798" stroke-width="1">
-            <line x1="52" y1="170" x2="344" y2="170"/>
-            <line x1="52" y1="164" x2="52" y2="176"/><line x1="344" y1="164" x2="344" y2="176"/>
-            <line x1="318" y1="160" x2="318" y2="180"/>
-          </g>
-          <text x="318" y="200" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.2" text-anchor="middle">REF</text>
-          <text x="200" y="232" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">NORMALISED TO A KNOWN WHITE</text>
-        </svg>
-        <span class="fl-label fl-tile__label">Fig. C — a reference in every frame</span>
-      </div>
+      <figure data-reveal="right" data-tilt style="--fl-reveal-delay:100ms;margin:0">
+        <div class="fl-plate">
+          <div class="fl-rooms">
+            <div class="fl-rooms__row">
+              <figure><div class="fl-slot is-pending" data-file="col-kitchen-raw.jpg" style="--ph:4/3"></div><figcaption>Kitchen</figcaption></figure>
+              <figure><div class="fl-slot is-pending" data-file="col-window-raw.jpg" style="--ph:4/3"></div><figcaption>Window</figcaption></figure>
+              <figure><div class="fl-slot is-pending" data-file="col-clinic-raw.jpg" style="--ph:4/3"></div><figcaption>Clinic</figcaption></figure>
+            </div>
+            <div class="fl-rooms__rule">Normalised to a known white</div>
+            <div class="fl-rooms__row">
+              <figure><div class="fl-slot is-pending" data-file="col-kitchen-fix.jpg" style="--ph:4/3"></div><figcaption>Kitchen</figcaption></figure>
+              <figure><div class="fl-slot is-pending" data-file="col-window-fix.jpg" style="--ph:4/3"></div><figcaption>Window</figcaption></figure>
+              <figure><div class="fl-slot is-pending" data-file="col-clinic-fix.jpg" style="--ph:4/3"></div><figcaption>Clinic</figcaption></figure>
+            </div>
+          </div>
+        </div>
+        <figcaption class="fl-caption" style="margin-top:12px">FIG. C: one subject, three room lights,
+          before and after the reference in frame is applied</figcaption>
+      </figure>
+    </div>
     </div>
   </div>
 </section>
@@ -318,38 +301,27 @@
   <div class="fl-wrap">
     <div class="fl-feature fl-feature--flip">
       <div data-reveal="right">
-        <span class="fl-label fl-kicker">Tracking</span>
+        <div class="fl-pill" aria-hidden="true"></div>
         <h2 class="fl-display-m" id="tracking">Find it again.</h2>
         <p class="fl-body" style="margin-top:16px">Every capture is pinned to a place on the body,
           not to a filename. Months later the phone's camera shows you where a spot was, in AR, on
           the skin in front of you, and takes the follow-up from the same position.</p>
-        <p class="fl-body" style="margin-top:16px">A map and a record. Nothing on this screen is a
-          score, a risk figure, or an opinion.</p>
       </div>
-      <div class="fl-tile" data-reveal="left" data-tilt style="--fl-reveal-delay:100ms">
-        <svg viewBox="0 0 400 300" aria-hidden="true">
-          <g fill="none" stroke="#BBBDBE" stroke-width="1">
-            <path d="M200 44c14 0 24 10 24 24s-10 24-24 24-24-10-24-24 10-24 24-24z"/>
-            <path d="M200 96c34 0 58 13 62 35l10 49h-26l-6 70h-80l-6-70h-26l10-49c4-22 28-35 62-35z"/>
-          </g>
-          <g stroke="#959798" stroke-width=".75" stroke-dasharray="2 5">
-            <line x1="160" y1="115" x2="240" y2="115"/><line x1="150" y1="147" x2="250" y2="147"/>
-            <line x1="156" y1="179" x2="244" y2="179"/>
-          </g>
-          <g>
-            <circle cx="176" cy="131" r="7" fill="#DB9D91" stroke="#151616" stroke-width="1.2"/>
-            <circle cx="228" cy="168" r="7" fill="#DB9D91" stroke="#151616" stroke-width="1.2"/>
-            <circle cx="212" cy="113" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
-            <circle cx="166" cy="188" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
-          </g>
-          <g stroke="#151616" stroke-width="1.2">
-            <line x1="176" y1="117" x2="176" y2="123"/><line x1="176" y1="139" x2="176" y2="145"/>
-            <line x1="162" y1="131" x2="168" y2="131"/><line x1="184" y1="131" x2="190" y2="131"/>
-          </g>
-          <text x="200" y="286" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">PINNED IN SPACE</text>
-        </svg>
-        <span class="fl-label fl-tile__label">Fig. D — the same place, months later</span>
-      </div>
+      <figure data-reveal="left" data-tilt style="--fl-reveal-delay:100ms;margin:0">
+        <div class="fl-plate">
+          <div class="fl-mesh">
+            <div class="fl-slot is-pending" data-file="body-mesh.png" style="--ph:2/3"></div>
+            <div class="fl-pin fl-pin--latest" style="--x:38%;--y:26%"><span class="fl-pin__dot"></span><span class="fl-pin__date">02 Sep</span></div>
+            <div class="fl-pin fl-pin--flip" style="--x:62%;--y:34%"><span class="fl-pin__dot"></span><span class="fl-pin__date">11 Jun</span></div>
+            <div class="fl-pin" style="--x:55%;--y:52%"><span class="fl-pin__dot"></span><span class="fl-pin__date">14 Mar</span></div>
+            <div class="fl-pin fl-pin--flip" style="--x:33%;--y:63%"><span class="fl-pin__dot"></span><span class="fl-pin__date">27 Jan</span></div>
+            <div class="fl-pin" style="--x:64%;--y:78%"><span class="fl-pin__dot"></span><span class="fl-pin__date">05 Dec</span></div>
+          </div>
+        </div>
+        <figcaption class="fl-caption" style="margin-top:12px">FIG. D: five captures, each pinned to
+          where it was taken and when</figcaption>
+      </figure>
+    </div>
     </div>
   </div>
 </section>
@@ -357,14 +329,16 @@
 <!-- ============ 06 pre-order ============ -->
 <section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>Pre-order</span>
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
     <h2 class="fl-display-m" id="pre-order-h" data-reveal>Reserve one.</h2>
 
     <div class="fl-buy" style="margin-top:48px" data-reveal="scale">
-      <div class="fl-buy__shot" data-tilt>
+      <div class="fl-buy__banner" data-tilt>
         <img src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
+        <img src="flacara_full_side.png" alt="The Flacara housing from the side" width="960" height="720">
       </div>
 
+      <div class="fl-buy__cols">
       <div class="fl-buy__body">
         <div>
           <span class="fl-device__for">flacara h1 · aluminium edition</span>
@@ -380,6 +354,10 @@
           both lighting modes, and the alignment and tracking features above. It seats over the
           phone camera array; there is no added lens, which is why it costs what it does.</p>
 
+        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
+      </div>
+
+      <div class="fl-buy__aside">
         <div class="fl-table-wrap">
           <table class="fl-table">
             <tbody>
@@ -392,8 +370,6 @@
             </tbody>
           </table>
         </div>
-
-        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
 
         <p class="fl-note">Flacara is a camera accessory. It is not a medical device, it is not
           cleared or approved by the FDA, and it does not diagnose, screen for, or assess any
@@ -430,11 +406,30 @@
           </div>
         </details>
       </div>
+      </div>
     </div>
   </div>
 </section>
 
 </main>
+
+<footer class="fl-footer">
+  <div class="fl-wrap">
+    <a class="fl-lock" href="index.html" aria-label="Flacara home">
+      <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
+      <span class="logo">flacara</span>
+    </a>
+    <div class="fl-footer__right fl-small">
+      <ul class="fl-footer__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clinicians.html">Devices</a></li>
+        <li><a href="#pre-order">Pre-order</a></li>
+      </ul>
+      <p>Flacara is a camera accessory. It is not a medical device, it does not diagnose anything,
+        and nothing it produces is a medical opinion.</p>
+    </div>
+  </div>
+</footer>
 
 <!-- the email step: asked for only once someone has said yes -->
 <dialog class="fl-modal" id="reserve">
@@ -480,20 +475,42 @@
   });
 </script>
 
-<footer class="fl-footer">
-  <div class="fl-wrap">
-    <a class="fl-wordmark--flat" href="index.html">flacara</a>
-    <div class="fl-footer__right fl-small">
-      <ul class="fl-footer__links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="clinicians.html">Devices</a></li>
-        <li><a href="#pre-order">Pre-order</a></li>
-      </ul>
-      <p>Flacara is a camera accessory. It is not a medical device, it does not diagnose anything,
-        and nothing it produces is a medical opinion.</p>
-    </div>
-  </div>
-</footer>
+<script>
+(function () {
+  /* every [data-fl-slider] on the page, not just the first: the alignment
+     section adds a second one. */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fl-slider]'), function (wrap) {
+    var input = wrap.querySelector('.fl-slider__input');
+    if (!input) return;
+    function set(v) { wrap.style.setProperty('--pos', v + '%'); }
+    input.addEventListener('input', function () { set(input.value); });
+
+    var played = false;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting || played) return;
+        played = true;
+        if (reduceMotion) return;
+        var start = null;
+        var duration = 1100;
+        var from = 6, mid = 94, to = 50;
+        function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+        function frame(now) {
+          if (start === null) start = now;
+          var t = Math.min(1, (now - start) / duration);
+          var e = ease(t);
+          var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
+          set(v);
+          input.value = v;
+          if (t < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+    }, { threshold: 0.5 });
+    io.observe(wrap);
+  });
+})();</script>
 
 <script src="motion.js" defer></script>
 

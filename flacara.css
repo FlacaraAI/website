@@ -51,6 +51,14 @@
      and highlights, where the two brand colors should read as equals. */
   --fl-ramp-even:      linear-gradient(135deg, var(--fl-blue) 0%, var(--fl-red) 100%);
   --fl-ramp-even-deep: linear-gradient(135deg, var(--fl-blue-deep) 0%, var(--fl-red-deep) 100%);
+  /* the same two hues carried down only as far as a near-white label needs:
+     #FAFBFC reads 4.8:1 on both ends, so this is the lightest the filled
+     button can go and still be legible. Hover takes it one step deeper. */
+  --fl-blue-ink:       #4F72AE;
+  --fl-red-ink:        #A85F4A;
+  --fl-ramp-even-ink:  linear-gradient(135deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%);
+  --fl-ramp-even-ink-deep: linear-gradient(135deg, #3F5F96 0%, #8E4A3C 100%);
+  --fl-on-ink:         #FAFBFC;
   /* the pale tints instead of the base hues — for large backdrops, where the
      full-strength gradient would be too heavy to sit behind a product shot. */
   --fl-ramp-quiet:     linear-gradient(160deg, var(--fl-blue-quiet) 0%, var(--fl-red-quiet) 100%);
@@ -177,7 +185,7 @@ a:hover { text-decoration-thickness: 2px; }
   margin-left: calc(var(--lock-size) * 1.08);
 }
 
-/* accent pill — once per viewport, never interactive (§2.6) */
+/* accent pill — the section opener as well as the hero's. Never interactive (§2.6) */
 .fl-pill { height: 10px; width: 60px; border-radius: 999px; background: var(--fl-ramp); margin-bottom: 26px; }
 
 /* flat wordmark: same face, no ramp, no lift. max() keeps it at or above the
@@ -205,13 +213,21 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-plate img { display: block; max-width: 100%; width: 100%; height: auto; }
 .fl-plate + .fl-caption { display: block; margin-top: 12px; }
 
-/* pending slot: same mat, square, filename in mono */
-.fl-plate.is-pending { aspect-ratio: 1 / 1; display: grid; place-items: center; }
-.fl-plate.is-pending::after {
-  content: attr(data-file) " \2014  pending";
+/* pending slot: same mat, filename in mono. --ph sets the ratio; the default
+   stays the square the foundation check already relies on. Swap the element
+   for an <img src> and drop is-pending. */
+.is-pending::after {
+  content: attr(data-file) " 4  pending";
   font-family: var(--fl-mono); font-size: 0.75rem; letter-spacing: 0.02em;
-  color: var(--fl-on-mat-muted); text-align: center;
+  color: var(--fl-on-mat-muted); text-align: center; padding: 8px;
 }
+.fl-plate.is-pending { aspect-ratio: var(--ph, 1 / 1); display: grid; place-items: center; }
+/* a pending slot that is not itself a plate: sits inside one, or under the
+   tracking pins. */
+.fl-slot { aspect-ratio: var(--ph, 1 / 1); background: var(--fl-mat-raised); border-radius: 2px;
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge); display: grid; place-items: center; }
+.fl-slider__img.is-pending { background: var(--fl-mat-raised); display: grid; place-items: center;
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge); }
 
 @media (max-width: 640px) { .fl-plate { padding: 16px; } }
 
@@ -275,6 +291,58 @@ a:hover { text-decoration-thickness: 2px; }
   outline: 2px solid var(--fl-focus); outline-offset: 2px;
 }
 
+/* two dated frames above the slider that lines them up. The pair carries the
+   dates; the slider only ever shows one of them at a time. */
+.fl-align { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fl-align figcaption { font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--fl-muted); margin-top: 8px; }
+.fl-align > figure { margin: 0; min-width: 0; }
+/* the registration readout: what the app corrected before the shutter fired */
+.fl-delta { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 16px; }
+.fl-delta > div { display: grid; gap: 4px; }
+.fl-delta .k { font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fl-muted); }
+.fl-delta .v { font-family: var(--fl-mono); font-size: 0.875rem; color: var(--fl-ink);
+  font-variant-numeric: tabular-nums; }
+
+/* ---------- colour: the same spot under three lights, before and after ----------
+   Two rows of three on one plate. The rule between them is the whole claim. */
+.fl-rooms { display: grid; gap: 14px; }
+.fl-rooms__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.fl-rooms figure { margin: 0; min-width: 0; }
+.fl-rooms figcaption { font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--fl-on-mat-muted); margin-top: 8px; text-align: center; }
+.fl-rooms__rule { display: flex; align-items: center; gap: 12px; margin: 6px 0;
+  font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--fl-on-mat-muted); }
+.fl-rooms__rule::before, .fl-rooms__rule::after { content: ""; height: 1px; background: var(--fl-mat-edge); flex: 1; }
+@media (max-width: 520px) { .fl-rooms__row { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- tracking: the mesh, and where the captures were taken ----------
+   The mesh is one image. Every pin is placed in percent over it, so they can
+   be nudged without re-exporting anything. */
+.fl-mesh { position: relative; }
+.fl-pin { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); }
+.fl-pin__dot {
+  display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--fl-red);
+  box-shadow: 0 0 0 4px rgba(219,157,145,.24), inset 0 0 0 1px rgba(0,0,0,.4);
+}
+.fl-pin__date {
+  position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap;
+  font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+  color: var(--fl-on-mat); background: rgba(31,34,37,.78); border-radius: 999px; padding: 3px 9px;
+}
+.fl-pin__date::before {
+  content: ""; position: absolute; left: -12px; top: 50%; width: 12px; height: 1px;
+  background: var(--fl-on-mat-muted);
+}
+.fl-pin--flip .fl-pin__date { left: auto; right: 22px; }
+.fl-pin--flip .fl-pin__date::before { left: auto; right: -12px; }
+/* the most recent capture reads first */
+.fl-pin--latest .fl-pin__dot { box-shadow: 0 0 0 6px rgba(219,157,145,.30), inset 0 0 0 1px rgba(0,0,0,.4); }
+.fl-pin--latest .fl-pin__date { background: var(--fl-red); color: var(--fl-on-red); }
+@media (max-width: 520px) { .fl-pin__date { font-size: 0.5625rem; padding: 2px 7px; } }
+
 /* stat row beside the slider — three figures, thin rules between, no shadow */
 .fl-stat-row { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
 .fl-stat-row > div {
@@ -313,8 +381,9 @@ a:hover { text-decoration-thickness: 2px; }
   transition: background-color var(--fl-dur) var(--fl-ease), color var(--fl-dur) var(--fl-ease);
 }
 .fl-btn:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
-.fl-btn--primary   { background: var(--fl-ramp-even); color: var(--fl-on-red); }
-.fl-btn--primary:hover { background: var(--fl-ramp-even-deep); }
+.fl-btn--primary   { background: var(--fl-ramp-even-ink); color: var(--fl-on-ink);
+                     border: 0; padding: 11px 19px; }
+.fl-btn--primary:hover { background: var(--fl-ramp-even-ink-deep); }
 .fl-btn--secondary {
   position: relative; background: var(--fl-blue-quiet); color: var(--fl-ink); border-color: var(--fl-rule);
 }
@@ -388,6 +457,9 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-nav__links a:not(.fl-btn):hover { color: var(--fl-ink); text-decoration: none; }
 .fl-nav__links a[aria-current="page"] { color: var(--fl-ink); background: linear-gradient(135deg, var(--fl-blue-quiet), var(--fl-red-quiet)); }
 .fl-nav .fl-btn { flex: none; }
+/* the bar's one action reads as its own object: fully round, against the
+   16px bar and the 999px track it sits between. */
+.fl-nav .fl-btn--primary { border-radius: 999px; padding-inline: 23px; }
 @media (max-width: 640px) {
   /* ponytail: the track plus the button cannot share 335px with the mark. Let
      the row wrap; the pill grows rather than the content shrinking. */
@@ -399,6 +471,10 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- footer (Stage 1 §9) ---------- */
 .fl-footer { border-top: 1px solid var(--fl-rule); padding: 64px 0; }
+/* the footer signs off with the mark itself: disc + ramped wordmark, at the
+   smallest size §3.2 still allows the display face to be used at. */
+.fl-footer .fl-lock { --lock-size: 2rem; font-size: var(--lock-size); text-decoration: none; }
+.fl-footer .fl-lock:hover { text-decoration: none; }
 .fl-footer .fl-wrap { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
 .fl-footer__right { display: grid; gap: 16px; justify-items: end; text-align: right; max-width: 60ch; }
 .fl-footer__links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
@@ -447,12 +523,6 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 
 /* kicker: the mono label as a section opener (§3.5) */
-.fl-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
-.fl-kicker::before {
-  content: ""; display: inline-block; width: 20px; height: 3px; border-radius: 999px;
-  background: var(--fl-ramp-even); flex: none;
-}
-
 /* spec list: label over value */
 .fl-specs { margin: 0; display: grid; gap: 24px; }
 .fl-specs dd { margin: 4px 0 0; }
@@ -641,40 +711,48 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 /* a diagram tile: for illustrating a behaviour, never for showing a photograph */
-.fl-tile { position: relative; background: var(--fl-surface); border-radius: var(--fl-radius-card);
+.fl-tile { position: relative; background: var(--fl-ramp-quiet); border-radius: var(--fl-radius-card);
   box-shadow: var(--lift-card); aspect-ratio: 4 / 3; overflow: hidden; display: grid; place-items: center; }
-.fl-tile svg { width: 100%; height: 100%; display: block; }
+/* the ramp enters from one corner and is gone before the diagram — the same
+   wash .fl-band uses, at a weight a line drawing can still be read through. */
+.fl-tile::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: var(--fl-ramp); opacity: .35;
+  -webkit-mask: radial-gradient(65% 85% at 100% 0%, #000 0%, transparent 70%);
+          mask: radial-gradient(65% 85% at 100% 0%, #000 0%, transparent 70%);
+}
+.fl-tile svg { width: 100%; height: 100%; display: block; position: relative; z-index: 1; }
+.fl-tile__label { z-index: 2; }
 /* top-left, not bottom: every diagram in this tile family prints its own
    caption low and centered (see the tiles in clinicians.html) — a bottom
    overlay collided with it. */
 .fl-tile__label { position: absolute; left: 20px; top: 16px; }
 
-/* ---------- pre-purchase panel ---------- */
-.fl-buy { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .95fr); align-items: stretch;
-  background: var(--fl-surface); border-radius: var(--fl-radius-card);
+/* ---------- pre-purchase panel ----------
+   Wide, not tall: both views run across the top as one plate, and the specs
+   sit beside the reserve action underneath. Nothing has to stretch to match
+   the height of anything else. */
+.fl-buy { background: var(--fl-surface); border-radius: var(--fl-radius-card);
   box-shadow: var(--lift-card); overflow: hidden; }
-/* the shot panel stretches to match the (much longer) spec column, so its
-   red backdrop reads as one continuous surface rather than stopping short;
-   the image itself sticks near the top as the reader scrolls the specs. */
-.fl-buy__shot { background: var(--fl-ramp-quiet); display: grid; justify-items: center;
-  align-content: start; padding: 24px; min-width: 0; }
-.fl-buy__shot img { width: 100%; max-width: 620px; position: sticky; top: 88px; }
-.fl-buy__body { padding: 56px; display: grid; align-content: start; gap: 24px; }
+.fl-buy__banner { background: var(--fl-ramp-quiet);
+  display: grid; grid-auto-flow: column; justify-content: center; align-items: center;
+  gap: 40px; padding: 32px 48px; }
+.fl-buy__banner img { max-height: 300px; width: auto; }
+.fl-buy__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 48px 56px; }
+.fl-buy__body, .fl-buy__aside { display: grid; gap: 24px; align-content: start; min-width: 0; }
 .fl-buy__price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .fl-buy__price .amt { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
   letter-spacing: -.024em; line-height: 1; }
 .fl-buy__price .qual { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted); }
-.fl-buy .fl-btn--primary { justify-self: start; font-size: 1.0625rem; padding: 15px 32px; border-radius: 8px; }
-/* the spec rows on this panel run six deep; a tighter row keeps the whole
-   list from outrunning the device shot beside it */
+.fl-buy .fl-btn--primary { justify-self: start; font-size: 1.0625rem; padding: 16px 33px; border-radius: 8px; }
 .fl-buy .fl-table th, .fl-buy .fl-table td { padding: 7px 16px; }
 .fl-buy .fl-table th:first-child, .fl-buy .fl-table td:first-child { padding-left: 0; }
 .fl-note { border-top: 1px solid var(--fl-rule); padding-top: 16px; font-size: .875rem;
   line-height: 1.6; color: var(--fl-muted); }
 @media (max-width: 860px) {
-  .fl-buy { grid-template-columns: 1fr; }
-  .fl-buy__shot, .fl-buy__body { padding: 32px 24px; }
-  .fl-buy__shot img { position: static; }
+  .fl-buy__banner { grid-auto-flow: row; gap: 8px; padding: 24px; }
+  .fl-buy__banner img { max-height: none; width: 100%; }
+  .fl-buy__cols { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
 }
 
 /* ---------- FAQ: native disclosure, no script ---------- */
