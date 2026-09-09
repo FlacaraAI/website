@@ -79,6 +79,10 @@
         </div>
       </div>
       <div data-reveal="scale" style="--fl-reveal-delay:140ms">
+        <!-- The traced outline hands off to the device reveal: it finishes drawing,
+             zooms out about the ring centre onto the video's first frame, and
+             crossfades. motion.js drives it; without JS the outline just stays. -->
+        <div class="fl-reveal" data-fl-reveal>
         <svg class="fl-outline" viewBox="250.3 139.3 460 460" aria-hidden="true">
     <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
       <path pathLength="1" style="--s:.00;--i:5" d="m313.84085 360.42007c0 -91.93152 74.52521 -166.45671 166.4567 -166.45671c44.147034 0 86.48596 17.537354 117.70264 48.754044c31.216736 31.216675 48.75403 73.5556 48.75403 117.70267c0 91.93149 -74.52515 166.4567 -166.45667 166.4567c-91.93149 0 -166.4567 -74.52521 -166.4567 -166.4567z"/>
@@ -99,6 +103,10 @@
       <path pathLength="1" style="--s:.36;--i:6" d="m319.749 360.4227c0 -88.66998 71.881226 -160.5512 160.55118 -160.5512c42.58081 0 83.41766 16.915161 113.526855 47.024353c30.109192 30.109177 47.024353 70.946 47.024353 113.52684c0 88.66995 -71.881226 160.55118 -160.55121 160.55118c-88.66995 0 -160.55118 -71.881226 -160.55118 -160.55118z"/>
     </g>
   </svg>
+          <video class="fl-reveal__vid" muted playsinline preload="auto"
+                 data-src="images/device-reveal.webm" aria-hidden="true"></video>
+          <img class="fl-reveal__still" src="images/device-reveal.webp" alt="The flacara h1, seen head on" width="900" height="932">
+        </div>
       </div>
     </div>
   </div>

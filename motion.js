@@ -115,6 +115,30 @@
     });
   }
 
+  /* ---------- hero: the traced outline hands off to the device reveal ----------
+     Waits on the last fl-trace to end rather than on a clock: a backgrounded tab
+     pauses CSS animations but still runs timers, and a timer would zoom out over a
+     half-drawn outline. Playback then waits out the crossfade, because the clip has
+     no still head — it is already moving on frame 1. */
+  var handoff = document.querySelector('[data-fl-reveal]');
+  var clip = handoff && handoff.querySelector('.fl-reveal__vid');
+  if (handoff && clip && !reduceMotion) {
+    /* ponytail: UA sniff. Nothing reports "can decode alpha in WebM", and Safari
+       plays VP9 WebM with the alpha silently dropped — a black box, worse than the
+       still. Delete this once an HEVC-with-alpha MP4 exists for Safari. */
+    if (!/^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent)) {
+      clip.src = clip.getAttribute('data-src') + '#t=0.001'; /* paints frame 0 while paused */
+      handoff.classList.add('has-video');
+    }
+    var pending = handoff.querySelectorAll('.fl-outline path').length;
+    handoff.addEventListener('animationend', function (e) {
+      if (e.animationName !== 'fl-trace' || --pending) return;
+      handoff.classList.add('is-handed-off');
+      /* 900ms = the transform leg of the crossfade, see .is-handed-off in flacara.css */
+      if (clip.src) setTimeout(function () { clip.play().catch(function () {}); }, 900);
+    });
+  }
+
   /* ---------- resolution slider: stop nudging once someone has dragged it ---------- */
   document.querySelectorAll('.fl-slider').forEach(function (s) {
     var input = s.querySelector('.fl-slider__input');

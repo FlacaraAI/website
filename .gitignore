@@ -5,3 +5,29 @@ Thumbs.db
 .DS_Store
 .vercel
 .env*
+
+# Claude Code / dev notes, not site content
+*.md
+!DESIGN_COLORS.md
+!DESIGN_SYSTEM.md
+
+# Blender source (site uses exported images, not the .blend)
+flacara.blend
+
+# Unused exploration/dev HTML pages, not linked from the live site
+explorations.html
+explorations-brand.html
+foundation-check.html
+hero.html
+heroes-alt.html
+heroes.html
+lockups.html
+
+# Unused reference images, not referenced by any page
+images/nonxp&xp_needs_split.jpg
+images/lesion-01-dl4.jpg
+images/lesion-01-flacara.JPG
+images/target-dl4.jpg
+
+# Source render for the device reveal; the site ships images/device-reveal.webm
+*.mov

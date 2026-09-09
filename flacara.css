@@ -695,7 +695,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
 .fl-hero-mat .fl-label { color: var(--fl-blue); }
 .fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
-.fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none; width: 122%; max-width: 122%; margin: 0 -11%; height: auto; }
+.fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
+.fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
+  position: absolute; inset: 0; width: 100%; height: 100%; }
 .fl-rail { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; padding-top: 20px;
   border-top: 1px solid var(--fl-mat-raised); }
 .fl-rail div { display: grid; gap: 4px; }
@@ -706,7 +708,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @media (max-width: 860px) {
   .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
   .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
-  .fl-hero-mat .fl-outline { width: 100%; max-width: 420px; margin: 0; }
+  .fl-hero-mat .fl-reveal { width: 100%; max-width: 420px; margin: 0; }
 }
 
 /* ---------- feature row ---------- */
@@ -911,6 +913,30 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @media (prefers-reduced-motion: reduce) {
   .fl-outline path { animation: none; stroke-dashoffset: 0; }
 }
+
+/* ---------- hero handoff: the outline zooms out onto the video's first frame ----------
+   Both numbers are measured off frame 0 of the render. The wireframe's outer ring
+   is 45.19% of its square box; the video's is 26.01% of frame width, hence the
+   .5756 scale. Their centres sit 1.86% of box height apart, hence the nudge.
+   Re-measure both if the clip is re-exported. ---------- */
+.fl-reveal { --fl-reveal-scale: .5756; }
+.fl-reveal .fl-outline { transform-origin: 50% 48.14%; }
+.fl-reveal__vid, .fl-reveal__still {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  opacity: 0; transition: opacity .6s var(--fl-ease-out);
+  /* the subject runs off its own frame for a third of the clip; a feathered edge
+     is kinder than the hard crop, and the page behind it is transparent anyway */
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 82%, transparent 100%);
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 82%, transparent 100%);
+}
+.fl-reveal__still { display: none; }
+.fl-reveal:not(.has-video) .fl-reveal__still { display: block; }
+.fl-reveal.is-handed-off .fl-outline {
+  opacity: 0; transform: translateY(1.86%) scale(var(--fl-reveal-scale));
+  transition: opacity .6s var(--fl-ease-out) .3s, transform .9s var(--fl-ease-out);
+}
+.fl-reveal.is-handed-off .fl-reveal__vid,
+.fl-reveal.is-handed-off .fl-reveal__still { opacity: 1; transition-delay: .3s; }
 
 /* ---------- resolution slider: a nudge inviting the drag, gone after first touch ---------- */
 @keyframes fl-grip-nudge {
