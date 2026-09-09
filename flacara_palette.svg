@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="940" viewBox="0 0 1200 940" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1200" height="940" fill="#F2F4F5"/>
+  <text x="48" y="56" font-size="28" font-weight="700" fill="#151616">Flacara — Color Palette</text>
+  <text x="48" y="82" font-size="13" fill="#5F6060">Extracted from flacara.css custom properties</text>
+
+  <!-- Group: Ground / neutrals -->
+  <text x="48" y="130" font-size="14" font-weight="700" fill="#151616" letter-spacing="0.08em">GROUND &amp; NEUTRALS</text>
+  <g font-size="12" fill="#151616">
+    <!-- swatch template: rect 140x100 with 16px gap, 6 columns -->
+    <g transform="translate(48,146)">
+      <rect width="140" height="100" fill="#E3E5E6" stroke="#BBBDBE"/>
+      <text x="8" y="120" font-weight="600">fl-ground</text>
+      <text x="8" y="136" fill="#5F6060">#E3E5E6</text>
+    </g>
+    <g transform="translate(204,146)">
+      <rect width="140" height="100" fill="#F2F4F5" stroke="#BBBDBE"/>
+      <text x="8" y="120" font-weight="600">fl-surface</text>
+      <text x="8" y="136" fill="#5F6060">#F2F4F5</text>
+    </g>
+    <g transform="translate(360,146)">
+      <rect width="140" height="100" fill="#D5D7D8" stroke="#BBBDBE"/>
+      <text x="8" y="120" font-weight="600">fl-sunken</text>
+      <text x="8" y="136" fill="#5F6060">#D5D7D8</text>
+    </g>
+    <g transform="translate(516,146)">
+      <rect width="140" height="100" fill="#BBBDBE"/>
+      <text x="8" y="120" font-weight="600">fl-rule</text>
+      <text x="8" y="136" fill="#5F6060">#BBBDBE</text>
+    </g>
+    <g transform="translate(672,146)">
+      <rect width="140" height="100" fill="#959798"/>
+      <text x="8" y="120" font-weight="600">fl-rule-strong</text>
+      <text x="8" y="136" fill="#5F6060">#959798</text>
+    </g>
+  </g>
+
+  <!-- Group: Ink / text -->
+  <text x="48" y="300" font-size="14" font-weight="700" fill="#151616" letter-spacing="0.08em">TEXT</text>
+  <g font-size="12" fill="#151616">
+    <g transform="translate(48,316)">
+      <rect width="140" height="100" fill="#151616"/>
+      <text x="8" y="120" font-weight="600">fl-ink</text>
+      <text x="8" y="136" fill="#5F6060">#151616</text>
+    </g>
+    <g transform="translate(204,316)">
+      <rect width="140" height="100" fill="#5F6060"/>
+      <text x="8" y="120" font-weight="600">fl-muted</text>
+      <text x="8" y="136" fill="#5F6060">#5F6060</text>
+    </g>
+  </g>
+
+  <!-- Group: Accent (lavender) -->
+  <text x="48" y="470" font-size="14" font-weight="700" fill="#151616" letter-spacing="0.08em">ACCENT (LAVENDER)</text>
+  <g font-size="12" fill="#151616">
+    <g transform="translate(48,486)">
+      <rect width="140" height="100" fill="#CECBDF"/>
+      <text x="8" y="120" font-weight="600">fl-accent</text>
+      <text x="8" y="136" fill="#5F6060">#CECBDF</text>
+    </g>
+    <g transform="translate(204,486)">
+      <rect width="140" height="100" fill="#BFBBD2"/>
+      <text x="8" y="120" font-weight="600">fl-accent-hover</text>
+      <text x="8" y="136" fill="#5F6060">#BFBBD2</text>
+    </g>
+    <g transform="translate(360,486)">
+      <rect width="140" height="100" fill="#E7E5EE"/>
+      <text x="8" y="120" font-weight="600">fl-accent-quiet</text>
+      <text x="8" y="136" fill="#5F6060">#E7E5EE</text>
+    </g>
+  </g>
+
+  <!-- Group: Mat (dark surface) -->
+  <text x="48" y="640" font-size="14" font-weight="700" fill="#151616" letter-spacing="0.08em">MAT (DARK SURFACE)</text>
+  <g font-size="12" fill="#EAECED">
+    <g transform="translate(48,656)">
+      <rect width="140" height="100" fill="#2A2D30"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-mat</text>
+      <text x="8" y="136" fill="#5F6060">#2A2D30</text>
+    </g>
+    <g transform="translate(204,656)">
+      <rect width="140" height="100" fill="#404346"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-mat-edge</text>
+      <text x="8" y="136" fill="#5F6060">#404346</text>
+    </g>
+    <g transform="translate(360,656)">
+      <rect width="140" height="100" fill="#1F2225"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-mat-deep</text>
+      <text x="8" y="136" fill="#5F6060">#1F2225</text>
+    </g>
+    <g transform="translate(516,656)">
+      <rect width="140" height="100" fill="#35383B"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-mat-raised</text>
+      <text x="8" y="136" fill="#5F6060">#35383B</text>
+    </g>
+    <g transform="translate(672,656)">
+      <rect width="140" height="100" fill="#EAECED"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-on-mat</text>
+      <text x="8" y="136" fill="#5F6060">#EAECED</text>
+    </g>
+    <g transform="translate(828,656)">
+      <rect width="140" height="100" fill="#979A9C"/>
+      <text x="8" y="120" font-weight="600" fill="#151616">fl-on-mat-muted</text>
+      <text x="8" y="136" fill="#5F6060">#979A9C</text>
+    </g>
+  </g>
+
+  <!-- Group: Status + gradient ramp -->
+  <text x="48" y="810" font-size="14" font-weight="700" fill="#151616" letter-spacing="0.08em">STATUS &amp; RAMP</text>
+  <g font-size="12" fill="#151616">
+    <g transform="translate(48,826)">
+      <rect width="140" height="50" fill="#8C2F2F"/>
+      <text x="8" y="66" font-weight="600">fl-invalid</text>
+      <text x="8" y="80" fill="#5F6060">#8C2F2F</text>
+    </g>
+    <g transform="translate(204,826)">
+      <defs>
+        <linearGradient id="ramp" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#C9DAF8"/>
+          <stop offset="35%" stop-color="#CECBDF"/>
+          <stop offset="100%" stop-color="#DB9D91"/>
+        </linearGradient>
+      </defs>
+      <rect width="296" height="50" fill="url(#ramp)"/>
+      <text x="8" y="66" font-weight="600">fl-ramp (gradient)</text>
+      <text x="8" y="80" fill="#5F6060">#C9DAF8 → #CECBDF → #DB9D91</text>
+    </g>
+  </g>
+</svg>

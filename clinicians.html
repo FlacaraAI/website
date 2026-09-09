@@ -14,6 +14,8 @@
 </head>
 <body class="fl-lit">
 
+<div class="fl-progress" aria-hidden="true"><div class="fl-progress__bar"></div></div>
+
 <!-- partials/mark.html — the symbol block from hero.html, unchanged. Inline once, first thing inside <body>, on every page that shows the mark. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
@@ -63,7 +65,7 @@
 <section class="fl-hero-mat">
   <div class="fl-wrap">
     <div class="fl-hero-mat__grid">
-      <div>
+      <div data-reveal="left">
         <span class="fl-label fl-kicker">flacara h1 · aluminium edition</span>
         <h1 class="fl-display-xl">Built to be repeated.</h1>
         <p class="fl-body fl-body--l" style="margin-top:24px;max-width:46ch">Two lighting modes, one
@@ -76,7 +78,7 @@
           <div><span class="k">Charging</span><span class="v">USB-C</span></div>
         </div>
       </div>
-      <div>
+      <div data-reveal="scale" style="--fl-reveal-delay:140ms">
         <svg class="fl-outline" viewBox="250.3 139.3 460 460" aria-hidden="true">
     <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
       <path pathLength="1" style="--s:.00;--i:5" d="m313.84085 360.42007c0 -91.93152 74.52521 -166.45671 166.4567 -166.45671c44.147034 0 86.48596 17.537354 117.70264 48.754044c31.216736 31.216675 48.75403 73.5556 48.75403 117.70267c0 91.93149 -74.52515 166.4567 -166.45667 166.4567c-91.93149 0 -166.4567 -74.52521 -166.4567 -166.4567z"/>
@@ -105,32 +107,108 @@
 <!-- ============ 01 resolution ============ -->
 <section class="fl-section" aria-labelledby="resolution">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker">Resolution</span>
-    <h2 class="fl-display-m" id="resolution">Read the fine print.</h2>
-    <p class="fl-body" style="margin-top:16px">The same resolution target, the same working distance,
-      the same session. Flacara on the left, a DermLite DL4 on the right. Judge it yourself.</p>
+    <span class="fl-label fl-kicker" data-reveal>Resolution</span>
+    <h2 class="fl-display-m" id="resolution" data-reveal>Read the fine print.</h2>
 
-    <div class="fl-compare" style="margin-top:48px">
-      <figure>
-        <div class="fl-plate"><img src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="3240" height="4320"></div>
-        <figcaption class="fl-caption">FIG. 1 — Resolution target, Flacara</figcaption>
+    <div class="fl-feature" style="margin-top:48px;align-items:start">
+      <figure data-reveal="left">
+        <div class="fl-plate">
+          <div class="fl-slider" data-fl-slider style="--pos:50%">
+            <img class="fl-slider__img fl-slider__img--base" src="images/target-dl4-aligned.jpg" alt="The same resolution target photographed with a DermLite DL4" width="3240" height="4320">
+            <img class="fl-slider__img fl-slider__img--reveal" src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="3240" height="4320">
+            <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span></div>
+            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
+            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
+          </div>
+        </div>
+        <figcaption class="fl-caption" style="margin-top:12px">FIG. 1: Resolution target, same target, same session, same working distance</figcaption>
       </figure>
-      <figure>
-        <div class="fl-plate"><img src="images/target-dl4.jpg" alt="The same resolution target photographed with a DermLite DL4" width="4032" height="3024"></div>
-        <figcaption class="fl-caption">FIG. 2 — Resolution target, DermLite DL4</figcaption>
-      </figure>
+
+      <div data-reveal="right" style="--fl-reveal-delay:100ms">
+        <p class="fl-body">A resolution check, not a clinical comparison: the same printed target, the
+          same working distance, the same session. Drag the divider, Flacara on one side, a DermLite
+          DL4 on the other, and judge the optical detail for yourself.</p>
+
+        <dl class="fl-stat-row" style="margin-top:32px">
+          <div>
+            <dt class="fl-label">Flacara resolves</dt>
+            <dd class="fl-stat-row__value">≈16 µm</dd>
+          </div>
+          <div>
+            <dt class="fl-label">Unaided eye<sup>1</sup></dt>
+            <dd class="fl-stat-row__value">≈100 µm</dd>
+          </div>
+          <div>
+            <dt class="fl-label">DermLite DL4, this target</dt>
+            <dd class="fl-stat-row__value fl-stat-row__value--text">Indistinguishable</dd>
+          </div>
+        </dl>
+
+        <p class="fl-body" style="margin-top:24px">No added lens. That resolving power comes from the
+          phone's own sensor and the software behind it. Line pairs on this target resolve more than
+          six times finer than what the unaided eye can pick apart at normal reading distance, from a
+          housing with no glass of its own.</p>
+
+        <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch">This is a resolution
+          comparison on a printed test target, not a clinical or diagnostic comparison, and it does not
+          imply that Flacara is a dermatoscope or any other kind of medical device. Image quality was
+          comparable side by side; that has not been quantified beyond this target, and these are
+          single frames from one session, not a study. DermLite is a trademark of its owner and there
+          is no affiliation.</p>
+        <p class="fl-small fl-note" style="margin-top:8px;max-width:64ch"><sup>1</sup> ≈0.1 mm (100 µm)
+          is the commonly cited limit for high-contrast detail resolved by the unaided eye at a normal
+          25 cm reading distance, about 1 arc-minute of visual angle at 20/20 acuity.</p>
+      </div>
     </div>
-    <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch">Image quality was comparable
-      side by side. That has not been quantified, and these are single frames from one session, not
-      a study. DermLite is a trademark of its owner and there is no affiliation.</p>
   </div>
 </section>
+
+<script>
+(function () {
+  var wrap = document.querySelector('[data-fl-slider]');
+  if (!wrap) return;
+  var input = wrap.querySelector('.fl-slider__input');
+  function set(v) { wrap.style.setProperty('--pos', v + '%'); }
+  input.addEventListener('input', function () { set(input.value); });
+
+  var played = false;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting || played) return;
+      played = true;
+      if (reduceMotion) return;
+      var start = null;
+      var duration = 1100;
+      var from = 6, mid = 94, to = 50;
+      function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+      function frame(now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / duration);
+        var e = ease(t);
+        var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
+        set(v);
+        input.value = v;
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }, { threshold: 0.5 });
+  io.observe(wrap);
+})();
+</script>
 
 <!-- ============ 02 lighting ============ -->
 <section class="fl-section" aria-labelledby="lighting">
   <div class="fl-wrap">
     <div class="fl-feature">
-      <div>
+      <div data-reveal="left">
         <span class="fl-label fl-kicker">Lighting</span>
         <h2 class="fl-display-m" id="lighting">Two lights, one press.</h2>
         <p class="fl-body" style="margin-top:16px">Unpolarized light shows the surface: scale,
@@ -140,7 +218,7 @@
         <p class="fl-body" style="margin-top:16px">The home edition ships with both. Cross-polarized
           light is as useful for tracking a skincare routine as it is for anything else.</p>
       </div>
-      <div class="fl-tile">
+      <div class="fl-tile" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
         <svg viewBox="0 0 400 300" aria-hidden="true">
           <defs>
             <clipPath id="halfL"><rect x="0" y="0" width="200" height="300"/></clipPath>
@@ -149,7 +227,7 @@
           <g fill="none" stroke="#BBBDBE" stroke-width="1">
             <circle cx="200" cy="150" r="96"/><circle cx="200" cy="150" r="72"/><circle cx="200" cy="150" r="48"/>
           </g>
-          <g clip-path="url(#halfL)"><circle cx="200" cy="150" r="96" fill="#CECBDF" opacity=".55"/></g>
+          <g clip-path="url(#halfL)"><circle cx="200" cy="150" r="96" fill="#DB9D91" opacity=".55"/></g>
           <g clip-path="url(#halfR)">
             <circle cx="200" cy="150" r="96" fill="none" stroke="#959798" stroke-width="1" stroke-dasharray="2 4"/>
           </g>
@@ -167,7 +245,7 @@
 <section class="fl-section" aria-labelledby="alignment">
   <div class="fl-wrap">
     <div class="fl-feature fl-feature--flip">
-      <div>
+      <div data-reveal="right">
         <span class="fl-label fl-kicker">Alignment</span>
         <h2 class="fl-display-m" id="alignment">It finds the frame for you.</h2>
         <p class="fl-body" style="margin-top:16px">Point the housing at a spot you have photographed
@@ -176,7 +254,7 @@
         <p class="fl-body" style="margin-top:16px">The result is two images that can be laid over one
           another, rather than two images that merely show the same thing.</p>
       </div>
-      <div class="fl-tile">
+      <div class="fl-tile" data-reveal="left" data-tilt style="--fl-reveal-delay:100ms">
         <svg viewBox="0 0 400 300" aria-hidden="true">
           <g fill="none" stroke="#BBBDBE" stroke-width="1">
             <rect x="86" y="66" width="168" height="168" transform="rotate(-9 170 150)"/>
@@ -186,7 +264,7 @@
           <g stroke="#151616" stroke-width="1.4">
             <line x1="200" y1="132" x2="200" y2="168"/><line x1="182" y1="150" x2="218" y2="150"/>
           </g>
-          <circle cx="200" cy="150" r="22" fill="none" stroke="#CECBDF" stroke-width="6"/>
+          <circle cx="200" cy="150" r="22" fill="none" stroke="#DB9D91" stroke-width="6"/>
           <g stroke="#959798" stroke-width="1" stroke-dasharray="3 4">
             <line x1="112" y1="150" x2="178" y2="150"/><line x1="222" y1="150" x2="288" y2="150"/>
           </g>
@@ -202,7 +280,7 @@
 <section class="fl-section" aria-labelledby="colour">
   <div class="fl-wrap">
     <div class="fl-feature">
-      <div>
+      <div data-reveal="left">
         <span class="fl-label fl-kicker">Colour</span>
         <h2 class="fl-display-m" id="colour">Colour you can trust twice.</h2>
         <p class="fl-body" style="margin-top:16px">The housing supplies its own light, so the room
@@ -212,14 +290,14 @@
         <p class="fl-body" style="margin-top:16px">It reports what it measured. It does not tell you
           what the measurement means.</p>
       </div>
-      <div class="fl-tile">
+      <div class="fl-tile" data-reveal="right" data-tilt style="--fl-reveal-delay:100ms">
         <svg viewBox="0 0 400 300" aria-hidden="true">
           <g stroke="#BBBDBE" stroke-width="1">
             <rect x="52" y="96" width="52" height="52" fill="#DFC3B4"/>
             <rect x="112" y="96" width="52" height="52" fill="#C99C86"/>
             <rect x="172" y="96" width="52" height="52" fill="#8E5F4C"/>
             <rect x="232" y="96" width="52" height="52" fill="#5E3A2E"/>
-            <rect x="292" y="96" width="52" height="52" fill="#CECBDF"/>
+            <rect x="292" y="96" width="52" height="52" fill="#DB9D91"/>
           </g>
           <g stroke="#959798" stroke-width="1">
             <line x1="52" y1="170" x2="344" y2="170"/>
@@ -239,7 +317,7 @@
 <section class="fl-section" aria-labelledby="tracking">
   <div class="fl-wrap">
     <div class="fl-feature fl-feature--flip">
-      <div>
+      <div data-reveal="right">
         <span class="fl-label fl-kicker">Tracking</span>
         <h2 class="fl-display-m" id="tracking">Find it again.</h2>
         <p class="fl-body" style="margin-top:16px">Every capture is pinned to a place on the body,
@@ -248,25 +326,25 @@
         <p class="fl-body" style="margin-top:16px">A map and a record. Nothing on this screen is a
           score, a risk figure, or an opinion.</p>
       </div>
-      <div class="fl-tile">
+      <div class="fl-tile" data-reveal="left" data-tilt style="--fl-reveal-delay:100ms">
         <svg viewBox="0 0 400 300" aria-hidden="true">
           <g fill="none" stroke="#BBBDBE" stroke-width="1">
             <path d="M200 44c14 0 24 10 24 24s-10 24-24 24-24-10-24-24 10-24 24-24z"/>
-            <path d="M200 96c34 0 58 16 62 44l10 62h-26l-6 88h-80l-6-88h-26l10-62c4-28 28-44 62-44z"/>
+            <path d="M200 96c34 0 58 13 62 35l10 49h-26l-6 70h-80l-6-70h-26l10-49c4-22 28-35 62-35z"/>
           </g>
           <g stroke="#959798" stroke-width=".75" stroke-dasharray="2 5">
-            <line x1="160" y1="120" x2="240" y2="120"/><line x1="150" y1="160" x2="250" y2="160"/>
-            <line x1="156" y1="200" x2="244" y2="200"/>
+            <line x1="160" y1="115" x2="240" y2="115"/><line x1="150" y1="147" x2="250" y2="147"/>
+            <line x1="156" y1="179" x2="244" y2="179"/>
           </g>
           <g>
-            <circle cx="176" cy="140" r="7" fill="#CECBDF" stroke="#151616" stroke-width="1.2"/>
-            <circle cx="228" cy="186" r="7" fill="#CECBDF" stroke="#151616" stroke-width="1.2"/>
-            <circle cx="212" cy="118" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
-            <circle cx="166" cy="212" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
+            <circle cx="176" cy="131" r="7" fill="#DB9D91" stroke="#151616" stroke-width="1.2"/>
+            <circle cx="228" cy="168" r="7" fill="#DB9D91" stroke="#151616" stroke-width="1.2"/>
+            <circle cx="212" cy="113" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
+            <circle cx="166" cy="188" r="4.5" fill="none" stroke="#959798" stroke-width="1.2"/>
           </g>
           <g stroke="#151616" stroke-width="1.2">
-            <line x1="176" y1="126" x2="176" y2="132"/><line x1="176" y1="148" x2="176" y2="154"/>
-            <line x1="162" y1="140" x2="168" y2="140"/><line x1="184" y1="140" x2="190" y2="140"/>
+            <line x1="176" y1="117" x2="176" y2="123"/><line x1="176" y1="139" x2="176" y2="145"/>
+            <line x1="162" y1="131" x2="168" y2="131"/><line x1="184" y1="131" x2="190" y2="131"/>
           </g>
           <text x="200" y="286" fill="#5F6060" font-family="ui-monospace,monospace" font-size="11" letter-spacing="1.4" text-anchor="middle">PINNED IN SPACE</text>
         </svg>
@@ -279,11 +357,11 @@
 <!-- ============ 06 pre-order ============ -->
 <section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker">Pre-order</span>
-    <h2 class="fl-display-m" id="pre-order-h">Reserve one.</h2>
+    <span class="fl-label fl-kicker" data-reveal>Pre-order</span>
+    <h2 class="fl-display-m" id="pre-order-h" data-reveal>Reserve one.</h2>
 
-    <div class="fl-buy" style="margin-top:48px">
-      <div class="fl-buy__shot">
+    <div class="fl-buy" style="margin-top:48px" data-reveal="scale">
+      <div class="fl-buy__shot" data-tilt>
         <img src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
       </div>
 
@@ -294,7 +372,7 @@
         </div>
 
         <div class="fl-buy__price">
-          <span class="amt">$249</span>
+          <span class="amt">$<span data-count="249">0</span></span>
           <span class="qual">USD · directional, may change before launch</span>
         </div>
 
@@ -315,39 +393,42 @@
           </table>
         </div>
 
-        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Reserve a flacara h1</button>
+        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
 
         <p class="fl-note">Flacara is a camera accessory. It is not a medical device, it is not
           cleared or approved by the FDA, and it does not diagnose, screen for, or assess any
           condition. Nothing it produces is a medical opinion. Talk to a professional about anything
           on your skin that concerns you.</p>
 
-        <div class="fl-faq" style="margin-top:8px">
-          <details>
-            <summary>When does it ship?</summary>
-            <p>Units are between prototype and pilot. Reserving puts you in the first batch and
-              tells us how many to build; we will email a date before anything is charged.</p>
-          </details>
-          <details>
-            <summary>Am I being charged now?</summary>
-            <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
-          </details>
-          <details>
-            <summary>How is the aluminium edition different?</summary>
-            <p>It is the same device with a machined aluminium top plate instead of the standard
-              one. Same lighting, same detail, same software.</p>
-          </details>
-          <details>
-            <summary>Does it work with my phone?</summary>
-            <p>iPhone at launch. The housing seats over the camera array rather than clipping to a
-              single lens, so support is per phone body and we will publish the list.</p>
-          </details>
-          <details>
-            <summary>Where do my photographs go?</summary>
-            <p>They stay on your phone unless you export them. We will publish the full data terms
-              before the first unit ships.</p>
-          </details>
-        </div>
+        <details class="fl-faq-outer" style="margin-top:8px">
+          <summary>Frequently asked questions</summary>
+          <div class="fl-faq">
+            <details>
+              <summary>When does it ship?</summary>
+              <p>Units are between prototype and pilot. Reserving puts you in the first batch and
+                tells us how many to build; we will email a date before anything is charged.</p>
+            </details>
+            <details>
+              <summary>Am I being charged now?</summary>
+              <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
+            </details>
+            <details>
+              <summary>How is the aluminium edition different?</summary>
+              <p>It is the same device with a machined aluminium top plate instead of the standard
+                one. Same lighting, same detail, same software.</p>
+            </details>
+            <details>
+              <summary>Does it work with my phone?</summary>
+              <p>iPhone at launch. The housing seats over the camera array rather than clipping to a
+                single lens, so support is per phone body and we will publish the list.</p>
+            </details>
+            <details>
+              <summary>Where do my photographs go?</summary>
+              <p>They stay on your phone unless you export them. We will publish the full data terms
+                before the first unit ships.</p>
+            </details>
+          </div>
+        </details>
       </div>
     </div>
   </div>
@@ -358,7 +439,7 @@
 <!-- the email step: asked for only once someone has said yes -->
 <dialog class="fl-modal" id="reserve">
   <div class="fl-modal__in">
-    <h3>Reserve a flacara h1</h3>
+    <h3>Pre-order a flacara h1</h3>
     <p class="fl-small" style="color:var(--fl-muted)">One email address. No card, no deposit, and we
       will write before anything is charged.</p>
     <form class="fl-form" method="dialog">
@@ -372,7 +453,7 @@
       </div>
       <p class="fl-form__error" aria-live="polite"></p>
       <div class="fl-modal__row">
-        <button class="fl-btn fl-btn--primary" type="submit" value="confirm">Reserve</button>
+        <button class="fl-btn fl-btn--primary" type="submit" value="confirm">Pre-order</button>
         <button class="fl-btn fl-btn--tertiary" type="submit" value="cancel" formnovalidate>Not yet</button>
       </div>
     </form>
@@ -380,10 +461,23 @@
 </dialog>
 
 <script>
-  /* the only script on the page: open the native dialog. Closing, focus
-     trapping and Esc are the platform's job, not ours. */
+  /* open the native dialog. Closing, focus trapping and Esc are the platform's job, not ours. */
   document.getElementById('reserve-open')
     .addEventListener('click', () => document.getElementById('reserve').showModal());
+
+  /* on confirm, send the reservation; the dialog still closes immediately via method="dialog" */
+  document.querySelector('#reserve form').addEventListener('submit', (e) => {
+    if (e.submitter?.value !== 'confirm') return;
+    const form = e.target;
+    const email = form.email.value;
+    const org = form.org.value;
+    if (!email) return;
+    fetch('/api/reserve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, org, source: 'clinicians.html' }),
+    }).catch(() => {});
+  });
 </script>
 
 <footer class="fl-footer">
@@ -400,6 +494,8 @@
     </div>
   </div>
 </footer>
+
+<script src="motion.js" defer></script>
 
 </body>
 </html>

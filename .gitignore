@@ -3,3 +3,5 @@
 .impeccable/
 Thumbs.db
 .DS_Store
+.vercel
+.env*

@@ -15,6 +15,8 @@
 </head>
 <body class="fl-lit">
 
+<div class="fl-progress" aria-hidden="true"><div class="fl-progress__bar"></div></div>
+
 <!-- partials/mark.html — the symbol block from hero.html, unchanged. Inline once, first thing inside <body>, on every page that shows the mark. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
@@ -80,20 +82,25 @@
 <!-- ============ devices ============ -->
 <section class="fl-section--tall" id="devices" aria-labelledby="devices-h">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker">Devices</span>
-    <h2 class="fl-display-m" id="devices-h">One device.</h2>
-    <p class="fl-body fl-body--l" style="margin-top:16px;max-width:56ch">It seats over your phone's
+    <span class="fl-label fl-kicker" data-reveal>Devices</span>
+    <h2 class="fl-display-m" id="devices-h" data-reveal style="--fl-reveal-delay:60ms">One device.</h2>
+    <p class="fl-body fl-body--l" style="margin-top:16px;max-width:56ch;--fl-reveal-delay:120ms" data-reveal>It seats over your phone's
       camera and supplies the light, polarized or not, at a fixed distance. The specialist edition
       is the same instrument with a machined aluminium top.</p>
 
     <div class="fl-devices" style="margin-top:64px">
-      <a class="fl-device" href="clinicians.html">
-        <img class="fl-device__shot" src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
-        <span class="fl-device__for">For home</span>
-        <span class="fl-device__name">flacara h1</span>
-        <p class="fl-device__note">Polarized and unpolarized light, a fixed working distance, and a
-          record of the same spot over time. Also an aluminium-top edition for specialists.</p>
-        <span class="fl-btn fl-btn--tertiary" style="margin-top:8px">See the device</span>
+      <a class="fl-device" href="clinicians.html" data-reveal="scale" data-tilt style="--fl-reveal-delay:180ms">
+        <div class="fl-device__frame">
+          <span class="fl-device__index">01 — home</span>
+          <img class="fl-device__shot" src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
+        </div>
+        <div class="fl-device__body">
+          <span class="fl-device__for">For home</span>
+          <span class="fl-device__name">flacara h1</span>
+          <p class="fl-device__note">Polarized and unpolarized light, a fixed working distance, and a
+            record of the same spot over time. Also an aluminium-top edition for specialists.</p>
+          <span class="fl-btn fl-btn--tertiary" style="margin-top:8px">See the device</span>
+        </div>
       </a>
     </div>
   </div>
@@ -116,6 +123,8 @@
     </div>
   </div>
 </footer>
+
+<script src="motion.js" defer></script>
 
 </body>
 </html>

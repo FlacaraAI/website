@@ -14,16 +14,19 @@
   --fl-ink:           #151616;
   --fl-muted:         #5F6060;
 
-  /* accent */
-  /* The ramp's own 35% stop, flat. This is a SURFACE colour, not a text colour:
-     1.26:1 on the ground, 11.42:1 under --fl-ink. Fills, bands and cards take
-     it; accent text on light does not exist, it is --fl-ink with an underline.
-     Darker derivatives are reserved for a future dark mode. */
-  --fl-accent:        #CECBDF;
-  --fl-accent-hover:  #BFBBD2;
-  --fl-accent-quiet:  #E7E5EE;
-  --fl-on-accent:     #151616;
-  /* focus must clear 3:1 against every ground it lands on; the accent cannot. */
+  /* accent — blue and red are the only two brand colors. See DESIGN_COLORS.md.
+     The lavender seen below is not a color of ours: it is only the
+     interpolated 35% stop of the blue → red ramp (--fl-ramp) and must never
+     be pulled out and used as a standalone fill, text, or border color. */
+  --fl-blue:          #C9DAF8;
+  --fl-blue-deep:     #9DBBEA;
+  --fl-blue-quiet:    #EBF1FC;
+  --fl-red:           #DB9D91;
+  --fl-red-deep:      #C67C6D;
+  --fl-red-quiet:     #F5E7E4;
+  --fl-on-blue:       #151616;
+  --fl-on-red:        #151616;
+  /* focus must clear 3:1 against every ground it lands on; the accents cannot. */
   --fl-focus:         #151616;
 
   /* imagery */
@@ -33,7 +36,6 @@
   --fl-mat-raised:    #35383B;
   --fl-on-mat:        #EAECED;
   --fl-on-mat-muted:  #979A9C;
-  --fl-accent-on-mat: #CECBDF;   /* the same value: on a dark surface it clears 8.73:1 */
 
   /* fenced: form validation only — see §2.4 */
   --fl-invalid:       #8C2F2F;
@@ -45,6 +47,13 @@
   --fl-ground-lit: linear-gradient(135deg, #FCFCFC 0%, #ECECEC 100%);
   --fl-ramp:       linear-gradient(135deg, #C9DAF8 0%, #CECBDF 35%, #DB9D91 100%);
   --fl-ramp-tail:  linear-gradient(135deg, #CCD1EA 0%, #CECBDF 18.75%, #DB9D91 100%);
+  /* blue and red weighted evenly (no lavender stop pinned in) — for buttons
+     and highlights, where the two brand colors should read as equals. */
+  --fl-ramp-even:      linear-gradient(135deg, var(--fl-blue) 0%, var(--fl-red) 100%);
+  --fl-ramp-even-deep: linear-gradient(135deg, var(--fl-blue-deep) 0%, var(--fl-red-deep) 100%);
+  /* the pale tints instead of the base hues — for large backdrops, where the
+     full-strength gradient would be too heavy to sit behind a product shot. */
+  --fl-ramp-quiet:     linear-gradient(160deg, var(--fl-blue-quiet) 0%, var(--fl-red-quiet) 100%);
 
   /* fenced shadows — brand layer only, see §4 */
   --lift-ico: drop-shadow(0 9px 14px rgba(148,153,158,.42));
@@ -64,6 +73,12 @@
   /* motion */
   --fl-ease: cubic-bezier(0.2, 0, 0, 1);
   --fl-dur:  150ms;
+  /* Stage 3 — a second, livelier easing for entrances and hovers. The
+     120–180ms clinical timing above still governs state changes (focus,
+     validation, the current-page pill); this one is for things that move
+     on their own or respond to a cursor. */
+  --fl-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fl-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* tokens hero.html defines that §7.1 does not */
@@ -217,6 +232,66 @@ a:hover { text-decoration-thickness: 2px; }
   .fl-compare > figure:first-child::after { top: auto; right: 0; left: 0; bottom: -24px; width: auto; height: 1px; }
 }
 
+/* ---------- resolution slider ----------
+   §5.1 bans crossfade/slider-wipe between *clinical* images because it implies
+   a transition that didn't happen. This compares a printed resolution target,
+   not a patient photo, so a drag-to-reveal is used deliberately here and
+   nowhere else on the site. */
+.fl-slider {
+  position: relative; max-width: 480px; margin: 0 auto; aspect-ratio: 3 / 4;
+  overflow: hidden; border-radius: 2px; touch-action: pan-y;
+}
+.fl-slider__img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  display: block; -webkit-user-drag: none; user-select: none;
+}
+.fl-slider__img--reveal { clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0); }
+.fl-slider__divider {
+  position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 1px;
+  background: var(--fl-on-mat); transform: translateX(-50%); pointer-events: none;
+}
+.fl-slider__grip {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 32px; height: 32px; border-radius: 999px; background: var(--fl-mat-raised);
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge);
+  display: grid; place-items: center; color: var(--fl-on-mat);
+}
+.fl-slider__grip svg { display: block; }
+.fl-slider__tag {
+  position: absolute; top: 12px; font-family: var(--fl-mono); font-weight: 500;
+  font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--fl-on-mat); background: rgba(31,34,37,.55); padding: 4px 8px;
+  border-radius: 2px; pointer-events: none;
+}
+.fl-slider__tag--left { left: 12px; }
+.fl-slider__tag--right { right: 12px; }
+.fl-slider__input {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0;
+  cursor: ew-resize; -webkit-appearance: none; appearance: none;
+}
+.fl-slider__input::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; }
+.fl-slider__input::-moz-range-thumb { width: 44px; height: 100%; border: none; background: transparent; }
+.fl-slider__input:focus-visible ~ .fl-slider__divider {
+  outline: 2px solid var(--fl-focus); outline-offset: 2px;
+}
+
+/* stat row beside the slider — three figures, thin rules between, no shadow */
+.fl-stat-row { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
+.fl-stat-row > div {
+  flex: 1 1 120px; padding-left: 20px; border-left: 1px solid var(--fl-rule);
+}
+.fl-stat-row > div:first-child { padding-left: 0; border-left: none; }
+.fl-stat-row dt { margin: 0 0 6px; }
+.fl-stat-row__value {
+  margin: 0; font-family: var(--fl-mono); font-weight: 500; font-size: 1.5rem;
+  letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
+}
+.fl-stat-row__value--text { font-size: 1rem; letter-spacing: 0; }
+@media (max-width: 480px) {
+  .fl-stat-row { gap: 16px 20px; }
+  .fl-stat-row > div { flex-basis: 42%; padding-left: 16px; }
+}
+
 /* ---------- fork (index.html two-panel section) ---------- */
 .fl-fork { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; align-items: start; }
 .fl-fork > div { min-width: 0; }
@@ -238,9 +313,15 @@ a:hover { text-decoration-thickness: 2px; }
   transition: background-color var(--fl-dur) var(--fl-ease), color var(--fl-dur) var(--fl-ease);
 }
 .fl-btn:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
-.fl-btn--primary   { background: var(--fl-accent); color: var(--fl-on-accent); }
-.fl-btn--primary:hover { background: var(--fl-accent-hover); }
-.fl-btn--secondary { background: var(--fl-accent-quiet); color: var(--fl-ink); border-color: var(--fl-rule); }
+.fl-btn--primary   { background: var(--fl-ramp-even); color: var(--fl-on-red); }
+.fl-btn--primary:hover { background: var(--fl-ramp-even-deep); }
+.fl-btn--secondary {
+  position: relative; background: var(--fl-blue-quiet); color: var(--fl-ink); border-color: var(--fl-rule);
+}
+.fl-btn--secondary::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--fl-ramp-even); border-radius: 999px;
+}
 .fl-btn--secondary:hover { background: var(--fl-sunken); }
 .fl-btn--tertiary  { background: transparent; color: var(--fl-ink); padding-left: 0; padding-right: 0; }
 .fl-btn--tertiary:hover { text-decoration: underline; text-underline-offset: 2px; }
@@ -250,7 +331,7 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-table-wrap { overflow-x: auto; }
 .fl-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .fl-table th, .fl-table td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--fl-rule); vertical-align: top; }
-.fl-table thead th { background: var(--fl-sunken); font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; }
+.fl-table thead th { background: var(--fl-sunken); font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; box-shadow: inset 0 -2px 0 0 var(--fl-blue-deep); }
 .fl-table tbody th { font-family: var(--fl-text); font-weight: 400; font-size: 0.875rem; line-height: 1.55; color: var(--fl-muted); }
 .fl-table td { font-family: var(--fl-mono); font-size: 0.8125rem; line-height: 1.5; letter-spacing: 0.02em; white-space: nowrap; }
 .fl-table .num { text-align: right; }
@@ -305,7 +386,7 @@ a:hover { text-decoration-thickness: 2px; }
   transition: color .15s var(--fl-ease), background-color .15s var(--fl-ease);
 }
 .fl-nav__links a:not(.fl-btn):hover { color: var(--fl-ink); text-decoration: none; }
-.fl-nav__links a[aria-current="page"] { color: var(--fl-ink); background: var(--fl-surface); }
+.fl-nav__links a[aria-current="page"] { color: var(--fl-ink); background: linear-gradient(135deg, var(--fl-blue-quiet), var(--fl-red-quiet)); }
 .fl-nav .fl-btn { flex: none; }
 @media (max-width: 640px) {
   /* ponytail: the track plus the button cannot share 335px with the mark. Let
@@ -366,7 +447,11 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 
 /* kicker: the mono label as a section opener (§3.5) */
-.fl-kicker { display: block; margin-bottom: 24px; }
+.fl-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+.fl-kicker::before {
+  content: ""; display: inline-block; width: 20px; height: 3px; border-radius: 999px;
+  background: var(--fl-ramp-even); flex: none;
+}
 
 /* spec list: label over value */
 .fl-specs { margin: 0; display: grid; gap: 24px; }
@@ -377,7 +462,7 @@ a:hover { text-decoration-thickness: 2px; }
    enters from one corner and is gone before the copy. */
 .fl-band {
   position: relative; overflow: hidden; isolation: isolate;
-  background: var(--fl-accent); color: var(--fl-on-accent);
+  background: var(--fl-blue-quiet); color: var(--fl-ink);
   border-radius: var(--fl-radius-card); box-shadow: var(--lift-card);
   padding: 96px 64px;
 }
@@ -388,11 +473,11 @@ a:hover { text-decoration-thickness: 2px; }
           mask: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
 }
 .fl-band .fl-label, .fl-band .fl-caption, .fl-band .fl-small { color: var(--fl-muted); }
-.fl-band .fl-form label, .fl-band .fl-form legend { color: var(--fl-on-accent); }
+.fl-band .fl-form label, .fl-band .fl-form legend { color: var(--fl-ink); }
 .fl-band .fl-form__error { color: var(--fl-muted); }
 .fl-band .fl-btn--primary { background: var(--fl-ink); color: var(--fl-surface); }
 .fl-band .fl-btn--primary:hover { background: #2E2F2F; }
-.fl-band .fl-form input:focus-visible { outline-color: var(--fl-on-accent); }
+.fl-band .fl-form input:focus-visible { outline-color: var(--fl-ink); }
 .fl-band .fl-form input[type="radio"] { accent-color: var(--fl-ink); }
 .fl-band .fl-card { color: var(--fl-ink); }
 .fl-band .fl-card .fl-caption, .fl-band .fl-card .fl-small { color: var(--fl-muted); }
@@ -464,23 +549,53 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 /* ---------- devices (home) ---------- */
-.fl-devices { display: grid; justify-items: center; gap: 40px; }
+.fl-devices { display: grid; gap: 40px; }
 .fl-device {
-  background: var(--fl-surface); border-radius: var(--fl-radius-card);
-  box-shadow: var(--lift-card); padding: 48px; width: min(100%, 560px);
-  display: grid; justify-items: center; text-align: center; gap: 10px;
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: stretch;
+  background: var(--fl-surface); border-radius: 4px; border: 1px solid var(--fl-rule);
+  box-shadow: var(--lift-card);
   text-decoration: none; color: inherit;
-  transition: transform var(--fl-dur) var(--fl-ease);
+  transition: transform var(--fl-dur) var(--fl-ease), border-color var(--fl-dur) var(--fl-ease);
 }
-.fl-device:hover { transform: translateY(-2px); text-decoration: none; }
-.fl-device__shot { width: min(100%, 380px); margin-bottom: 8px; }
-.fl-device__name { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
-  letter-spacing: -.024em; line-height: 1; }
-.fl-device__for { display: inline-block; background: var(--fl-accent-quiet); color: var(--fl-ink);
+.fl-device::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--fl-ramp-even); z-index: 2;
+}
+.fl-device:hover { transform: translateY(-2px); border-color: var(--fl-blue-deep); text-decoration: none; }
+.fl-device__frame {
+  position: relative; background: var(--fl-ramp-even); min-width: 0;
+  display: grid; place-items: center; padding: 40px; overflow: hidden;
+}
+.fl-device__frame::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: var(--fl-blue-quiet); opacity: .55;
+}
+.fl-device__index {
+  position: absolute; top: 20px; left: 24px; z-index: 1;
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-muted);
+}
+.fl-device__shot { position: relative; z-index: 1; width: min(100%, 560px); }
+.fl-device__body {
+  padding: 56px 48px; display: grid; align-content: center; justify-items: start;
+  text-align: left; gap: 12px; min-width: 0;
+}
+.fl-device__name { font-family: var(--fl-display); font-weight: 600; font-size: 2.75rem;
+  letter-spacing: -.028em; line-height: 1; }
+.fl-device__name::after {
+  content: ""; display: block; width: 56px; height: 4px; margin-top: 12px;
+  border-radius: 999px; background: var(--fl-ramp-even);
+}
+.fl-device__for { display: inline-block; background: var(--fl-blue-quiet); color: var(--fl-ink);
   font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
   border-radius: 999px; padding: 6px 12px; }
 .fl-device__note { font-size: .9375rem; line-height: 1.6; color: var(--fl-muted); max-width: 42ch; }
-@media (max-width: 640px) { .fl-device { padding: 32px 20px; } }
+@media (max-width: 780px) {
+  .fl-device { grid-template-columns: 1fr; }
+  .fl-device__frame { padding: 40px 24px; }
+  .fl-device__body { padding: 32px 24px; justify-items: center; text-align: center; }
+}
 
 /* ---------- dark hero, fading into the page (device page) ----------
    §2.2 amended for exactly one surface: the device page's opening. It is the
@@ -500,9 +615,9 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-hero-mat > * { position: relative; z-index: 1; }
 .fl-hero-mat h1, .fl-hero-mat .fl-display-xl { color: var(--fl-on-mat); }
 .fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
-.fl-hero-mat .fl-label { color: var(--fl-accent-on-mat); }
-.fl-hero-mat__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
-.fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none; width: 100%; height: auto; }
+.fl-hero-mat .fl-label { color: var(--fl-blue); }
+.fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
+.fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none; width: 122%; max-width: 122%; margin: 0 -11%; height: auto; }
 .fl-rail { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; padding-top: 20px;
   border-top: 1px solid var(--fl-mat-raised); }
 .fl-rail div { display: grid; gap: 4px; }
@@ -513,7 +628,7 @@ a:hover { text-decoration-thickness: 2px; }
 @media (max-width: 860px) {
   .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
   .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
-  .fl-hero-mat .fl-outline { max-width: 340px; }
+  .fl-hero-mat .fl-outline { width: 100%; max-width: 420px; margin: 0; }
 }
 
 /* ---------- feature row ---------- */
@@ -529,23 +644,31 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-tile { position: relative; background: var(--fl-surface); border-radius: var(--fl-radius-card);
   box-shadow: var(--lift-card); aspect-ratio: 4 / 3; overflow: hidden; display: grid; place-items: center; }
 .fl-tile svg { width: 100%; height: 100%; display: block; }
-.fl-tile__label { position: absolute; left: 20px; bottom: 16px; }
+/* top-left, not bottom: every diagram in this tile family prints its own
+   caption low and centered (see the tiles in clinicians.html) — a bottom
+   overlay collided with it. */
+.fl-tile__label { position: absolute; left: 20px; top: 16px; }
 
 /* ---------- pre-purchase panel ---------- */
-.fl-buy { display: grid; grid-template-columns: .95fr 1.05fr; align-items: stretch;
+.fl-buy { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .95fr); align-items: stretch;
   background: var(--fl-surface); border-radius: var(--fl-radius-card);
   box-shadow: var(--lift-card); overflow: hidden; }
-.fl-buy__shot { background: var(--fl-accent-quiet); display: grid; justify-items: center;
-  align-content: start; padding: 56px; }
-/* the spec column is long; the device stays with the reader rather than
-   leaving a 1200px empty panel behind it */
-.fl-buy__shot img { width: 100%; max-width: 420px; position: sticky; top: 88px; }
+/* the shot panel stretches to match the (much longer) spec column, so its
+   red backdrop reads as one continuous surface rather than stopping short;
+   the image itself sticks near the top as the reader scrolls the specs. */
+.fl-buy__shot { background: var(--fl-ramp-quiet); display: grid; justify-items: center;
+  align-content: start; padding: 24px; min-width: 0; }
+.fl-buy__shot img { width: 100%; max-width: 620px; position: sticky; top: 88px; }
 .fl-buy__body { padding: 56px; display: grid; align-content: start; gap: 24px; }
 .fl-buy__price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .fl-buy__price .amt { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
   letter-spacing: -.024em; line-height: 1; }
 .fl-buy__price .qual { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted); }
 .fl-buy .fl-btn--primary { justify-self: start; font-size: 1.0625rem; padding: 15px 32px; border-radius: 8px; }
+/* the spec rows on this panel run six deep; a tighter row keeps the whole
+   list from outrunning the device shot beside it */
+.fl-buy .fl-table th, .fl-buy .fl-table td { padding: 7px 16px; }
+.fl-buy .fl-table th:first-child, .fl-buy .fl-table td:first-child { padding-left: 0; }
 .fl-note { border-top: 1px solid var(--fl-rule); padding-top: 16px; font-size: .875rem;
   line-height: 1.6; color: var(--fl-muted); }
 @media (max-width: 860px) {
@@ -555,6 +678,17 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 /* ---------- FAQ: native disclosure, no script ---------- */
+/* collapsed behind one outer toggle by default, so five closed questions
+   don't cost more vertical space than a single row until asked for */
+.fl-faq-outer { border-top: 1px solid var(--fl-rule); }
+.fl-faq-outer > summary { list-style: none; cursor: pointer; padding: 16px 0;
+  font-family: var(--fl-text); font-weight: 600; font-size: 1rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.fl-faq-outer > summary::-webkit-details-marker { display: none; }
+.fl-faq-outer > summary::after { content: "+"; font-family: var(--fl-mono); color: var(--fl-muted);
+  transition: transform .3s var(--fl-ease-spring); display: inline-block; }
+.fl-faq-outer[open] > summary::after { transform: rotate(180deg); }
+.fl-faq-outer .fl-faq { margin-top: 4px; }
 .fl-faq { border-top: 1px solid var(--fl-rule); }
 .fl-faq details { border-bottom: 1px solid var(--fl-rule); }
 .fl-faq summary { list-style: none; cursor: pointer; padding: 16px 0;
@@ -562,7 +696,8 @@ a:hover { text-decoration-thickness: 2px; }
   display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .fl-faq summary::-webkit-details-marker { display: none; }
 .fl-faq summary::after { content: "+"; font-family: var(--fl-mono); color: var(--fl-muted); }
-.fl-faq details[open] summary::after { content: "\2212"; }
+.fl-faq details[open] summary::after { content: "\2212"; color: var(--fl-red-deep); }
+.fl-faq summary:hover::after { color: var(--fl-blue-deep); }
 .fl-faq details p { font-size: .875rem; line-height: 1.6; color: var(--fl-muted);
   margin: 0 0 18px; max-width: 62ch; }
 
@@ -574,3 +709,136 @@ a:hover { text-decoration-thickness: 2px; }
 .fl-modal h3 { font-family: var(--fl-text); font-weight: 600; font-size: 1.25rem; }
 .fl-modal .fl-form { max-width: none; }
 .fl-modal__row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+/* ======================================================================
+   Stage 3 — the interaction pass. Motion for its own sake, everywhere the
+   restrained Stage-1/2 language above left content sitting still. Backed
+   by motion.js; every rule here degrades to "static and visible" with
+   prefers-reduced-motion or without JS. Never applied to the clinical
+   comparison figures in §5.1 — those still change on drag alone.
+   ====================================================================== */
+
+/* ---------- scroll progress: a thin ramp along the top edge ---------- */
+.fl-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none; }
+.fl-progress__bar { height: 100%; width: 0%; background: var(--fl-ramp); transition: width .12s linear; }
+@media (prefers-reduced-motion: reduce) { .fl-progress { display: none; } }
+
+/* ---------- page-to-page transition: home ↔ device swipes as one motion ----------
+   Cross-document View Transitions (Chromium today, no-op elsewhere — a plain
+   navigation is a fully valid fallback, so nothing is gated behind JS). The
+   nav and footer are the same chrome on every page, so they get their own
+   transition-name and simply persist; only the space between them slides. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  .fl-nav    { view-transition-name: fl-nav; }
+  .fl-footer { view-transition-name: fl-footer; }
+
+  ::view-transition-group(root) { animation-duration: .42s; }
+  ::view-transition-old(root) {
+    animation: fl-vt-out .34s var(--fl-ease-out) both;
+  }
+  ::view-transition-new(root) {
+    animation: fl-vt-in .42s var(--fl-ease-out) both;
+  }
+  @keyframes fl-vt-out { to   { opacity: 0; transform: translateX(-28px) scale(.98); } }
+  @keyframes fl-vt-in  { from { opacity: 0; transform: translateX(28px)  scale(.98); } }
+}
+
+/* ---------- generic scroll reveal, JS-driven, staggerable via inline --fl-reveal-delay ---------- */
+[data-reveal] {
+  opacity: 0; transform: translateY(26px);
+  transition: opacity .7s var(--fl-ease-out), transform .7s var(--fl-ease-out);
+  transition-delay: var(--fl-reveal-delay, 0ms);
+}
+[data-reveal="left"]  { transform: translateX(-24px); }
+[data-reveal="right"] { transform: translateX(24px); }
+[data-reveal="scale"] { transform: translateY(14px) scale(.96); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- nav: settles into a smaller pill once the page has moved ---------- */
+.fl-nav .fl-wrap { transition: height .3s var(--fl-ease-out), padding .3s var(--fl-ease-out), background-color .3s var(--fl-ease-out); }
+.fl-nav.is-scrolled .fl-wrap { height: 48px; background: rgba(242, 244, 245, 0.66); }
+.fl-nav__mark .ico { transition: transform .4s var(--fl-ease-spring); }
+.fl-nav__mark:hover .ico { transform: rotate(-16deg) scale(1.1); }
+.fl-nav__links a[aria-current="page"] { transition: color .15s var(--fl-ease), background-color .3s var(--fl-ease-spring); }
+
+/* ---------- buttons: lift, press, and a sweep of light on the primary ---------- */
+.fl-btn {
+  transition: background-color var(--fl-dur) var(--fl-ease), color var(--fl-dur) var(--fl-ease),
+              transform .25s var(--fl-ease-spring), box-shadow .25s var(--fl-ease-out);
+}
+.fl-btn:hover { transform: translateY(-2px); }
+.fl-btn:active { transform: translateY(0) scale(.96); transition-duration: .1s; }
+.fl-btn--primary, .fl-btn--secondary { position: relative; overflow: hidden; }
+.fl-btn--primary::after, .fl-btn--secondary::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: skewX(-18deg); pointer-events: none;
+  transition: left .6s var(--fl-ease-out);
+}
+.fl-btn--primary:hover::after, .fl-btn--secondary:hover::after { left: 130%; }
+.fl-btn--primary:hover { box-shadow: 0 10px 24px -8px rgba(219,157,145,.55); }
+@media (prefers-reduced-motion: reduce) {
+  .fl-btn, .fl-btn:hover, .fl-btn:active { transform: none; }
+  .fl-btn--primary::after, .fl-btn--secondary::after { display: none; }
+}
+
+/* ---------- magnetic tilt targets ---------- */
+[data-tilt] { transition: transform .15s var(--fl-ease-out); transform-style: preserve-3d; will-change: transform; }
+
+/* ---------- device card, tile, buy panel: hover life ---------- */
+.fl-device__shot { transition: transform .5s var(--fl-ease-out); }
+.fl-device:hover .fl-device__shot { transform: scale(1.04); }
+.fl-tile, .fl-card { transition: transform .35s var(--fl-ease-out), box-shadow .35s var(--fl-ease-out); }
+.fl-tile:hover, .fl-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 32px 60px -16px rgba(157,187,234,.32), 0 4px 10px rgba(198,124,109,.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-device__shot, .fl-tile, .fl-card { transition: none; }
+  .fl-device:hover .fl-device__shot, .fl-tile:hover, .fl-card:hover { transform: none; box-shadow: var(--lift-card); }
+}
+
+/* ---------- hero aperture: idle breathing + cursor parallax ---------- */
+.fl-aper {
+  transform: translate(calc(-50% + var(--px, 0) * 26px * var(--k, 1)), calc(-50% + var(--py, 0) * 26px * var(--k, 1))) scale(var(--k, 1));
+  transition: transform .4s var(--fl-ease-out);
+}
+@keyframes fl-aper-breathe { 0%, 100% { opacity: var(--o, .8); } 50% { opacity: calc(var(--o, .8) * .74); } }
+.fl-aper { animation: fl-aper-in 1.5s var(--fl-ease) var(--d, 0ms) both, fl-aper-breathe 7s ease-in-out calc(var(--d, 0ms) + 1.5s) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .fl-aper { animation: none; transform: translate(-50%, -50%) scale(var(--k, 1)); transition: none; }
+}
+
+/* ---------- the device-page outline: traces itself in, stroke by stroke.
+   pathLength="1" plus --s/--i were already authored on every path in
+   clinicians.html; nothing had wired them to a keyframe until now. ---------- */
+.fl-outline path {
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: fl-trace 1.1s var(--fl-ease-out) calc(var(--i, 0) * 55ms + 200ms) both;
+}
+@keyframes fl-trace { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .fl-outline path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* ---------- resolution slider: a nudge inviting the drag, gone after first touch ---------- */
+@keyframes fl-grip-nudge {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(calc(-50% + 7px), -50%); }
+}
+.fl-slider:not(.is-touched) .fl-slider__grip { animation: fl-grip-nudge 2.4s ease-in-out 1.5s infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .fl-slider:not(.is-touched) .fl-slider__grip { animation: none; }
+}
+
+/* ---------- FAQ marker: a quarter turn instead of a content swap ---------- */
+.fl-faq summary::after { transition: transform .3s var(--fl-ease-spring); display: inline-block; }
+.fl-faq details[open] summary::after { transform: rotate(180deg); }
+
+/* ---------- counted numbers: reserve their width so nothing reflows while they climb ---------- */
+[data-count] { font-variant-numeric: tabular-nums; }

@@ -12,6 +12,8 @@
 </head>
 <body class="fl-lit">
 
+<div class="fl-progress" aria-hidden="true"><div class="fl-progress__bar"></div></div>
+
 <!-- partials/mark.html — the symbol block from hero.html, unchanged. Inline once, first thing inside <body>, on every page that shows the mark. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
@@ -65,7 +67,7 @@
 <section class="fl-section--tall">
   <div class="fl-wrap">
     <div class="fl-pill" aria-hidden="true"></div>
-    <div class="fl-prose">
+    <div class="fl-prose" data-reveal>
       <h1 class="fl-display-xl">A clear picture.</h1>
       <p class="fl-body fl-body--l">Flacara gives you a clear picture of a spot on your skin. Take another later and see whether it has changed.</p>
     </div>
@@ -74,8 +76,8 @@
 
 <section class="fl-section">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker">01 — The picture</span>
-    <figure class="fl-prose">
+    <span class="fl-label fl-kicker" data-reveal>01 — The picture</span>
+    <figure class="fl-prose" data-reveal="scale" style="--fl-reveal-delay:80ms">
       <div class="fl-plate">
         <img src="images/sample-01.JPG" alt="Close photograph of skin taken with the Flacara consumer device" width="1200" height="1200">
       </div>
@@ -87,7 +89,7 @@
 
 <section class="fl-section">
   <div class="fl-wrap">
-    <div class="fl-panel">
+    <div class="fl-panel" data-reveal>
       <span class="fl-label fl-kicker">02 — What it is not</span>
       <div class="fl-prose">
         <!-- ≤16ch: "Not a diagnosis." (16) -->
@@ -100,17 +102,17 @@
 
 <section class="fl-section">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker">03 — The device</span>
+    <span class="fl-label fl-kicker" data-reveal>03 — The device</span>
     <div class="fl-prose">
-      <h2 class="fl-display-m">The device</h2>
-      <div class="fl-card" style="margin-top:32px">
+      <h2 class="fl-display-m" data-reveal>The device</h2>
+      <div class="fl-card" data-reveal="scale" style="margin-top:32px;--fl-reveal-delay:80ms">
         <div class="fl-table-wrap">
           <table class="fl-table">
             <tbody>
               <tr><th scope="row" class="fl-small">Light</th><td class="fl-data">Polarized</td></tr>
               <tr><th scope="row" class="fl-small">Charging</th><td class="fl-data">USB-C</td></tr>
               <tr><th scope="row" class="fl-small">Works with</th><td class="fl-data">iPhone</td></tr>
-              <tr><th scope="row" class="fl-small">Price (USD)</th><td class="fl-data num">199</td></tr>
+              <tr><th scope="row" class="fl-small">Price (USD)</th><td class="fl-data num"><span data-count="199">0</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -122,21 +124,46 @@
 
 <section class="fl-section--tall" id="pre-order">
   <div class="fl-wrap">
-    <div class="fl-prose">
+    <div class="fl-prose" data-reveal>
       <span class="fl-label fl-kicker">04 — Pre-order</span>
       <h2 class="fl-display-m">Pre-order</h2>
-      <form class="fl-form" action="#" method="post">
+      <form class="fl-form" id="pre-order-form" action="#" method="post">
         <div class="fl-form__field">
           <label for="email">Email</label>
           <input id="email" name="email" type="email" required aria-describedby="email-error">
           <p class="fl-form__error" id="email-error"></p>
         </div>
         <div><button class="fl-btn fl-btn--primary" type="submit">Pre-order</button></div>
-        <p class="fl-small">No payment is taken now. We will email you when units ship.</p>
+        <p class="fl-small" id="pre-order-status">No payment is taken now. We will email you when units ship.</p>
       </form>
     </div>
   </div>
 </section>
+
+<script>
+  document.getElementById('pre-order-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const status = document.getElementById('pre-order-status');
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    try {
+      const r = await fetch('/api/reserve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'patients.html' }),
+      });
+      if (!r.ok) throw new Error('request failed');
+      status.textContent = 'Thanks — we will email you when units ship.';
+      form.reset();
+    } catch {
+      status.textContent = 'Something went wrong. Please try again.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
 
 </main>
 
@@ -154,6 +181,8 @@
     </div>
   </div>
 </footer>
+
+<script src="motion.js" defer></script>
 
 </body>
 </html>
