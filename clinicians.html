@@ -9,6 +9,7 @@
 <!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="flacara.css">
 <!-- No page-local stylesheet. Every component here lives in flacara.css. -->
 </head>
@@ -105,7 +106,13 @@
   </svg>
           <video class="fl-reveal__vid" muted playsinline preload="auto"
                  data-src="images/device-reveal.webm" aria-hidden="true"></video>
+          <canvas class="fl-reveal__canvas" aria-hidden="true"></canvas>
           <img class="fl-reveal__still" src="images/device-reveal.webp" alt="The flacara h1, seen head on" width="900" height="932">
+          <button class="fl-reveal__play" type="button" aria-label="Play the device animation" hidden>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 2.5l9 5.5-9 5.5V2.5z" fill="currentColor"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -158,10 +165,10 @@
           </div>
         </dl>
 
-        <p class="fl-body" style="margin-top:24px">No added lens. That resolving power comes from the
-          phone's own sensor and the software behind it. Line pairs on this target resolve more than
-          six times finer than what the unaided eye can pick apart at normal reading distance, from a
-          housing with no glass of its own.</p>
+        <p class="fl-body" style="margin-top:24px">That resolving power comes from the phone's own
+          sensor and the software behind it, which is how Flacara gets a purpose-built dermatoscope's
+          functional resolution for a fraction of the cost. Line pairs on this target resolve more
+          than six times finer than what the unaided eye can pick apart at normal reading distance.</p>
 
         <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch">This is a resolution
           comparison on a printed test target, not a clinical or diagnostic comparison, and it does not
@@ -222,41 +229,24 @@
           and offset before the shutter fires. You are not asked to hold still and guess.</p>
       </div>
       <figure data-reveal="left" data-tilt style="--fl-reveal-delay:100ms;margin:0">
-        <div class="fl-align">
-          <figure>
-            <div class="fl-plate is-pending" data-file="align-mar.jpg"></div>
-            <figcaption>A · 14 Mar</figcaption>
-          </figure>
-          <figure>
-            <div class="fl-plate is-pending" data-file="align-sep.jpg"></div>
-            <figcaption>B · 19 Sep</figcaption>
-          </figure>
-        </div>
-
-        <div class="fl-plate" style="margin-top:12px">
+        <div class="fl-plate">
           <div class="fl-slider" data-fl-slider style="--pos:50%;aspect-ratio:4/3;max-width:none">
-            <div class="fl-slider__img is-pending" data-file="align-sep.jpg"></div>
-            <div class="fl-slider__img fl-slider__img--reveal is-pending" data-file="align-mar.jpg" style="background:var(--fl-mat-deep)"></div>
+            <img class="fl-slider__img fl-slider__img--base" src="images/align-1-aligned.jpg" alt="The capture 1 frame after the app registered it to a common reference">
+            <img class="fl-slider__img fl-slider__img--reveal" src="images/align-2-aligned.jpg" alt="The capture 2 frame after the app registered it to the same reference as capture 1">
             <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span></div>
-            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">14 Mar</span>
-            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">19 Sep</span>
-            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to move between the March frame and the September frame of the same spot">
+            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Capture 1</span>
+            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">Capture 2</span>
+            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare capture 1 and capture 2 after the app has registered both to the same reference frame">
           </div>
         </div>
-
-        <div class="fl-delta">
-          <div><span class="k">Offset</span><span class="v">1.8 mm</span></div>
-          <div><span class="k">Rotation</span><span class="v">4.2°</span></div>
-          <div><span class="k">Corrected</span><span class="v">Before shutter</span></div>
-        </div>
-        <figcaption class="fl-caption" style="margin-top:12px">The same spot on two dates,
-          each held in the frame the other used. Drag to move between them; neither image has been
-          altered and nothing has been blended.</figcaption>
+        <figcaption class="fl-caption" style="margin-top:12px">FIG. B: we register every new capture
+          to your reference frame before the shutter fires, so two visits can be compared on equal
+          footing. Drag to compare this pair, aligned.</figcaption>
       </figure>
     </div>
   </div>
@@ -308,15 +298,30 @@
           not to a filename. Months later the phone's camera shows you where a spot was, in AR, on
           the skin in front of you, and takes the follow-up from the same position.</p>
       </div>
-      <figure data-reveal="left" data-tilt style="--fl-reveal-delay:100ms;margin:0">
+      <figure data-reveal="left" style="--fl-reveal-delay:100ms;margin:0">
         <div class="fl-plate">
-          <div class="fl-mesh">
-            <div class="fl-slot is-pending" data-file="body-mesh.png" style="--ph:2/3"></div>
-            <div class="fl-pin fl-pin--latest" style="--x:38%;--y:26%"><span class="fl-pin__dot"></span><span class="fl-pin__date">02 Sep</span></div>
-            <div class="fl-pin fl-pin--flip" style="--x:62%;--y:34%"><span class="fl-pin__dot"></span><span class="fl-pin__date">11 Jun</span></div>
-            <div class="fl-pin" style="--x:55%;--y:52%"><span class="fl-pin__dot"></span><span class="fl-pin__date">14 Mar</span></div>
-            <div class="fl-pin fl-pin--flip" style="--x:33%;--y:63%"><span class="fl-pin__dot"></span><span class="fl-pin__date">27 Jan</span></div>
-            <div class="fl-pin" style="--x:64%;--y:78%"><span class="fl-pin__dot"></span><span class="fl-pin__date">05 Dec</span></div>
+          <div class="fl-tracking-card" data-tilt>
+            <div class="fl-mesh" data-track>
+              <img class="fl-slot" style="--ph:1155/2380" src="images/body-mesh.png" alt="The tracking screen of the Flacara app: a body scan with five tracked points marked on the torso" width="1155" height="2380">
+              <div class="fl-pin fl-pin--latest" data-track-pin style="--x:38.45%;--y:43.64%"><span class="fl-pin__dot"></span><span class="fl-pin__date">02 Sep</span></div>
+              <div class="fl-pin fl-pin--flip" data-track-pin style="--x:32.97%;--y:47.89%"><span class="fl-pin__dot"></span><span class="fl-pin__date">11 Jun</span></div>
+              <div class="fl-pin" data-track-pin style="--x:40.20%;--y:50.61%"><span class="fl-pin__dot"></span><span class="fl-pin__date">14 Mar</span></div>
+              <div class="fl-pin fl-pin--flip" data-track-pin style="--x:32.63%;--y:55.53%"><span class="fl-pin__dot"></span><span class="fl-pin__date">27 Jan</span></div>
+              <div class="fl-pin" data-track-pin style="--x:38.08%;--y:56.18%"><span class="fl-pin__dot"></span><span class="fl-pin__date">05 Dec</span></div>
+              <div class="fl-track-reticle" aria-hidden="true"><span class="fl-track-reticle__ring"></span></div>
+            </div>
+            <div class="fl-tracking-log">
+              <span class="fl-label" style="color:var(--fl-on-mat-muted)">Capture log</span>
+              <ul data-track-log>
+                <li data-track-log-item><span class="fl-tracking-log__dot"></span><span class="fl-tracking-log__date">02 Sep</span></li>
+                <li data-track-log-item><span class="fl-tracking-log__dot"></span><span class="fl-tracking-log__date">11 Jun</span></li>
+                <li data-track-log-item><span class="fl-tracking-log__dot"></span><span class="fl-tracking-log__date">14 Mar</span></li>
+                <li data-track-log-item><span class="fl-tracking-log__dot"></span><span class="fl-tracking-log__date">27 Jan</span></li>
+                <li data-track-log-item><span class="fl-tracking-log__dot"></span><span class="fl-tracking-log__date">05 Dec</span></li>
+              </ul>
+              <p class="fl-small" style="color:var(--fl-on-mat-muted);margin-top:auto">Five points on
+                one mesh, each held to the same place the app first pinned it.</p>
+            </div>
           </div>
         </div>
         <figcaption class="fl-caption" style="margin-top:12px">Five captures, each pinned to

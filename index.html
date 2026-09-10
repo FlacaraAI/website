@@ -9,6 +9,7 @@
 <!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="flacara.css">
 <!-- No page-local stylesheet: the aperture hero and the device card are both
      components in flacara.css now (Stage 2). -->
@@ -64,6 +65,12 @@
 
 <!-- ============ hero: the brand, and no hardware ============ -->
 <section class="fl-hero-aper">
+  <!-- two soft, drifting blobs — blue and red, nothing standalone between
+       them; any lavender you see is just the blur letting them overlap. -->
+  <div class="fl-blob fl-blob--1" aria-hidden="true"></div>
+  <div class="fl-blob fl-blob--2" aria-hidden="true"></div>
+  <div class="fl-blob fl-blob--3" aria-hidden="true"></div>
+
   <!-- three apertures off the mark's own ramp (§2.6, place 1) -->
   <div class="fl-aper" style="--k:.72;--o:.85;--d:0ms" aria-hidden="true"></div>
   <div class="fl-aper" style="--k:1;--o:.42;--d:160ms" aria-hidden="true"></div>

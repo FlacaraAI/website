@@ -122,20 +122,106 @@
      no still head — it is already moving on frame 1. */
   var handoff = document.querySelector('[data-fl-reveal]');
   var clip = handoff && handoff.querySelector('.fl-reveal__vid');
-  if (handoff && clip && !reduceMotion) {
+  var canvas = handoff && handoff.querySelector('.fl-reveal__canvas');
+  var playBtn = handoff && handoff.querySelector('.fl-reveal__play');
+  if (handoff && clip && !reduceMotion && clip.canPlayType('video/webm; codecs="vp9"')) {
+    var isSafari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent);
+    clip.src = clip.getAttribute('data-src') + '#t=0.001'; /* paints frame 0 while paused */
+    handoff.classList.add('has-video');
+
     /* ponytail: UA sniff. Nothing reports "can decode alpha in WebM", and Safari
-       plays VP9 WebM with the alpha silently dropped — a black box, worse than the
-       still. Delete this once an HEVC-with-alpha MP4 exists for Safari. */
-    if (!/^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent)) {
-      clip.src = clip.getAttribute('data-src') + '#t=0.001'; /* paints frame 0 while paused */
-      handoff.classList.add('has-video');
+       plays VP9 WebM with the alpha silently dropped to solid black instead of
+       composited. Rather than fall back to the still there, the clip's own black
+       matte is chroma-keyed out by hand, frame by frame, onto a canvas the same
+       size and mask as the video — so Safari gets the motion too, just recomposited
+       in software instead of by the decoder. Delete once an HEVC-with-alpha MP4
+       exists for Safari and this can go back to being a plain <video>. */
+    if (canvas && isSafari) {
+      var ctx = canvas.getContext('2d');
+      var off = document.createElement('canvas');
+      var offCtx = off.getContext('2d', { willReadFrequently: true });
+      /* the matte is a true black (0,0,0); a soft ramp between the two thresholds
+         avoids a hard-edged cutout where the render itself anti-aliases into it */
+      var lo = 10, hi = 46;
+      var keying = false;
+      /* only hides the raw (black-matte) video once a frame has actually been
+         keyed onto the canvas — if playback or metadata never arrives, the
+         video stays as the visible layer rather than leaving an empty hole */
+      function keyFrame() {
+        var w = clip.videoWidth, h = clip.videoHeight;
+        if (!w) return false;
+        if (canvas.width !== w) { canvas.width = w; canvas.height = h; off.width = w; off.height = h; }
+        offCtx.drawImage(clip, 0, 0, w, h);
+        var frame = offCtx.getImageData(0, 0, w, h);
+        var d = frame.data;
+        for (var i = 0; i < d.length; i += 4) {
+          var luma = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+          var a = (luma - lo) / (hi - lo);
+          d[i + 3] = a < 0 ? 0 : a > 1 ? 255 : Math.round(a * 255);
+        }
+        ctx.putImageData(frame, 0, 0);
+        handoff.classList.add('is-keyed');
+        return true;
+      }
+      function loop() {
+        if (!keying) return;
+        keyFrame();
+        if (clip.ended) { keying = false; return; }
+        if (clip.requestVideoFrameCallback) clip.requestVideoFrameCallback(loop);
+        else requestAnimationFrame(loop);
+      }
+      function start() {
+        if (keying || !keyFrame()) return;
+        keying = true;
+        loop();
+      }
+      clip.addEventListener('loadeddata', start);
+      clip.addEventListener('play', start);
+      start(); /* paints frame 0 immediately if metadata is already there */
     }
+
+    clip.addEventListener('error', function () {
+      handoff.classList.remove('has-video', 'is-keyed'); /* falls back to the still */
+    });
+
+    /* Low Power Mode (confirmed on a real device) suppresses autoplay
+       outright — a script-triggered play() rejects with NotAllowedError.
+       Not fixable from here; the platform only honours a play() that traces
+       back to a genuine user gesture. Retry on the page's first one, so it
+       recovers instead of sitting frozen forever — 'ended' also leaves
+       paused true, so that has to be checked too or a later click would
+       restart the clip instead of leaving it settled on its last frame. */
+    var gestureKinds = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    function retryOnGesture() {
+      if (clip.ended || !clip.paused) { gestureKinds.forEach(function (k) { document.removeEventListener(k, retryOnGesture); }); return; }
+      clip.play().catch(function () {});
+    }
+    if (isSafari) gestureKinds.forEach(function (k) { document.addEventListener(k, retryOnGesture, { passive: true }); });
+
+    /* there is no API to ask the platform "is autoplay being blocked" — the
+       only signal available is whether play() actually took, checked a beat
+       after asking. If it didn't, show an explicit control rather than
+       leaving the frozen frame with no clue that a tap would start it. */
+    if (playBtn) {
+      playBtn.hidden = false; /* CSS now owns visibility via .awaiting-play */
+      playBtn.addEventListener('click', function () {
+        clip.play().catch(function () {});
+      });
+      clip.addEventListener('playing', function () { handoff.classList.remove('awaiting-play'); });
+    }
+
     var pending = handoff.querySelectorAll('.fl-outline path').length;
     handoff.addEventListener('animationend', function (e) {
       if (e.animationName !== 'fl-trace' || --pending) return;
       handoff.classList.add('is-handed-off');
-      /* 900ms = the transform leg of the crossfade, see .is-handed-off in flacara.css */
-      if (clip.src) setTimeout(function () { clip.play().catch(function () {}); }, 900);
+      /* 850ms = when the clip is told to play, tuned in the timing lab against
+         the 1.80s zoom / .67s+.90s crossfade in .is-handed-off in flacara.css */
+      setTimeout(function () {
+        clip.play().catch(function () {});
+        setTimeout(function () {
+          if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
+        }, 400);
+      }, 850);
     });
   }
 
@@ -146,5 +232,34 @@
     var mark = function () { s.classList.add('is-touched'); };
     input.addEventListener('pointerdown', mark, { once: true });
     input.addEventListener('keydown', mark, { once: true });
+  });
+
+  /* ---------- body-mesh tracking: the reticle finds each red dot in turn ----------
+     Pulls its target straight off each pin's own --x/--y, so the pins stay the
+     single source of truth for where the dots actually are on the image. */
+  document.querySelectorAll('[data-track]').forEach(function (mesh) {
+    var pins = Array.prototype.slice.call(mesh.querySelectorAll('[data-track-pin]'));
+    var reticle = mesh.querySelector('.fl-track-reticle');
+    if (!pins.length || !reticle) return;
+    var card = mesh.closest('.fl-tracking-card');
+    var logItems = card ? Array.prototype.slice.call(card.querySelectorAll('[data-track-log-item]')) : [];
+
+    function target(idx) {
+      pins.forEach(function (p) { p.classList.remove('is-targeted'); });
+      logItems.forEach(function (li) { li.classList.remove('is-targeted'); });
+      pins[idx].classList.add('is-targeted');
+      if (logItems[idx]) logItems[idx].classList.add('is-targeted');
+      reticle.style.left = pins[idx].style.getPropertyValue('--x');
+      reticle.style.top = pins[idx].style.getPropertyValue('--y');
+    }
+
+    target(0);
+    if (reduceMotion) return;
+
+    var i = 0;
+    setInterval(function () {
+      i = (i + 1) % pins.length;
+      target(i);
+    }, 2400);
   });
 })();

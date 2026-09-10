@@ -299,12 +299,19 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   outline: 2px solid var(--fl-focus); outline-offset: 2px;
 }
 
-/* two dated frames above the slider that lines them up. The pair carries the
-   dates; the slider only ever shows one of them at a time. */
+/* two frames above the slider that lines them up. The pair carries the
+   captions; the slider only ever shows one of them at a time. */
 .fl-align { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .fl-align figcaption { font-family: var(--fl-mono); font-size: 0.625rem; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--fl-muted); margin-top: 8px; }
 .fl-align > figure { margin: 0; min-width: 0; }
+
+/* two captures stacked in one frame: shows registration quality directly,
+   not just the two source photos side by side. Not-aligned reads as a
+   double edge; aligned reads as one. */
+.fl-overlay { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.fl-overlay__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.fl-overlay__img--b { opacity: .5; mix-blend-mode: difference; }
 /* the registration readout: what the app corrected before the shutter fired */
 .fl-delta { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 16px; }
 .fl-delta > div { display: grid; gap: 4px; }
@@ -328,8 +335,34 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 /* ---------- tracking: the mesh, and where the captures were taken ----------
    The mesh is one image. Every pin is placed in percent over it, so they can
-   be nudged without re-exporting anything. */
-.fl-mesh { position: relative; }
+   be nudged without re-exporting anything. The card pairs the phone against
+   a capture log so the whole plate reads as one square-ish panel rather
+   than a tall, narrow screenshot on an otherwise empty field. */
+.fl-tracking-card { display: flex; align-items: stretch; gap: 32px; }
+.fl-mesh { position: relative; width: 220px; flex: none; }
+.fl-tracking-log { display: flex; flex-direction: column; gap: 20px; min-width: 180px; }
+.fl-tracking-log ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
+.fl-tracking-log li { display: flex; align-items: center; gap: 12px; }
+.fl-tracking-log__dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--fl-mat-raised);
+  box-shadow: inset 0 0 0 1px var(--fl-on-mat-muted); flex: none;
+  transition: background-color .3s var(--fl-ease-out), box-shadow .3s var(--fl-ease-out), transform .3s var(--fl-ease-spring);
+}
+.fl-tracking-log__date {
+  font-family: var(--fl-mono); font-size: .8125rem; letter-spacing: .04em;
+  color: var(--fl-on-mat-muted); transition: color .3s var(--fl-ease-out);
+}
+.fl-tracking-log li[data-track-log-item].is-targeted .fl-tracking-log__dot {
+  background: var(--fl-red); box-shadow: 0 0 0 4px rgba(219,157,145,.28); transform: scale(1.25);
+}
+.fl-tracking-log li[data-track-log-item].is-targeted .fl-tracking-log__date { color: var(--fl-on-mat); }
+@media (max-width: 640px) {
+  .fl-tracking-card { flex-direction: column; }
+  .fl-mesh { width: 100%; max-width: 260px; margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-tracking-log__dot, .fl-tracking-log__date { transition: none; }
+}
 .fl-pin { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); }
 .fl-pin__dot {
   display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--fl-red);
@@ -350,6 +383,38 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-pin--latest .fl-pin__dot { box-shadow: 0 0 0 6px rgba(219,157,145,.30), inset 0 0 0 1px rgba(0,0,0,.4); }
 .fl-pin--latest .fl-pin__date { background: var(--fl-red); color: var(--fl-on-red); }
 @media (max-width: 520px) { .fl-pin__date { font-size: 0.5625rem; padding: 2px 7px; } }
+
+/* ---------- the reticle: finds each pin on the mesh in turn (motion.js) ----------
+   Same coordinate system as .fl-pin — left/top set to the same --x/--y a pin
+   already carries, so it always lands exactly on a dot. */
+.fl-pin__dot { transition: transform .3s var(--fl-ease-spring), box-shadow .3s var(--fl-ease-out); }
+[data-track-pin].is-targeted .fl-pin__dot { transform: scale(1.3); }
+[data-track-pin]:not(.is-targeted) .fl-pin__date { opacity: .5; transition: opacity .3s var(--fl-ease-out); }
+[data-track-pin].is-targeted .fl-pin__date { transition: opacity .3s var(--fl-ease-out); }
+
+.fl-track-reticle {
+  position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
+  width: 40px; height: 40px; margin: -20px 0 0 -20px;
+  transition: left .7s var(--fl-ease-spring), top .7s var(--fl-ease-spring);
+}
+.fl-track-reticle::before, .fl-track-reticle::after {
+  content: ""; position: absolute; background: var(--fl-red);
+}
+.fl-track-reticle::before { left: 50%; top: 4px; bottom: 4px; width: 1px; transform: translateX(-50%); }
+.fl-track-reticle::after { top: 50%; left: 4px; right: 4px; height: 1px; transform: translateY(-50%); }
+.fl-track-reticle__ring {
+  position: absolute; inset: 8px; border-radius: 50%; border: 1.5px solid var(--fl-red);
+  animation: fl-track-ping 2.2s var(--fl-ease-out) infinite;
+}
+@keyframes fl-track-ping {
+  0% { transform: scale(.55); opacity: 1; }
+  60%, 100% { transform: scale(1.35); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-track-reticle { transition: none; }
+  .fl-track-reticle__ring { animation: none; opacity: .9; }
+  [data-track-pin] .fl-pin__dot { transition: none; }
+}
 
 /* stat row beside the slider — three figures, thin rules between, no shadow */
 .fl-stat-row { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
@@ -601,6 +666,57 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   padding: 64px 24px 88px;
   background: var(--fl-ground-lit);
 }
+/* three blue/red blobs behind the apertures, each drifting and fading on
+   its own cycle. Kept deliberately light on the GPU: no blend mode, a
+   moderate blur radius, and only three animating layers — five plus a
+   multiply blend was a real cost on integrated graphics. */
+.fl-blob {
+  position: absolute; z-index: -2; border-radius: 50%;
+  filter: blur(60px); pointer-events: none; will-change: transform, opacity;
+}
+.fl-blob--1 {
+  width: 52vmax; height: 52vmax; left: -16vmax; top: -20vmax;
+  background: radial-gradient(circle, var(--fl-blue) 0%, transparent 68%);
+  animation: fl-blob-1 22s ease-in-out infinite;
+}
+.fl-blob--2 {
+  width: 46vmax; height: 46vmax; right: -14vmax; bottom: -18vmax;
+  background: radial-gradient(circle, var(--fl-red) 0%, transparent 68%);
+  animation: fl-blob-2 27s ease-in-out infinite;
+}
+.fl-blob--3 {
+  width: 34vmax; height: 34vmax; right: 4vmax; top: -10vmax;
+  background: radial-gradient(circle, var(--fl-red) 0%, transparent 70%);
+  animation: fl-blob-3 24s ease-in-out infinite;
+}
+@keyframes fl-blob-1 {
+  0%   { transform: translate(0, 0) scale(.9); opacity: .6; }
+  30%  { transform: translate(9vmax, 6vmax) scale(1.25); opacity: .85; }
+  60%  { transform: translate(3vmax, 11vmax) scale(.82); opacity: .55; }
+  100% { transform: translate(0, 0) scale(.9); opacity: .6; }
+}
+@keyframes fl-blob-2 {
+  0%   { transform: translate(0, 0) scale(1); opacity: .55; }
+  40%  { transform: translate(-10vmax, -8vmax) scale(1.3); opacity: .8; }
+  70%  { transform: translate(-4vmax, -13vmax) scale(.78); opacity: .5; }
+  100% { transform: translate(0, 0) scale(1); opacity: .55; }
+}
+@keyframes fl-blob-3 {
+  0%   { transform: translate(0, 0) scale(.85); opacity: .45; }
+  50%  { transform: translate(-8vmax, 8vmax) scale(1.3); opacity: .7; }
+  100% { transform: translate(0, 0) scale(.85); opacity: .45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-blob { animation: none; opacity: .5; }
+}
+@media (max-width: 640px) {
+  /* smallest devices skip the blur entirely rather than pay for it at a
+     size the eye barely registers as a shape */
+  .fl-blob--3 { display: none; }
+  .fl-blob--1 { width: 75vmax; height: 75vmax; }
+  .fl-blob--2 { width: 66vmax; height: 66vmax; }
+}
+
 .fl-aper {
   position: absolute; left: 50%; top: 50%; z-index: -1;
   transform: translate(-50%, -50%) scale(var(--k, 1));
@@ -921,9 +1037,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    Re-measure both if the clip is re-exported. ---------- */
 .fl-reveal { --fl-reveal-scale: .5756; }
 .fl-reveal .fl-outline { transform-origin: 50% 48.14%; }
-.fl-reveal__vid, .fl-reveal__still {
+.fl-reveal__vid, .fl-reveal__still, .fl-reveal__canvas {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-  opacity: 0; transition: opacity .6s var(--fl-ease-out);
+  opacity: 0; transition: opacity .67s var(--fl-ease-out);
   /* the subject runs off its own frame for a third of the clip; a feathered edge
      is kinder than the hard crop, and the page behind it is transparent anyway */
   -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 82%, transparent 100%);
@@ -931,12 +1047,39 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-reveal__still { display: none; }
 .fl-reveal:not(.has-video) .fl-reveal__still { display: block; }
+/* the WebM's alpha doesn't composite in every engine (see motion.js); on those,
+   the raw <video> stays keyed out and a per-frame chroma-keyed canvas stands in
+   for it instead, so the still element is the only other fallback layer left. */
+.fl-reveal__canvas { display: none; }
+.fl-reveal.is-keyed .fl-reveal__vid { opacity: 0 !important; }
+.fl-reveal.is-keyed .fl-reveal__canvas { display: block; }
 .fl-reveal.is-handed-off .fl-outline {
   opacity: 0; transform: translateY(1.86%) scale(var(--fl-reveal-scale));
-  transition: opacity .6s var(--fl-ease-out) .3s, transform .9s var(--fl-ease-out);
+  transition: opacity .67s var(--fl-ease-out) .90s, transform 1.80s var(--fl-ease-out);
 }
 .fl-reveal.is-handed-off .fl-reveal__vid,
-.fl-reveal.is-handed-off .fl-reveal__still { opacity: 1; transition-delay: .3s; }
+.fl-reveal.is-handed-off .fl-reveal__still,
+.fl-reveal.is-handed-off .fl-reveal__canvas { opacity: 1; transition-delay: .90s; }
+.fl-reveal.is-keyed.is-handed-off .fl-reveal__vid { opacity: 0 !important; }
+
+/* play affordance: only shown once autoplay has actually been tried and
+   failed (motion.js decides that, not this file) — Low Power Mode and
+   similar platform policies block a silent play() with no visible signal
+   otherwise, which reads as broken rather than as "tap to continue" */
+.fl-reveal__play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.9);
+  width: 44px; height: 44px; border-radius: 999px; border: none; padding: 0;
+  background: var(--fl-mat-raised); box-shadow: inset 0 0 0 1px var(--fl-mat-edge);
+  color: var(--fl-on-mat); display: grid; place-items: center; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s var(--fl-ease-out), transform .3s var(--fl-ease-spring);
+}
+.fl-reveal__play svg { margin-left: 2px; } /* optical centering of the triangle */
+.fl-reveal.is-handed-off.awaiting-play .fl-reveal__play {
+  opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
+}
+.fl-reveal__play:hover { background: var(--fl-mat-edge); }
+@media (prefers-reduced-motion: reduce) { .fl-reveal__play { transition: opacity .3s linear; } }
 
 /* ---------- resolution slider: a nudge inviting the drag, gone after first touch ---------- */
 @keyframes fl-grip-nudge {
@@ -954,3 +1097,41 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 /* ---------- counted numbers: reserve their width so nothing reflows while they climb ---------- */
 [data-count] { font-variant-numeric: tabular-nums; }
+
+/* ---------- kicker pill: draws itself in, scroll-driven, no JS ----------
+   Every section opens on this same short accent bar (§2.6) — a nice place
+   for the ramp to visibly arrive rather than just being present. The hero's
+   own pill already has its own staggered .fl-rise entrance, so it's excluded. */
+@supports (animation-timeline: view()) {
+  .fl-pill:not(.fl-hero-aper .fl-pill) {
+    transform-origin: left center;
+    animation: fl-pill-grow .7s var(--fl-ease-spring) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+  @keyframes fl-pill-grow { from { transform: scaleX(0); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fl-pill:not(.fl-hero-aper .fl-pill) { animation: none; }
+  }
+}
+
+/* ---------- the lighting room grid: each frame settles in a beat after the last ---------- */
+[data-reveal].is-visible .fl-rooms__row figure {
+  animation: fl-rise .6s var(--fl-ease-out) both;
+}
+[data-reveal].is-visible .fl-rooms__row figure:nth-child(1) { animation-delay: .05s; }
+[data-reveal].is-visible .fl-rooms__row figure:nth-child(2) { animation-delay: .12s; }
+[data-reveal].is-visible .fl-rooms__row figure:nth-child(3) { animation-delay: .19s; }
+.fl-rooms .fl-slot { transition: transform .5s var(--fl-ease-out); }
+.fl-rooms figure:hover .fl-slot { transform: scale(1.05); }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal].is-visible .fl-rooms__row figure { animation: none; }
+  .fl-rooms .fl-slot, .fl-rooms figure:hover .fl-slot { transition: none; transform: none; }
+}
+
+/* ---------- pin dates: the leader line brightens when the reticle lands on it ---------- */
+.fl-pin__date::before { transition: background-color .3s var(--fl-ease-out), width .3s var(--fl-ease-out); }
+[data-track-pin].is-targeted .fl-pin__date::before { background: var(--fl-red); width: 14px; }
+@media (prefers-reduced-motion: reduce) {
+  .fl-pin__date::before { transition: none; }
+}
