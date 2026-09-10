@@ -214,13 +214,13 @@
     handoff.addEventListener('animationend', function (e) {
       if (e.animationName !== 'fl-trace' || --pending) return;
       handoff.classList.add('is-handed-off');
-      /* 900ms = the transform leg of the crossfade, see .is-handed-off in flacara.css */
+      /* 1050ms = the transform leg of the crossfade, see .is-handed-off in flacara.css */
       setTimeout(function () {
         clip.play().catch(function () {});
         setTimeout(function () {
           if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
         }, 400);
-      }, 900);
+      }, 1050);
     });
   }
 
