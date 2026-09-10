@@ -1055,7 +1055,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-reveal.is-keyed .fl-reveal__canvas { display: block; }
 .fl-reveal.is-handed-off .fl-outline {
   opacity: 0; transform: translateY(1.86%) scale(var(--fl-reveal-scale));
-  transition: opacity .6s var(--fl-ease-out) .3s, transform 1.05s linear;
+  transition: opacity .6s var(--fl-ease-out) .3s, transform 1.2s linear;
 }
 .fl-reveal.is-handed-off .fl-reveal__vid,
 .fl-reveal.is-handed-off .fl-reveal__still,
