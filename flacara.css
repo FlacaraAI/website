@@ -1035,7 +1035,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    is 45.19% of its square box; the video's is 26.01% of frame width, hence the
    .5756 scale. Their centres sit 1.86% of box height apart, hence the nudge.
    Re-measure both if the clip is re-exported. ---------- */
-.fl-reveal { --fl-reveal-scale: .5756; }
+.fl-reveal { --fl-reveal-scale: .4090; }
 .fl-reveal .fl-outline { transform-origin: 50% 48.14%; }
 .fl-reveal__vid, .fl-reveal__still, .fl-reveal__canvas {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
@@ -1055,11 +1055,13 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-reveal.is-keyed .fl-reveal__canvas { display: block; }
 .fl-reveal.is-handed-off .fl-outline {
   opacity: 0; transform: translateY(1.86%) scale(var(--fl-reveal-scale));
-  transition: opacity .90s var(--fl-ease-out) .30s, transform .45s linear;
+  transition: opacity .90s var(--fl-ease-out) .46s, transform .74s linear;
 }
 .fl-reveal.is-handed-off .fl-reveal__vid,
 .fl-reveal.is-handed-off .fl-reveal__still,
-.fl-reveal.is-handed-off .fl-reveal__canvas { opacity: 1; transition-delay: .3s; }
+.fl-reveal.is-handed-off .fl-reveal__canvas {
+  opacity: 1; transition: opacity .87s var(--fl-ease-out) .68s;
+}
 .fl-reveal.is-keyed.is-handed-off .fl-reveal__vid { opacity: 0 !important; }
 
 /* play affordance: only shown once autoplay has actually been tried and

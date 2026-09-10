@@ -220,6 +220,7 @@
          motion was visible. It fades into view opacity-wise regardless of
          when it started, so starting it early only means it's already
          moving by the time it's seen, not that it appears too soon. */
+      clip.playbackRate = 1.00;
       clip.play().catch(function () {});
       setTimeout(function () {
         if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
