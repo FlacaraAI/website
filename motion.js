@@ -214,17 +214,18 @@
     handoff.addEventListener('animationend', function (e) {
       if (e.animationName !== 'fl-trace' || --pending) return;
       handoff.classList.add('is-handed-off');
-      /* plays immediately on handoff, independent of the wireframe's own
-         fade/zoom duration — tying video start to that transform meant every
-         time the zoom got slower, the video started later and less of its
-         motion was visible. It fades into view opacity-wise regardless of
-         when it started, so starting it early only means it's already
-         moving by the time it's seen, not that it appears too soon. */
-      clip.playbackRate = 1.00;
-      clip.play().catch(function () {});
+      /* clip stays on frame 1 until this fires, tuned in the timing lab
+         against the crossfade's own delay/duration in flacara.css — this is
+         independent of the wireframe's zoom/fade, not tied to it, so
+         retuning either one doesn't silently shift the other. */
       setTimeout(function () {
-        if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
-      }, 400);
+        clip.loop = true;
+        clip.playbackRate = 1.00;
+        clip.play().catch(function () {});
+        setTimeout(function () {
+          if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
+        }, 400);
+      }, 760);
     });
   }
 
