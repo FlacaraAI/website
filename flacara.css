@@ -1161,3 +1161,42 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @media (prefers-reduced-motion: reduce) {
   .fl-pin__date::before { transition: none; }
 }
+
+/* ---------- scroll-swap: steps on the left drive which phone screen shows on the right ----------
+   The stage is sticky within its own grid track (align-items:start on the
+   parent + align-self:start + position:sticky on the stage itself), the same
+   device used for .fl-buy — the sticky element hugs its own content instead
+   of stretching, while its cell stays as tall as the step list next to it. */
+.fl-swap { display: grid; grid-template-columns: 1fr .85fr; gap: 0 64px; align-items: start; }
+.fl-swap__steps { display: grid; gap: 128px; padding-bottom: 40vh; }
+.fl-swap__step { opacity: .32; transition: opacity .4s var(--fl-ease-out); max-width: 46ch; }
+.fl-swap__step.is-active { opacity: 1; }
+.fl-swap__num { display: block; margin-bottom: 10px; }
+.fl-swap__stage { position: sticky; top: 96px; align-self: start; }
+
+.fl-phone {
+  position: relative; width: 280px; max-width: 100%; aspect-ratio: 280 / 572;
+  margin: 0 auto; border-radius: 34px; background: var(--fl-mat-deep);
+  box-shadow: inset 0 0 0 1px var(--fl-mat-edge), inset 0 0 0 8px var(--fl-mat);
+  padding: 8px; overflow: hidden;
+}
+.fl-phone__notch {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 84px; height: 18px; border-radius: 0 0 12px 12px; background: var(--fl-mat-deep); z-index: 2;
+}
+.fl-phone__screen { position: relative; width: 100%; height: 100%; border-radius: 26px; overflow: hidden; }
+.fl-phone__view {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transform: translateY(10px); transition: opacity .45s var(--fl-ease-out), transform .45s var(--fl-ease-out);
+}
+.fl-phone__view.is-active { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 860px) {
+  .fl-swap { grid-template-columns: 1fr; }
+  .fl-swap__steps { gap: 64px; padding-bottom: 0; }
+  .fl-swap__step { opacity: 1; max-width: none; }
+  .fl-swap__stage { position: static; margin-bottom: 40px; order: -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-swap__step, .fl-phone__view { transition: none; }
+}
