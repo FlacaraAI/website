@@ -267,4 +267,31 @@
     }, 2400);
   });
 
+  /* ---------- scroll-swap: whichever step crosses the centre band wins ----------
+     A thin horizontal band at the viewport's vertical middle, not "is it on
+     screen at all" — with a tall step list, several steps are visible at
+     once, and the one closest to reading height should be the one driving
+     the phone, not just whichever entered the viewport first. */
+  document.querySelectorAll('[data-fl-swap]').forEach(function (swap) {
+    var steps = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-step]'));
+    var screens = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-screen]'));
+    if (!steps.length || !screens.length) return;
+
+    function activate(idx) {
+      steps.forEach(function (s) { s.classList.toggle('is-active', s === steps[idx]); });
+      screens.forEach(function (s) { s.classList.toggle('is-active', s === screens[idx]); });
+    }
+    activate(0);
+
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var idx = steps.indexOf(entry.target);
+        if (idx > -1) activate(idx);
+      });
+    }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(function (s) { io.observe(s); });
+  });
+
 })();
