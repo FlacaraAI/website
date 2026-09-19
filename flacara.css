@@ -188,6 +188,16 @@ a:hover { text-decoration-thickness: 2px; }
 /* accent pill — the section opener as well as the hero's. Never interactive (§2.6) */
 .fl-pill { height: 10px; width: 60px; border-radius: 999px; background: var(--fl-ramp); margin-bottom: 26px; }
 
+/* the hero's pill, carrying real text instead of standing in as a bare
+   accent dash — same gradient, now a readable regulatory badge. */
+.fl-badge {
+  display: inline-flex; align-items: center;
+  height: 28px; padding: 0 14px; border-radius: 999px; margin-bottom: 26px;
+  background: var(--fl-ramp-even); color: var(--fl-on-red);
+  font-family: var(--fl-mono); font-weight: 600; font-size: .6875rem;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+
 /* flat wordmark: same face, no ramp, no lift. max() keeps it at or above the
    32px switch point (§3.2, §5.0) whatever the inherited size. */
 .fl-wordmark--flat {
@@ -332,6 +342,34 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-on-mat-muted); }
 .fl-rooms__rule::before, .fl-rooms__rule::after { content: ""; height: 1px; background: var(--fl-mat-edge); flex: 1; }
 @media (max-width: 520px) { .fl-rooms__row { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- colour, as a swipeable stack ----------
+   three rooms, fanned like a hand of photographs. Click, drag, or leave it
+   alone — it cycles on its own, so the claim (same reference, same colour)
+   keeps restating itself rather than waiting to be discovered. */
+.fl-stack {
+  position: relative; aspect-ratio: 1383 / 677; cursor: grab; touch-action: pan-y;
+}
+.fl-stack:active { cursor: grabbing; }
+.fl-stack__card {
+  position: absolute; inset: 0; border-radius: 4px; overflow: hidden;
+  transition: transform .45s var(--fl-ease-spring), opacity .45s var(--fl-ease-out);
+}
+.fl-stack__card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.fl-stack__card:nth-child(1) { z-index: 3; transform: rotate(-1.2deg) translate(0, 0) scale(1); }
+.fl-stack__card:nth-child(2) { z-index: 2; transform: rotate(1.6deg) translate(14px, 10px) scale(.98); opacity: .82; }
+.fl-stack__card:nth-child(3) { z-index: 1; transform: rotate(-2.4deg) translate(-12px, 20px) scale(.96); opacity: .62; }
+.fl-stack__card.is-leaving { transform: translateX(130%) rotate(16deg) scale(1) !important; opacity: 0 !important; }
+.fl-stack__card.is-snapping { transition: none !important; }
+.fl-stack__tag {
+  position: absolute; left: 12px; bottom: 12px; z-index: 1;
+  background: rgba(21, 22, 22, .6); color: var(--fl-on-mat);
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
+  padding: 5px 11px; border-radius: 999px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-stack__card { transition: none; }
+}
 
 /* ---------- tracking: the mesh, and where the captures were taken ----------
    The mesh is one image. Every pin is placed in percent over it, so they can

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flacara h1 — the device</title>
-<meta name="description" content="The flacara h1: two lighting modes, a fixed working distance, and the same framing every time. It is not a medical device.">
+<meta name="description" content="The flacara h1: two lighting modes, a fixed working distance, and the same framing every time. FDA registered.">
 
 <!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +67,7 @@
   <div class="fl-wrap">
     <div class="fl-hero-mat__grid">
       <div data-reveal="left">
-        <div class="fl-pill" aria-hidden="true"></div>
+        <span class="fl-badge">FDA Registered</span>
         <h1 class="fl-display-xl">Built to be repeated.</h1>
         <p class="fl-body fl-body--l" style="margin-top:24px;max-width:46ch">Two lighting modes, one
           fixed working distance, and the same framing every session. The photograph you take today
@@ -172,9 +172,8 @@
           than six times finer than what the unaided eye can pick apart at normal reading distance.</p>
 
         <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch">This is a resolution
-          comparison on a printed test target, not a clinical or diagnostic comparison, and it does not
-          imply that Flacara is a dermatoscope or any other kind of medical device. Image quality was
-          comparable side by side; that has not been quantified beyond this target, and these are
+          comparison on a printed test target, not a clinical or diagnostic comparison. Image quality
+          was comparable side by side; that has not been quantified beyond this target, and these are
           single frames from one session, not a study. DermLite is a trademark of its owner and there
           is no affiliation.</p>
         <p class="fl-small fl-note" style="margin-top:8px;max-width:64ch"><sup>1</sup> ≈0.1 mm (100 µm)
@@ -219,8 +218,8 @@
 
         <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch">A single photograph pair
           from one session, not a study, and not a diagnostic comparison. Neither image is an
-          assessment of this lesion, and nothing here implies Flacara is a dermatoscope or any other
-          kind of medical device. DermLite is a trademark of its owner and there is no affiliation.</p>
+          assessment of this lesion. DermLite is a trademark of its owner and there is no
+          affiliation.</p>
       </div>
     </div>
   </div>
@@ -304,24 +303,25 @@
           the same white point, which is the only way a colour difference between two dates means a
           difference in the skin rather than a difference in the bulb overhead.</p>
       </div>
-      <figure data-reveal="right" data-tilt style="--fl-reveal-delay:100ms;margin:0">
+      <figure data-reveal="right" style="--fl-reveal-delay:100ms;margin:0">
         <div class="fl-plate">
-          <div class="fl-rooms">
-            <div class="fl-rooms__row">
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-kitchen-raw.jpg" alt="Kitchen lighting, as shot" width="1383" height="677"><figcaption>Kitchen</figcaption></figure>
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-window-raw.jpg" alt="Window lighting, as shot" width="1383" height="677"><figcaption>Window</figcaption></figure>
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-clinic-raw.jpg" alt="Clinic lighting, as shot" width="1383" height="677"><figcaption>Clinic</figcaption></figure>
+          <div class="fl-stack" data-fl-stack role="group" aria-label="Three rooms, normalised to the same colour — click or swipe to cycle">
+            <div class="fl-stack__card">
+              <img src="images/col-kitchen-fix.jpg" alt="Kitchen lighting, normalised to a known white" width="1383" height="677">
+              <span class="fl-stack__tag">Kitchen</span>
             </div>
-            <div class="fl-rooms__rule">Normalised to a known white</div>
-            <div class="fl-rooms__row">
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-kitchen-fix.jpg" alt="Kitchen lighting, normalised" width="1383" height="677"><figcaption>Kitchen</figcaption></figure>
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-window-fix.jpg" alt="Window lighting, normalised" width="1383" height="677"><figcaption>Window</figcaption></figure>
-              <figure><img class="fl-slot" style="--ph:4/3" src="images/col-clinic-fix.jpg" alt="Clinic lighting, normalised" width="1383" height="677"><figcaption>Clinic</figcaption></figure>
+            <div class="fl-stack__card">
+              <img src="images/col-window-fix.jpg" alt="Window lighting, normalised to a known white" width="1383" height="677">
+              <span class="fl-stack__tag">Window</span>
+            </div>
+            <div class="fl-stack__card">
+              <img src="images/col-clinic-fix.jpg" alt="Clinic lighting, normalised to a known white" width="1383" height="677">
+              <span class="fl-stack__tag">Clinic</span>
             </div>
           </div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">Three lighting environments, each shown
-          as the room gave it and again after the reference in frame is applied</figcaption>
+        <figcaption class="fl-caption" style="margin-top:12px">Kitchen, window, exam room — click or
+          swipe through. Same reference in frame, same white point, same colour.</figcaption>
       </figure>
     </div>
   </div>
@@ -416,10 +416,9 @@
           </table>
         </div>
 
-        <p class="fl-note">Flacara is a camera accessory. It is not a medical device, it is not
-          cleared or approved by the FDA, and it does not diagnose, screen for, or assess any
-          condition. Nothing it produces is a medical opinion. Talk to a professional about anything
-          on your skin that concerns you.</p>
+        <p class="fl-note">Flacara is an FDA registered medical device. It does not diagnose,
+          screen for, or assess any condition on its own — talk to a professional about anything on
+          your skin that concerns you.</p>
 
         <details class="fl-faq-outer" style="margin-top:8px">
           <summary>Frequently asked questions</summary>
@@ -470,8 +469,7 @@
         <li><a href="clinicians.html">Devices</a></li>
         <li><a href="#pre-order">Pre-order</a></li>
       </ul>
-      <p>Flacara is a camera accessory. It is not a medical device, it does not diagnose anything,
-        and nothing it produces is a medical opinion.</p>
+      <p>Flacara, a division of Lumo Imaging, is an FDA registered medical device.</p>
     </div>
   </div>
 </footer>

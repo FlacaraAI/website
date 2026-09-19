@@ -266,4 +266,52 @@
       target(i);
     }, 2400);
   });
+
+  /* ---------- swipeable photo stack: click, drag, or wait ----------
+     the top card swipes off (translateX + rotate + fade), gets appended
+     to the back of the DOM with transitions briefly suspended so it
+     snaps into place unseen, and the next card is now on top by nothing
+     more than DOM order — no state to track. Auto-advances so the point
+     (same colour, three rooms) keeps making itself without a click. */
+  document.querySelectorAll('[data-fl-stack]').forEach(function (stack) {
+    var cards = stack.querySelectorAll('.fl-stack__card');
+    if (cards.length < 2) return;
+    var busy = false;
+    var timer = null;
+
+    function advance() {
+      if (busy) return;
+      busy = true;
+      var top = stack.querySelector('.fl-stack__card');
+      top.classList.add('is-leaving');
+      window.setTimeout(function () {
+        top.classList.add('is-snapping');
+        top.classList.remove('is-leaving');
+        stack.appendChild(top);
+        void top.offsetWidth; /* force reflow before re-enabling transitions */
+        requestAnimationFrame(function () {
+          top.classList.remove('is-snapping');
+          busy = false;
+        });
+      }, reduceMotion ? 0 : 420);
+    }
+
+    function start() { if (!reduceMotion && !timer) timer = setInterval(advance, 3400); }
+    function stop() { clearInterval(timer); timer = null; }
+
+    stack.addEventListener('click', advance);
+    stack.addEventListener('pointerenter', stop);
+    stack.addEventListener('pointerleave', start);
+
+    var startX = null;
+    stack.addEventListener('pointerdown', function (e) { startX = e.clientX; });
+    stack.addEventListener('pointerup', function (e) {
+      if (startX === null) return;
+      var dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 30) advance();
+    });
+
+    start();
+  });
 })();
