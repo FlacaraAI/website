@@ -116,10 +116,14 @@
   }
 
   /* ---------- hero: the traced outline hands off to the device reveal ----------
-     Waits on the last fl-trace to end rather than on a clock: a backgrounded tab
-     pauses CSS animations but still runs timers, and a timer would zoom out over a
-     half-drawn outline. Playback then waits out the crossfade, because the clip has
-     no still head — it is already moving on frame 1. */
+     The handoff waits on two independent signals and fires only once both are
+     true, whichever comes last: the outline has finished tracing in, and the
+     clip has actually decoded a frame. Neither is a clock — a backgrounded tab
+     pauses CSS animations but still runs timers, so a timer-based handoff can
+     fire over a half-drawn outline; and a slow connection can leave the video
+     with nothing to show yet, so a handoff that doesn't wait for it can crossfade
+     onto a blank frame. Waiting for both is what keeps this looking the same
+     regardless of device speed or connection, instead of racing a clock. */
   var handoff = document.querySelector('[data-fl-reveal]');
   var clip = handoff && handoff.querySelector('.fl-reveal__vid');
   var canvas = handoff && handoff.querySelector('.fl-reveal__canvas');
@@ -210,23 +214,36 @@
       clip.addEventListener('playing', function () { handoff.classList.remove('awaiting-play'); });
     }
 
+    /* the two signals the handoff is waiting on; see the comment above */
+    var traceDone = false, clipReady = false;
+    function maybeHandOff() {
+      if (!traceDone || !clipReady || handoff.classList.contains('is-handed-off')) return;
+      handoff.classList.add('is-handed-off');
+      clip.loop = true;
+      clip.playbackRate = 1.00;
+      clip.play().catch(function () {});
+      setTimeout(function () {
+        if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
+      }, 400);
+    }
+
     var pending = handoff.querySelectorAll('.fl-outline path').length;
     handoff.addEventListener('animationend', function (e) {
       if (e.animationName !== 'fl-trace' || --pending) return;
-      handoff.classList.add('is-handed-off');
-      /* clip stays on frame 1 until this fires, tuned in the timing lab
-         against the crossfade's own delay/duration in flacara.css — this is
-         independent of the wireframe's zoom/fade, not tied to it, so
-         retuning either one doesn't silently shift the other. */
-      setTimeout(function () {
-        clip.loop = true;
-        clip.playbackRate = 1.00;
-        clip.play().catch(function () {});
-        setTimeout(function () {
-          if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
-        }, 400);
-      }, 760);
+      traceDone = true;
+      maybeHandOff();
     });
+
+    /* readyState 2 (HAVE_CURRENT_DATA) means a frame has actually decoded, so
+       the crossfade lands on real video rather than a blank layer on a slow
+       connection. Already there by the time this runs on most repeat views,
+       hence the synchronous check as well as the event. */
+    if (clip.readyState >= 2) {
+      clipReady = true;
+    } else {
+      clip.addEventListener('loadeddata', function () { clipReady = true; maybeHandOff(); }, { once: true });
+    }
+    maybeHandOff();
   }
 
   /* ---------- resolution slider: stop nudging once someone has dragged it ---------- */
