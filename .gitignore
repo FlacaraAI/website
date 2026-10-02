@@ -31,3 +31,5 @@ images/target-dl4.jpg
 
 # Source render for the device reveal; the site ships images/device-reveal.webm
 *.mov
+# ...except the HEVC-with-alpha copy Safari plays (it can't composite the WebM's alpha)
+!images/device-reveal.mov

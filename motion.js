@@ -118,7 +118,12 @@
   var playBtn = handoff && handoff.querySelector('.fl-reveal__play');
   if (handoff && clip && !reduceMotion && clip.canPlayType('video/webm; codecs="vp9"')) {
     var isSafari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent);
-    clip.src = clip.getAttribute('data-src') + '#t=0.001'; /* paints frame 0 while paused */
+    /* Safari gets an HEVC-with-alpha copy of the same clip: real transparency
+       from the decoder, so dark parts of the device stay opaque instead of
+       being keyed out and letting the hero colour show through them. */
+    var hevc = clip.getAttribute('data-src-hevc');
+    var nativeAlpha = isSafari && hevc && clip.canPlayType('video/mp4; codecs="hvc1"') !== '';
+    clip.src = (nativeAlpha ? hevc : clip.getAttribute('data-src')) + '#t=0.001'; /* paints frame 0 while paused */
     handoff.classList.add('has-video');
 
     /* ponytail: UA sniff. Nothing reports "can decode alpha in WebM", and Safari
@@ -128,7 +133,7 @@
        size and mask as the video — so Safari gets the motion too, just recomposited
        in software instead of by the decoder. Delete once an HEVC-with-alpha MP4
        exists for Safari and this can go back to being a plain <video>. */
-    if (canvas && isSafari) {
+    if (canvas && isSafari && !nativeAlpha) {
       var ctx = canvas.getContext('2d');
       var off = document.createElement('canvas');
       var offCtx = off.getContext('2d', { willReadFrequently: true });
