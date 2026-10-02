@@ -1348,7 +1348,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    this file only decides what each moment looks like. */
 .fl-reveal {
   --fl-reveal-dur-out: 1.18s;  /* outline fades out (opacity) */
-  --fl-reveal-zoom-dur: 2.44s; /* outline's own pull-back zoom, independent of its fade */
+  --fl-reveal-zoom-dur: 3.20s; /* outline's own pull-back zoom, independent of its fade */
   --fl-reveal-dur-in: 2.50s;   /* video/still/canvas fades in */
 }
 .fl-reveal .fl-outline {
