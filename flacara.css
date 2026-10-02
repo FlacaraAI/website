@@ -172,8 +172,9 @@ a:hover { text-decoration-thickness: 2px; }
   background: var(--fl-ramp-tail); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
 }
-/* the disc is always half blue, half red — in a lockup and standing alone */
-.fl-lock .ico, .ico.solo { --disc: url(#ramp-split); }
+/* every instance of the mark uses the master logo's own ramp (favicon.svg):
+   blue → lavender at 35% → rose, one smooth diagonal — in a lockup and alone */
+.fl-lock .ico, .ico.solo { --disc: url(#ramp-full); }
 
 /* tagline — sits under the wordmark, not under the icon */
 .fl-tagline {
@@ -540,7 +541,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
       linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
   }
 }
-.fl-nav .ico.solo { width: 32px; height: 32px; display: block; overflow: visible; --flame: var(--fl-surface); }
+.fl-nav .ico.solo { width: 32px; height: 32px; display: block; overflow: visible; }
 .fl-nav__mark { display: flex; align-items: center; text-decoration: none; }
 
 /* the three destinations are one control, not four competing ones: an inset
