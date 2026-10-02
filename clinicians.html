@@ -81,7 +81,7 @@
         <h1 class="fl-display-xl">Introducing <span class="fl-hero-accent">Flacara H1</span></h1>
         <div class="fl-rail">
           <div><span class="k">Lighting</span><span class="v">Polarized / unpolarized</span></div>
-          <div><span class="k">Detail</span><span class="v">~40 µm</span></div>
+          <div><span class="k">Detail</span><span class="v">~16 µm</span></div>
           <div><span class="k">Top plate</span><span class="v">Machined aluminium</span></div>
           <div><span class="k">Charging</span><span class="v">USB-C</span></div>
         </div>
@@ -283,7 +283,7 @@
           <table class="fl-table">
             <tbody>
               <tr><th scope="row">Lighting</th><td>Polarized · Unpolarized</td></tr>
-              <tr><th scope="row">Detail</th><td class="num">~40 µm</td></tr>
+              <tr><th scope="row">Detail</th><td class="num">~16 µm</td></tr>
               <tr><th scope="row">Optics</th><td>Phone sensor and software</td></tr>
               <tr><th scope="row">Top plate</th><td>Machined aluminium</td></tr>
               <tr><th scope="row">Charging</th><td>USB-C</td></tr>
@@ -405,6 +405,27 @@
     if (!input) return;
     function set(v) { wrap.style.setProperty('--pos', v + '%'); }
     input.addEventListener('input', function () { set(input.value); });
+
+    /* drag anywhere on the image, not just the thumb — a native range on
+       iOS only moves if the finger lands right on its thumb. touch-action:
+       pan-y leaves vertical swipes to the page and sends sideways ones here. */
+    var dragging = false;
+    function follow(e) {
+      var r = wrap.getBoundingClientRect();
+      var v = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100));
+      input.value = v; set(v);
+    }
+    wrap.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0) return;
+      dragging = true; played = true;
+      wrap.classList.add('is-touched');
+      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+      if (e.pointerType === 'mouse') { follow(e); e.preventDefault(); }
+    });
+    wrap.addEventListener('pointermove', function (e) { if (dragging) follow(e); });
+    ['pointerup', 'pointercancel'].forEach(function (t) {
+      wrap.addEventListener(t, function () { dragging = false; });
+    });
 
     var played = false;
     wrap.flSweep = function () {

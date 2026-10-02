@@ -301,7 +301,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-slider__input {
   position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0;
   cursor: ew-resize; -webkit-appearance: none; appearance: none;
+  /* the wrapper drives dragging (clinicians.html); the input stays for keyboard */
+  pointer-events: none;
 }
+.fl-slider { cursor: ew-resize; -webkit-user-select: none; user-select: none; }
 .fl-slider__input::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; }
 .fl-slider__input::-moz-range-thumb { width: 44px; height: 100%; border: none; background: transparent; }
 .fl-slider__input:focus-visible ~ .fl-slider__divider {
@@ -825,7 +828,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   from { opacity: 0; transform: translate(-50%, -50%) scale(calc(var(--k, 1) * .82)); }
 }
 .fl-hero-aper__in { position: relative; display: grid; justify-items: center; text-align: center; max-width: 720px; margin: 0 auto; }
-.fl-hero-aper .fl-lock { font-size: clamp(3rem, 11vw, 6.5rem); }
+.fl-hero-aper .fl-lock { font-size: clamp(3.5rem, 13vw, 8rem); }
 .fl-hero-aper .fl-lock--sm { font-size: 1.75rem; margin-bottom: 20px; }
 .fl-hero-aper .fl-tagline { margin-left: 0; margin-top: 28px; }
 .fl-hero-aper .fl-pill { margin: 0 0 28px; }
@@ -914,7 +917,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    the hero's rings drawn thin behind it. */
 .fl-intro__head { max-width: 760px; margin: 0 auto; display: grid; justify-items: center; text-align: center; }
 .fl-intro__head .fl-kicker { justify-content: center; }
-.fl-intro__head .fl-display-l { max-width: 18ch; }
+.fl-intro__head .fl-display-l { max-width: 18ch; font-size: clamp(2.5rem, 6vw, 4rem); }
 .fl-intro__head .fl-body { margin-top: 18px; max-width: 56ch; }
 .fl-intro__accent {
   background: linear-gradient(110deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%);
@@ -1490,6 +1493,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    trigger crossing the centre band swaps the screen and crossfades in
    whichever side caption belongs to it, so text rises in beside the phone
    without ever scrolling behind it. */
+/* the phone is as big as the screen allows, up to 340px wide */
+.fl-swap-section { --ph-w: min(340px, calc((100vh - 190px) * .486)); }
 .fl-swap { position: relative; }
 .fl-swap__pinned { position: sticky; top: 112px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
 .fl-swap__row { display: flex; align-items: center; justify-content: center; gap: 40px; }
@@ -1517,7 +1522,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    into it, side control nubs, a home indicator, and a soft diagonal glare so
    the screen reads as glass, not a solid colour. */
 .fl-phone {
-  position: relative; width: 300px; max-width: 76vw; aspect-ratio: 9 / 18.5;
+  position: relative; width: var(--ph-w, 340px); max-width: 76vw; aspect-ratio: 9 / 18.5;
   margin: 0 auto; border-radius: 48px; padding: 12px;
   background: linear-gradient(160deg, #5c5f62 0%, #28292b 9%, #0b0c0d 42%, #000 56%, #28292b 91%, #5c5f62 100%);
   box-shadow:
@@ -1588,7 +1593,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   animation: fl-phone-shadow 6s ease-in-out infinite;
 }
 .fl-phone-float {
-  height: 650px; display: flex; align-items: center; justify-content: center;
+  height: calc(var(--ph-w, 340px) * 18.5 / 9 + 30px); display: flex; align-items: center; justify-content: center;
   animation: fl-phone-float 6s ease-in-out infinite; will-change: transform;
 }
 @keyframes fl-phone-float {
@@ -1839,7 +1844,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    top, sized to leave room, and all four captions share one slot under it,
    crossfading in place exactly as they do beside it on desktop. */
 @media (max-width: 900px) {
-  .fl-swap-section { --ph-w: clamp(150px, calc((100svh - 400px) * .486), 220px); }
+  .fl-swap-section { --ph-w: clamp(150px, calc((100svh - 350px) * .486), 250px); }
   .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 20px); }
   .fl-swap__row { display: contents; }
   .fl-phone-float { grid-area: stage; height: calc(var(--ph-w) * 18.5 / 9 + 16px); }
