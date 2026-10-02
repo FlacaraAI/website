@@ -309,6 +309,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   outline: 2px solid var(--fl-focus); outline-offset: 2px;
 }
 
+/* ---------- proof: the one real photograph on this page, staged on its own ----------
+   Everything else on this page is a left-text/right-box feature grid, which
+   starts to read as a template once it repeats. The actual lesion comparison
+   is the page's one piece of real evidence (§ brand brief: "it should show
+   pictures"), so it gets a centred editorial composition instead — intro
+   copy set above a single large stage, not squeezed beside it in a box. */
+.fl-proof__intro { max-width: 58ch; margin: 0 auto; text-align: center; }
+.fl-proof__intro .fl-pill { margin-left: auto; margin-right: auto; }
+.fl-proof__intro .fl-body { margin: 16px auto 0; max-width: 54ch; color: var(--fl-muted); }
+.fl-proof__stage { margin: 48px auto 0; max-width: 560px; }
+.fl-plate--proof { padding: 14px; }
+.fl-slider--square { aspect-ratio: 1 / 1; max-width: none; }
+.fl-proof__caption { margin-top: 16px; text-align: center; }
+.fl-proof__fine { margin: 28px auto 0; max-width: 54ch; text-align: center; }
+
 /* two frames above the slider that lines them up. The pair carries the
    captions; the slider only ever shows one of them at a time. */
 .fl-align { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
