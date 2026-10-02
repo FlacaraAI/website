@@ -91,30 +91,6 @@
     });
   }
 
-  /* ---------- hero aperture: rings drift toward the cursor ----------
-     rAF-throttled: a raw pointermove handler that reads
-     getBoundingClientRect() on every event forces a layout on every
-     trackpad tick, which is heavy enough on some machines that the whole
-     page — cursor included — starts to feel unresponsive. */
-  var hero = document.querySelector('.fl-hero-aper');
-  if (hero && !reduceMotion) {
-    var heroRaf = null, heroX = 0, heroY = 0;
-    hero.addEventListener('pointermove', function (e) {
-      heroX = e.clientX; heroY = e.clientY;
-      if (heroRaf) return;
-      heroRaf = requestAnimationFrame(function () {
-        heroRaf = null;
-        var r = hero.getBoundingClientRect();
-        hero.style.setProperty('--px', (((heroX - r.left) / r.width) - 0.5).toFixed(3));
-        hero.style.setProperty('--py', (((heroY - r.top) / r.height) - 0.5).toFixed(3));
-      });
-    });
-    hero.addEventListener('pointerleave', function () {
-      hero.style.setProperty('--px', 0);
-      hero.style.setProperty('--py', 0);
-    });
-  }
-
   /* ---------- hero: the traced outline hands off to the device reveal ----------
      The handoff waits on two independent signals and fires only once both are
      true, whichever comes last: the outline has finished tracing in, and the
@@ -293,11 +269,21 @@
     var steps = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-step]'));
     var screens = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-screen]'));
     var captions = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-caption]'));
+    var phone = swap.querySelector('.fl-phone');
     if (!steps.length || !screens.length) return;
 
+    /* matched by the data attribute's value, not array position — the
+       caption elements are split across a left and a right column in the
+       DOM, so their document order does not line up with the step index. */
     function activate(idx) {
-      screens.forEach(function (s) { s.classList.toggle('is-active', s === screens[idx]); });
-      captions.forEach(function (c) { c.classList.toggle('is-active', c === captions[idx]); });
+      var key = String(idx), activeScreen = null;
+      screens.forEach(function (s) {
+        var on = s.getAttribute('data-swap-screen') === key;
+        s.classList.toggle('is-active', on);
+        if (on) activeScreen = s;
+      });
+      captions.forEach(function (c) { c.classList.toggle('is-active', c.getAttribute('data-swap-caption') === key); });
+      if (phone) phone.classList.toggle('fl-phone--rotated', !!activeScreen && activeScreen.classList.contains('fl-phone__view--landscape'));
     }
     activate(0);
 

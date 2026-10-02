@@ -838,10 +838,18 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-mat h1, .fl-hero-mat .fl-display-xl { color: var(--fl-on-mat); }
 .fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
 .fl-hero-mat .fl-label { color: var(--fl-blue); }
-.fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
-.fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
+/* the wireframe/device reveal now plays as ambient motion behind the copy,
+   not beside it in its own column — full-bleed across the hero, dimmed so
+   the headline on top of it stays the thing being read. */
+.fl-hero-mat__bg {
+  position: absolute; inset: 0; z-index: 0;
+  display: grid; place-items: center;
+  opacity: .4; pointer-events: none;
+}
+.fl-hero-mat__bg .fl-reveal { position: relative; width: min(85vw, 820px); aspect-ratio: 1236 / 1280; }
 .fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
   position: absolute; inset: 0; width: 100%; height: 100%; }
+.fl-hero-mat__content { position: relative; z-index: 1; max-width: 640px; }
 .fl-rail { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; padding-top: 20px;
   border-top: 1px solid var(--fl-mat-raised); }
 .fl-rail div { display: grid; gap: 4px; }
@@ -851,8 +859,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-on-mat); font-variant-numeric: tabular-nums; }
 @media (max-width: 860px) {
   .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
-  .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
-  .fl-hero-mat .fl-reveal { width: 100%; max-width: 420px; margin: 0; }
+  .fl-hero-mat__bg { opacity: .2; }
+  .fl-hero-mat__bg .fl-reveal { width: min(70vw, 320px); }
 }
 
 /* ---------- feature row ---------- */
@@ -1035,10 +1043,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-device:hover .fl-device__shot, .fl-tile:hover, .fl-card:hover { transform: none; box-shadow: var(--lift-card); }
 }
 
-/* ---------- hero aperture: idle breathing + cursor parallax ---------- */
+/* ---------- hero aperture: idle breathing, held still ---------- */
 .fl-aper {
-  transform: translate(calc(-50% + var(--px, 0) * 26px * var(--k, 1)), calc(-50% + var(--py, 0) * 26px * var(--k, 1))) scale(var(--k, 1));
-  transition: transform .4s var(--fl-ease-out);
+  transform: translate(-50%, -50%) scale(var(--k, 1));
 }
 @keyframes fl-aper-breathe { 0%, 100% { opacity: var(--o, .8); } 50% { opacity: calc(var(--o, .8) * .74); } }
 .fl-aper { animation: fl-aper-in 1.5s var(--fl-ease) var(--d, 0ms) both, fl-aper-breathe 7s ease-in-out calc(var(--d, 0ms) + 1.5s) infinite; }
@@ -1180,13 +1187,18 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    device used for .fl-buy — the sticky element hugs its own content instead
    of stretching, while its cell stays as tall as the step list next to it. */
 /* the phone is the constant: centered, pinned, the one thing that never
-   moves. The pinned block (phone + caption) stays fixed under the nav while
-   an invisible, taller trigger track scrolls behind it — each trigger
-   crossing the centre band swaps the screen and crossfades the caption in
-   place, so the text "comes up" without ever scrolling behind the phone. */
+   moves. The pinned block (captions either side + phone) stays fixed under
+   the nav while an invisible, taller trigger track scrolls behind it — each
+   trigger crossing the centre band swaps the screen and crossfades in
+   whichever side caption belongs to it, so text rises in beside the phone
+   without ever scrolling behind it. */
 .fl-swap { position: relative; }
-.fl-swap__pinned { position: sticky; top: 88px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
-.fl-swap__caption { position: relative; width: 100%; max-width: 440px; margin: 28px auto 0; min-height: 150px; }
+.fl-swap__pinned {
+  position: sticky; top: 112px; z-index: 2;
+  display: flex; align-items: center; justify-content: center; gap: 40px;
+}
+.fl-swap__caption { position: relative; width: 300px; flex: none; min-height: 170px; }
+.fl-swap__caption--right { text-align: left; }
 .fl-swap__cap {
   position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(14px);
   transition: opacity .4s var(--fl-ease-out), transform .4s var(--fl-ease-out);
@@ -1212,7 +1224,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     inset 0 2px 2px rgba(255,255,255,.22),
     inset 0 -3px 4px rgba(0,0,0,.55),
     0 56px 90px -26px rgba(21,22,22,.4), 0 16px 32px -12px rgba(21,22,22,.28);
+  transition: transform .9s var(--fl-ease-out);
 }
+/* the one landscape capture: the device itself tips onto its side rather
+   than letterboxing the image inside a portrait frame. The source image
+   (app-compare-rot.png) is pre-rotated the other way, so the two cancel out
+   and the content reads upright once the phone has turned. Scaled down so
+   the wider footprint still sits comfortably between the two captions. */
+.fl-phone--rotated { transform: rotate(90deg) scale(.6); }
 .fl-phone__btn { position: absolute; background: linear-gradient(90deg, #45484a, #191a1b); z-index: 0; }
 .fl-phone__btn--action   { left: -2.5px; top: 78px;  width: 3px; height: 26px; border-radius: 2px 0 0 2px; }
 .fl-phone__btn--vol-up   { left: -2.5px; top: 128px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
@@ -1238,20 +1257,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-phone__view.is-active { opacity: 1; transform: translateY(0); }
 .fl-phone__view img { width: 100%; height: 100%; object-fit: cover; display: block; }
-/* the one landscape capture: letterboxed on the screen's own black rather
-   than cropped or forcing the frame to rotate. */
-.fl-phone__view--landscape img { object-fit: contain; }
 
 /* grounding: a soft shadow the phone actually sits in, so it reads as
    resting on the page rather than cut out and pasted over it — plus a slow
-   idle float so the stage has life even before anyone scrolls or points at it. */
+   idle float so the stage has life even before anyone scrolls or points at
+   it. The float lives on its own wrapper, not .fl-phone itself, because
+   .fl-phone now owns the rotate transform above — two animations/transitions
+   fighting over the same element's transform is how you get jitter. */
 .fl-swap__stage { text-align: center; }
 .fl-swap__stage::after {
   content: ""; display: block; width: 180px; height: 28px; margin: 18px auto 0;
   background: radial-gradient(closest-side, rgba(21,22,22,.22), transparent 72%);
   animation: fl-phone-shadow 6s ease-in-out infinite;
 }
-.fl-phone { animation: fl-phone-float 6s ease-in-out infinite; will-change: transform; }
+.fl-phone-float { animation: fl-phone-float 6s ease-in-out infinite; will-change: transform; }
 @keyframes fl-phone-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -1261,30 +1280,72 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   50% { transform: scale(.88); opacity: .7; }
 }
 
-@media (max-width: 640px) {
-  .fl-swap__pinned { top: 72px; }
+@media (max-width: 900px) {
+  .fl-swap__pinned { flex-direction: column; top: 72px; gap: 16px; }
+  .fl-swap__caption { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
   .fl-phone { width: 240px; }
+  .fl-phone--rotated { transform: rotate(90deg) scale(.48); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fl-swap__cap, .fl-phone__view { transition: none; }
-  .fl-phone { animation: none; }
+  .fl-swap__cap, .fl-phone__view, .fl-phone { transition: none; }
+  .fl-phone-float { animation: none; }
   .fl-swap__stage::after { animation: none; }
 }
 
-/* ---------- swap, plate variant: same rig as the phone, but the thing
-   pinned in the centre is a real comparison slider on a mat rather than a
-   device mockup. Screens stack absolutely inside a fixed square so they can
-   crossfade in place instead of resizing the page as they swap. ---------- */
-.fl-swap__stage--plate { width: 100%; max-width: 480px; }
-.fl-swap__device { position: relative; width: 100%; aspect-ratio: 1 / 1; }
-.fl-swap__screen {
-  position: absolute; inset: 0; opacity: 0; transform: translateY(10px);
-  transition: opacity .45s var(--fl-ease-out), transform .45s var(--fl-ease-out);
+/* ---------- scrub: one pinned square frame, scroll swaps what's in it ----------
+   The outer block is n screen-heights tall; the inner block is sticky and
+   exactly one screen tall, so the frame sits dead centre while the page
+   scrolls underneath. Shots behind the current one have lifted away, shots
+   ahead are waiting below, so every swap reads as moving forward or back. */
+.fl-scrub { position: relative; height: calc(var(--n, 3) * 85vh + 15vh); margin-top: 24px; }
+.fl-scrub__sticky {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding-top: 72px; gap: 24px;
+  --s: min(520px, 88vw, calc(100svh - 360px));
+}
+
+.fl-scrub__rail { position: relative; display: flex; gap: 4px; width: var(--s); min-width: min(360px, 88vw); }
+.fl-scrub__tab {
+  flex: 1; display: flex; align-items: baseline; justify-content: center; gap: 8px;
+  padding: 10px 4px 14px; border: 0; background: none; cursor: pointer;
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fl-muted); opacity: .6; transition: opacity .3s var(--fl-ease-out), color .3s var(--fl-ease-out);
+}
+.fl-scrub__tab .n { opacity: .6; }
+.fl-scrub__tab:hover { opacity: 1; }
+.fl-scrub__tab.is-active { color: var(--fl-ink); opacity: 1; }
+.fl-scrub__tab:focus-visible { outline: 2px solid var(--fl-ink); outline-offset: 2px; border-radius: 4px; }
+.fl-scrub__track { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--fl-rule); border-radius: 2px; overflow: hidden; }
+.fl-scrub__fill { position: absolute; inset: 0; background: var(--fl-ink); transform-origin: left; transform: scaleX(var(--p, 0)); }
+
+.fl-scrub__frame { position: relative; width: var(--s); aspect-ratio: 1 / 1; flex: none; }
+.fl-scrub__shot {
+  position: absolute; inset: 0; margin: 0;
+  opacity: 0; transform: translateY(14%) scale(.94);
+  transition: opacity .6s var(--fl-ease-out), transform .8s var(--fl-ease-out);
   pointer-events: none;
 }
-.fl-swap__screen.is-active { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.fl-swap__screen .fl-plate { height: 100%; }
-.fl-swap__screen .fl-slider { max-width: none; width: 100%; height: 100%; aspect-ratio: auto; }
+.fl-scrub__shot.is-past { transform: translateY(-5%) scale(.92); }
+.fl-scrub__shot.is-active { opacity: 1; transform: none; pointer-events: auto; z-index: 1; }
+.fl-scrub__shot .fl-plate { height: 100%; padding: 14px; }
+.fl-scrub__shot .fl-slider { max-width: none; width: 100%; height: 100%; aspect-ratio: auto; }
+
+.fl-scrub__captions { position: relative; width: min(520px, 88vw); min-height: 112px; text-align: center; }
+.fl-scrub__cap {
+  position: absolute; inset: 0 0 auto 0;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .45s var(--fl-ease-out), transform .6s var(--fl-ease-out);
+}
+.fl-scrub__cap.is-past { transform: translateY(-16px); }
+.fl-scrub__cap.is-active { opacity: 1; transform: none; transition-delay: .12s; }
+.fl-scrub__cap .fl-body { margin: 8px auto 0; max-width: 46ch; color: var(--fl-muted); }
+
+@media (max-width: 640px) {
+  .fl-scrub__sticky { padding-top: 64px; gap: 16px; --s: min(88vw, calc(100svh - 330px)); }
+  .fl-scrub__tab { font-size: .625rem; letter-spacing: .08em; gap: 5px; }
+  .fl-scrub__shot .fl-plate { padding: 10px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .fl-swap__screen { transition: none; }
+  .fl-scrub__shot, .fl-scrub__cap, .fl-scrub__tab { transition: none; }
 }

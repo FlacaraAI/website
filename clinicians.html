@@ -66,25 +66,12 @@
 <!-- ============ hero: the instrument, in the condition it is used in ============ -->
 <section class="fl-hero-mat">
   <div class="fl-wrap">
-    <div class="fl-hero-mat__grid">
-      <div data-reveal="left">
-        <span class="fl-badge">FDA Registered</span>
-        <h1 class="fl-display-xl">Introducing Flacara H1</h1>
-        <p class="fl-body fl-body--l" style="margin-top:24px;max-width:46ch">Two lighting modes, one
-          fixed working distance, and the same framing every session. The photograph you take today
-          can be put beside the one you take in six months and mean something.</p>
-        <div class="fl-rail">
-          <div><span class="k">Lighting</span><span class="v">Polarized / unpolarized</span></div>
-          <div><span class="k">Detail</span><span class="v">~40 µm</span></div>
-          <div><span class="k">Top plate</span><span class="v">Machined aluminium</span></div>
-          <div><span class="k">Charging</span><span class="v">USB-C</span></div>
-        </div>
-      </div>
-      <div data-reveal="scale" style="--fl-reveal-delay:140ms">
-        <!-- The traced outline hands off to the device reveal: it finishes drawing,
-             zooms out about the ring centre onto the video's first frame, and
-             crossfades. motion.js drives it; without JS the outline just stays. -->
-        <div class="fl-reveal" data-fl-reveal>
+    <!-- The traced outline hands off to the device reveal: it finishes drawing,
+         zooms out about the ring centre onto the video's first frame, and
+         crossfades. motion.js drives it; without JS the outline just stays.
+         It now sits behind the copy as ambient motion, not a second column. -->
+    <div class="fl-hero-mat__bg" data-reveal="scale" aria-hidden="true">
+      <div class="fl-reveal" data-fl-reveal>
         <svg class="fl-outline" viewBox="250.3 139.3 460 460" aria-hidden="true">
     <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
       <path pathLength="1" style="--s:.00;--i:5" d="m313.84085 360.42007c0 -91.93152 74.52521 -166.45671 166.4567 -166.45671c44.147034 0 86.48596 17.537354 117.70264 48.754044c31.216736 31.216675 48.75403 73.5556 48.75403 117.70267c0 91.93149 -74.52515 166.4567 -166.45667 166.4567c-91.93149 0 -166.4567 -74.52521 -166.4567 -166.4567z"/>
@@ -117,107 +104,103 @@
           </button>
         </div>
       </div>
+
+      <div class="fl-hero-mat__content" data-reveal="left">
+        <span class="fl-badge">FDA Registered</span>
+        <h1 class="fl-display-xl">Introducing Flacara H1</h1>
+        <div class="fl-rail">
+          <div><span class="k">Lighting</span><span class="v">Polarized / unpolarized</span></div>
+          <div><span class="k">Detail</span><span class="v">~40 µm</span></div>
+          <div><span class="k">Top plate</span><span class="v">Machined aluminium</span></div>
+          <div><span class="k">Charging</span><span class="v">USB-C</span></div>
+        </div>
+      </div>
     </div>
-  </div>
 </section>
 
-<!-- ============ 01 proof: resolution, a real lesion, alignment — one scroll-swap ============ -->
+<!-- ============ 01 proof: resolution, a real lesion, alignment — one pinned frame, scroll to swap ============ -->
 <section class="fl-section" aria-labelledby="proof">
   <div class="fl-wrap">
     <div class="fl-pill" data-reveal aria-hidden="true"></div>
     <h2 class="fl-display-m" id="proof" data-reveal>Decide for yourself.</h2>
 
-    <div class="fl-swap" data-fl-swap style="margin-top:48px">
-      <div class="fl-swap__pinned">
-        <div class="fl-swap__stage fl-swap__stage--plate" data-tilt data-reveal="scale">
-          <div class="fl-swap__device">
-            <div class="fl-swap__screen is-active" data-swap-screen="0">
-              <div class="fl-plate">
-                <div class="fl-slider" data-fl-slider style="--pos:50%">
-                  <img class="fl-slider__img fl-slider__img--base" src="images/target-dl4-aligned.jpg" alt="The same resolution target photographed with a DermLite DL4" width="1080" height="1080">
-                  <img class="fl-slider__img fl-slider__img--reveal" src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="1080" height="1080">
-                  <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span></div>
-                  <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
-                  <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
-                  <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
-                </div>
-              </div>
-            </div>
-
-            <div class="fl-swap__screen" data-swap-screen="1">
-              <div class="fl-plate">
-                <div class="fl-slider" data-fl-slider style="--pos:50%">
-                  <img class="fl-slider__img fl-slider__img--base" src="images/lesion-01-dl4-aligned.jpg" alt="A skin lesion photographed with a DermLite DL4" width="1068" height="1068">
-                  <img class="fl-slider__img fl-slider__img--reveal" src="images/lesion-01-flacara.JPG" alt="The same skin lesion photographed with Flacara" width="1068" height="1068">
-                  <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span></div>
-                  <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
-                  <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
-                  <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same lesion">
-                </div>
-              </div>
-            </div>
-
-            <div class="fl-swap__screen" data-swap-screen="2">
-              <div class="fl-plate">
-                <div class="fl-slider" data-fl-slider style="--pos:50%">
-                  <img class="fl-slider__img fl-slider__img--base" src="images/align-1-aligned.jpg" alt="The capture 1 frame after the app registered it to a common reference" width="772" height="772">
-                  <img class="fl-slider__img fl-slider__img--reveal" src="images/align-2-aligned.jpg" alt="The capture 2 frame after the app registered it to the same reference as capture 1" width="772" height="772">
-                  <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span></div>
-                  <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Capture 1</span>
-                  <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">Capture 2</span>
-                  <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare capture 1 and capture 2 after the app has registered both to the same reference frame">
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="fl-scrub" data-fl-scrub style="--n:3">
+      <div class="fl-scrub__sticky">
+        <div class="fl-scrub__rail" aria-label="Comparisons">
+          <button class="fl-scrub__tab is-active" type="button" data-scrub-go="0"><span class="n">01</span>Resolution</button>
+          <button class="fl-scrub__tab" type="button" data-scrub-go="1"><span class="n">02</span>Real lesion</button>
+          <button class="fl-scrub__tab" type="button" data-scrub-go="2"><span class="n">03</span>Alignment</button>
+          <span class="fl-scrub__track" aria-hidden="true"><span class="fl-scrub__fill"></span></span>
         </div>
 
-        <div class="fl-swap__caption">
-          <div class="fl-swap__cap is-active" data-swap-caption="0">
-            <span class="fl-label fl-swap__num">01 · Resolution</span>
+        <div class="fl-scrub__frame">
+          <figure class="fl-scrub__shot is-active" data-scrub-shot>
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/target-dl4-aligned.jpg" alt="The same resolution target photographed with a DermLite DL4" width="1080" height="1080">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="1080" height="1080">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
+              </div>
+            </div>
+          </figure>
+          <figure class="fl-scrub__shot" data-scrub-shot>
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/lesion-01-dl4-aligned.jpg" alt="A skin lesion photographed with a DermLite DL4" width="1068" height="1068">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/lesion-01-flacara.JPG" alt="The same skin lesion photographed with Flacara" width="1068" height="1068">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same lesion">
+              </div>
+            </div>
+          </figure>
+          <figure class="fl-scrub__shot" data-scrub-shot>
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/align-1-aligned.jpg" alt="The capture 1 frame after the app registered it to a common reference" width="772" height="772">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/align-2-aligned.jpg" alt="The capture 2 frame after the app registered it to the same reference as capture 1" width="772" height="772">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Capture 1</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">Capture 2</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare capture 1 and capture 2 after the app has registered both to the same reference frame">
+              </div>
+            </div>
+          </figure>
+        </div>
+
+        <div class="fl-scrub__captions" aria-live="polite">
+          <div class="fl-scrub__cap is-active" data-scrub-cap>
             <h3 class="fl-title">Read the fine print.</h3>
-            <p class="fl-body" style="margin-top:12px">A resolution check, not a clinical comparison:
-              the same printed target, the same working distance, the same session. Drag the divider,
-              Flacara on one side, a DermLite DL4 on the other, and judge the optical detail for
-              yourself.</p>
+            <p class="fl-body">A resolution check, not a clinical comparison: the same printed target, the same working distance, the same session. Drag the divider and judge the optical detail for yourself.</p>
           </div>
-          <div class="fl-swap__cap" data-swap-caption="1">
-            <span class="fl-label fl-swap__num">02 · A real lesion</span>
+          <div class="fl-scrub__cap" data-scrub-cap>
             <h3 class="fl-title">Not just a test chart.</h3>
-            <p class="fl-body" style="margin-top:12px">The target is a controlled way to measure
-              resolving power. This is the thing that number is supposed to predict: the same mole,
-              same sitting, Flacara on one side and a DermLite DL4 on the other.</p>
+            <p class="fl-body">What the chart is supposed to predict: the same mole, the same sitting, Flacara on one side and a DermLite DL4 on the other.</p>
           </div>
-          <div class="fl-swap__cap" data-swap-caption="2">
-            <span class="fl-label fl-swap__num">03 · Alignment</span>
+          <div class="fl-scrub__cap" data-scrub-cap>
             <h3 class="fl-title">It finds the frame for you.</h3>
-            <p class="fl-body" style="margin-top:12px">Point the housing at a spot you have
-              photographed before and the app registers the new frame against the old one, correcting
-              for rotation and offset before the shutter fires. You are not asked to hold still and
-              guess.</p>
+            <p class="fl-body">Point the housing at a spot you have photographed before and the app registers the new frame against the old one, correcting rotation and offset before the shutter fires.</p>
           </div>
         </div>
-      </div>
-
-      <div class="fl-swap__triggers" aria-hidden="true">
-        <div data-swap-step="0"></div>
-        <div data-swap-step="1"></div>
-        <div data-swap-step="2"></div>
       </div>
     </div>
 
@@ -394,8 +377,9 @@
 
 <script>
 (function () {
-  /* every [data-fl-slider] on the page, not just the first: the alignment
-     section adds a second one. */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* each slider gets a one-time sweep (6% → 94% → 50%) so it's obvious it can be dragged */
   Array.prototype.forEach.call(document.querySelectorAll('[data-fl-slider]'), function (wrap) {
     var input = wrap.querySelector('.fl-slider__input');
     if (!input) return;
@@ -403,29 +387,88 @@
     input.addEventListener('input', function () { set(input.value); });
 
     var played = false;
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    wrap.flSweep = function () {
+      if (played || reduceMotion) return;
+      played = true;
+      var start = null, duration = 1100, from = 6, mid = 94, to = 50;
+      function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+      function frame(now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / duration);
+        var e = ease(t);
+        var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
+        set(v);
+        input.value = v;
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    };
+
+    /* sliders inside the scrub sweep when their frame comes up, not on page entry */
+    if (wrap.closest('[data-fl-scrub]')) return;
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting || played) return;
-        played = true;
-        if (reduceMotion) return;
-        var start = null;
-        var duration = 1100;
-        var from = 6, mid = 94, to = 50;
-        function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-        function frame(now) {
-          if (start === null) start = now;
-          var t = Math.min(1, (now - start) / duration);
-          var e = ease(t);
-          var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
-          set(v);
-          input.value = v;
-          if (t < 1) requestAnimationFrame(frame);
-        }
-        requestAnimationFrame(frame);
-      });
+      if (entries[0].isIntersecting) { wrap.flSweep(); io.disconnect(); }
     }, { threshold: 0.5 });
     io.observe(wrap);
+  });
+
+  /* scrub: the frame is pinned for (n) screen-heights of scroll; which shot is
+     showing is read straight off scroll position rather than from observer
+     bands, so fast trackpad flicks can't skip a step or leave it stale. */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fl-scrub]'), function (scrub) {
+    var shots = scrub.querySelectorAll('[data-scrub-shot]');
+    var caps = scrub.querySelectorAll('[data-scrub-cap]');
+    var tabs = scrub.querySelectorAll('[data-scrub-go]');
+    var n = shots.length, current = -1, ticking = false;
+
+    function show(idx) {
+      if (idx === current) return;
+      current = idx;
+      for (var i = 0; i < n; i++) {
+        var state = i < idx ? 'is-past' : i === idx ? 'is-active' : '';
+        shots[i].className = 'fl-scrub__shot ' + state;
+        caps[i].className = 'fl-scrub__cap ' + state;
+        tabs[i].classList.toggle('is-active', i === idx);
+        if (i === idx) tabs[i].setAttribute('aria-current', 'step');
+        else tabs[i].removeAttribute('aria-current');
+        shots[i].toggleAttribute('inert', i !== idx);
+      }
+      var slider = shots[idx].querySelector('[data-fl-slider]');
+      if (slider && slider.flSweep) setTimeout(slider.flSweep, 350);
+    }
+
+    function progress() {
+      var r = scrub.getBoundingClientRect();
+      var run = r.height - window.innerHeight;
+      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+    }
+
+    function update() {
+      ticking = false;
+      var p = progress();
+      scrub.style.setProperty('--p', p.toFixed(4));
+      var r = scrub.getBoundingClientRect();
+      if (r.top > window.innerHeight * 0.4) return;
+      show(Math.min(n - 1, Math.floor(p * n)));
+    }
+
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+
+    Array.prototype.forEach.call(tabs, function (tab) {
+      tab.addEventListener('click', function () {
+        var i = +tab.getAttribute('data-scrub-go');
+        var run = scrub.offsetHeight - window.innerHeight;
+        var top = scrub.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: top + run * (i + 0.5) / n, behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
+    for (var i = 1; i < n; i++) shots[i].setAttribute('inert', '');
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
   });
 })();</script>
 
