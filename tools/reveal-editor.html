@@ -207,14 +207,21 @@
     startDelay: 0.20,          // site: the "+ 200ms" in --i*55ms + 200ms
     stagger: 0.055,            // site: the "55ms" per shape in the same formula
     perShapeDuration: 1.10,    // site: fl-trace 1.1s
-    outlineFadeDuration: 0.60, // site: --fl-reveal-dur (outline half)
-    outlineShrink: 0.94,       // site: the is-handed-off scale(.94)
+    outlineFadeDuration: 0.60, // site: --fl-reveal-dur (outline half, the opacity dissolve)
+    outlineFadeCurve: 'out',   // site: var(--fl-ease-out) — how the fade is paced, not how long it takes
+    outlineShrink: 0.94,       // site: the is-handed-off scale(.94) — the size it zooms to
+    outlineZoomDuration: 0.60, // new: how long the zoom itself takes, independent of the fade's own duration
+    outlineDelay: 0.00,        // new: offset of the outline's own fade-out from the handoff, +later / -earlier
     videoFadeDuration: 0.60,   // site: --fl-reveal-dur (video/still half)
-    playbackRate: 1.00         // site: clip.playbackRate
+    videoDelay: 0.00,          // new: offset of the video track from the handoff, +later / -earlier
+    playbackRate: 1.00,        // site: clip.playbackRate
+    trimStart: 0.00,           // new: seconds cropped off the front of the source clip
+    trimEnd: 0.00              // new: seconds cropped off the back of the source clip
   };
   var state = Object.assign({}, DEFAULTS);
   var shapeCount = 15;
   var videoTailShown = 2.2; // how much of the looping video to draw on the timeline, cosmetic only
+  var sourceDuration = 0;    // filled in once the clip's real length is known (see "loadedmetadata" below)
 
   // ---------- easing: a real solver for the site's own cubic-bezier(.16,1,.3,1),
   // so scrubbing shows the exact same curve production uses, not an approximation ----------
@@ -241,13 +248,36 @@
   function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
+  /* named curves for the outline fade's own pacing — separate from how LONG
+     it takes (that's the duration field). The site's own --fl-ease-out is a
+     steep one: most of the opacity drop happens in the first slice of the
+     duration, then it lingers faint for the rest, which reads as "fades so
+     fast" even once the duration is turned up, because turning up duration
+     stretches the lingering tail, not the fast part. A flatter curve is the
+     actual fix for that complaint, not a longer duration. */
+  var FADE_CURVES = {
+    out: { fn: easeOut, label: 'Ease out (snap, then lingers faint)', css: 'cubic-bezier(.16,1,.3,1)' },
+    linear: { fn: function (x) { return x; }, label: 'Linear (steady, constant rate)', css: 'linear' },
+    inOut: { fn: makeCubicBezier(0.65, 0, 0.35, 1), label: 'Ease in-out (slow, fast, slow)', css: 'cubic-bezier(.65,0,.35,1)' },
+    in: { fn: makeCubicBezier(0.42, 0, 1, 1), label: 'Ease in (slow start, vanishes fast at the end)', css: 'cubic-bezier(.42,0,1,1)' }
+  };
+
   function traceSpan() {
     // last shape starts at startDelay + stagger*(count-1) and runs perShapeDuration
     return state.startDelay + state.stagger * (shapeCount - 1) + state.perShapeDuration;
   }
-  function handoffStart() { return traceSpan(); } // both fades, and video playback, start here
+  function handoffStart() { return traceSpan(); } // the default moment everything hands off, by default
+  // Both the outline's fade-out and the video track can be pushed earlier or
+  // later than the handoff independently of each other — outlineDelay and
+  // videoDelay apply the same way, just to different layers. Both clamp at 0
+  // so neither can sit before the start of the scene, which would make the
+  // ruler math negative.
+  function outlineStart() { return Math.max(0, handoffStart() + state.outlineDelay); }
+  function videoStart() { return Math.max(0, handoffStart() + state.videoDelay); }
   function totalSpan() {
-    return handoffStart() + Math.max(state.outlineFadeDuration, state.videoFadeDuration) + videoTailShown;
+    var outlineEnd = outlineStart() + Math.max(state.outlineFadeDuration, state.outlineZoomDuration);
+    var videoEnd = videoStart() + Math.max(state.videoFadeDuration, videoTailShown);
+    return Math.max(traceSpan(), outlineEnd, videoEnd);
   }
 
   // ---------- ruler ----------
@@ -289,7 +319,7 @@
   var traceClip = makeClip(laneTrace, 'trace', 'Shapes drawing in', true);
   var outfadeClip = makeClip(laneOutfade, 'outfade', 'Outline fades out', true);
   var vidfadeClip = makeClip(laneVidfade, 'vidfade', 'Video fades in', true);
-  var videoClip = makeClip(laneVideo, 'video', 'Video (loops)', false);
+  var videoClip = makeClip(laneVideo, 'video', 'Video (loops)', true);
   var selectableClips = [traceClip, outfadeClip, vidfadeClip, videoClip];
 
   function layout() {
@@ -301,15 +331,20 @@
     traceClip.style.left = (state.startDelay * PPX) + 'px';
     traceClip.style.width = Math.max(28, (ts - state.startDelay) * PPX) + 'px';
 
-    var hs = handoffStart();
-    outfadeClip.style.left = (hs * PPX) + 'px';
+    var os = outlineStart();
+    outfadeClip.style.left = (os * PPX) + 'px';
     outfadeClip.style.width = Math.max(18, state.outlineFadeDuration * PPX) + 'px';
 
-    vidfadeClip.style.left = (hs * PPX) + 'px';
+    var vs = videoStart();
+    vidfadeClip.style.left = (vs * PPX) + 'px';
     vidfadeClip.style.width = Math.max(18, state.videoFadeDuration * PPX) + 'px';
 
-    videoClip.style.left = (hs * PPX) + 'px';
-    videoClip.style.width = (videoTailShown + Math.max(state.outlineFadeDuration, state.videoFadeDuration)) * PPX + 'px';
+    /* the video clip's edges are the crop: its left handle pulls trimStart in
+       from the source clip's front, its right handle pulls trimEnd in from
+       the back — exactly like trimming a clip's in/out points in an NLE. */
+    var loopSpan = videoTailShown + state.videoFadeDuration;
+    videoClip.style.left = ((vs + state.trimStart) * PPX) + 'px';
+    videoClip.style.width = Math.max(18, (loopSpan - state.trimStart - state.trimEnd) * PPX) + 'px';
 
     drawRuler();
     tracksEl.style.width = (totalSpan() * PPX + 160) + 'px';
@@ -387,12 +422,56 @@
     };
   })());
 
+  // dragging the clip body moves when the outline starts fading out, earlier
+  // or later relative to the handoff, independent of the video track.
+  dragClip(outfadeClip, (function () {
+    var base;
+    outfadeClip.addEventListener('pointerdown', function () { base = state.outlineDelay; });
+    return function (dx) {
+      state.outlineDelay = clamp(base + dx, -handoffStart(), 5);
+      layout(); if (selected === outfadeClip) renderInspector();
+    };
+  })());
+
   dragHandle(vidfadeClip, 'right', (function () {
     var base;
     vidfadeClip.querySelector('.handle.right').addEventListener('pointerdown', function () { base = state.videoFadeDuration; });
     return function (dx) {
       state.videoFadeDuration = clamp(base + dx, 0.1, 2.5);
       layout(); if (selected === vidfadeClip) renderInspector();
+    };
+  })());
+
+  // dragging the clip body moves the whole video track — fade-in and playback
+  // both — earlier or later relative to the handoff, independent of the
+  // outline's own timing.
+  dragClip(vidfadeClip, (function () {
+    var base;
+    vidfadeClip.addEventListener('pointerdown', function () { base = state.videoDelay; });
+    return function (dx) {
+      state.videoDelay = clamp(base + dx, -handoffStart(), 5);
+      layout(); if (selected === vidfadeClip) renderInspector();
+    };
+  })());
+
+  // the video clip's handles crop the source clip instead of resizing a
+  // timeline duration: left = trim from the front, right = trim from the back.
+  dragHandle(videoClip, 'left', (function () {
+    var base;
+    videoClip.querySelector('.handle.left').addEventListener('pointerdown', function () { base = state.trimStart; });
+    return function (dx) {
+      var cap = Math.max(0, (sourceDuration || 15) - state.trimEnd - 0.5);
+      state.trimStart = clamp(base + dx, 0, cap);
+      layout(); if (selected === videoClip) renderInspector();
+    };
+  })());
+  dragHandle(videoClip, 'right', (function () {
+    var base;
+    videoClip.querySelector('.handle.right').addEventListener('pointerdown', function () { base = state.trimEnd; });
+    return function (dx) {
+      var cap = Math.max(0, (sourceDuration || 15) - state.trimStart - 0.5);
+      state.trimEnd = clamp(base - dx, 0, cap); // dragging the right handle leftward (negative dx) trims more
+      layout(); if (selected === videoClip) renderInspector();
     };
   })());
 
@@ -426,6 +505,31 @@
     return wrap;
   }
 
+  function selectField(label, hint, value, options, onChange) {
+    var wrap = document.createElement('div');
+    wrap.className = 'field';
+    var l = document.createElement('label'); l.textContent = label;
+    var h = document.createElement('div'); h.className = 'hint'; h.textContent = hint;
+    var sel = document.createElement('select');
+    sel.style.cssText = 'width:100%;background:#0E0F10;border:1px solid #3A3D40;border-radius:4px;color:#E8EAEB;font-family:var(--fl-text,system-ui);font-size:.8125rem;padding:8px;margin-top:2px;';
+    Object.keys(options).forEach(function (key) {
+      var opt = document.createElement('option');
+      opt.value = key; opt.textContent = options[key];
+      if (key === value) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', function () { onChange(sel.value); });
+    wrap.appendChild(l); wrap.appendChild(h); wrap.appendChild(sel);
+    return wrap;
+  }
+
+  function groupLabel(text) {
+    var h = document.createElement('div');
+    h.textContent = text;
+    h.style.cssText = 'font-family:var(--fl-mono,monospace);font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;color:#6C7074;margin:20px 0 10px;padding-top:16px;border-top:1px solid #2A2D30;';
+    return h;
+  }
+
   function renderInspector() {
     inspector.innerHTML = '<h2>Inspector</h2>';
     if (selected === traceClip) {
@@ -433,11 +537,21 @@
       inspector.appendChild(field('How long each shape takes to draw', 'One shape’s own draw-in time, in seconds. Dragging the right edge of the clip does this too.', state.perShapeDuration, 0.2, 3, 0.01, function (v) { state.perShapeDuration = v; layout(); }));
       inspector.appendChild(field('Gap between shapes starting', 'How long after one shape starts before the next one begins, the stagger that makes them feel hand-drawn instead of simultaneous.', state.stagger, 0, 0.3, 0.005, function (v) { state.stagger = v; layout(); }));
     } else if (selected === outfadeClip) {
-      inspector.appendChild(field('Outline fade length', 'How long the wireframe takes to dissolve away, in seconds. Starts the instant the last shape finishes drawing.', state.outlineFadeDuration, 0.1, 2.5, 0.01, function (v) { state.outlineFadeDuration = v; layout(); }));
-      inspector.appendChild(field('How much it shrinks', 'The wireframe also pulls back slightly as it fades, instead of just vanishing in place. 1.0 = no shrink, 0.8 = a noticeable pull-back.', state.outlineShrink, 0.7, 1.0, 0.01, function (v) { state.outlineShrink = v; layout(); }));
+      inspector.appendChild(field('When it starts fading', 'How far the outline’s own fade-out sits from the handoff moment, in seconds. 0 = right when the last shape finishes, same as the video. Negative starts it earlier; positive holds it on screen longer before it goes. Dragging the clip body does this too.', state.outlineDelay, -2, 3, 0.01, function (v) { state.outlineDelay = v; layout(); }));
+      var fadeGroup = groupLabel('Fade — opacity only'); fadeGroup.style.marginTop = '0'; fadeGroup.style.paddingTop = '0'; fadeGroup.style.borderTop = 'none';
+      inspector.appendChild(fadeGroup);
+      inspector.appendChild(field('Outline fade length', 'How long the wireframe takes to dissolve away, in seconds, once it starts. This is the one that controls how long the fade takes — not the zoom fields below, those are separate.', state.outlineFadeDuration, 0.1, 2.5, 0.01, function (v) { state.outlineFadeDuration = v; layout(); }));
+      inspector.appendChild(selectField('Fade curve', 'How the fade is paced within that length, not how long it takes. The default (ease out) drops most of its opacity in the first slice of the duration and then lingers faint for the rest — which is why it can feel like it "fades so fast" even with the length turned up. Pick Linear for a steady, even dissolve, or Ease in-out for a smoother start and end.', state.outlineFadeCurve, Object.keys(FADE_CURVES).reduce(function (o, k) { o[k] = FADE_CURVES[k].label; return o; }, {}), function (v) { state.outlineFadeCurve = v; layout(); }));
+      inspector.appendChild(groupLabel('Zoom — the pull-back/push-in'));
+      inspector.appendChild(field('Zoom speed', 'How long the zoom itself takes, in seconds. Runs on its own clock from the same start as the fade above — make it quicker than the fade for a snap, or slower for a lingering pull-back that outlasts the dissolve.', state.outlineZoomDuration, 0.05, 2.5, 0.01, function (v) { state.outlineZoomDuration = v; layout(); }));
+      inspector.appendChild(field('Size it zooms to', 'The scale the wireframe reaches by the end of the zoom. 1.0 = no zoom at all. Below 1.0 shrinks it (0.5 = pulls back to half size); above 1.0 grows it instead, like a push in rather than a pull back.', state.outlineShrink, 0.2, 2.0, 0.01, function (v) { state.outlineShrink = v; layout(); }));
     } else if (selected === vidfadeClip) {
-      inspector.appendChild(field('Video fade length', 'How long the video/still takes to fade in, in seconds. Also starts the instant the last shape finishes — the real site waits for the video to actually be loaded before this begins, so it never fades onto a blank frame.', state.videoFadeDuration, 0.1, 2.5, 0.01, function (v) { state.videoFadeDuration = v; layout(); }));
+      inspector.appendChild(field('When the video comes in', 'How far the video track sits from the handoff moment, in seconds. 0 = right when the last shape finishes, same as the outline. Negative starts it earlier (overlapping the outline fade); positive holds it back. Dragging the clip body does this too.', state.videoDelay, -2, 3, 0.01, function (v) { state.videoDelay = v; layout(); }));
+      inspector.appendChild(field('Video fade length', 'How long the video/still takes to fade in, in seconds, once it starts. The real site also waits for the video to actually be loaded before this begins, so it never fades onto a blank frame.', state.videoFadeDuration, 0.1, 2.5, 0.01, function (v) { state.videoFadeDuration = v; layout(); }));
     } else if (selected === videoClip) {
+      var durHint = sourceDuration ? ('The source clip is ' + sourceDuration.toFixed(1) + 's long.') : 'The source clip’s length is still loading.';
+      inspector.appendChild(field('Trim from the start', 'Seconds cropped off the front of the source clip before it’s used — playback and the loop both begin this far in, instead of at frame 0. ' + durHint, state.trimStart, 0, 10, 0.05, function (v) { state.trimStart = v; layout(); }));
+      inspector.appendChild(field('Trim from the end', 'Seconds cropped off the back of the source clip — the loop jumps back to the start this far before the real end, instead of playing all the way out. ' + durHint, state.trimEnd, 0, 10, 0.05, function (v) { state.trimEnd = v; layout(); }));
       inspector.appendChild(field('Playback speed', 'How fast the looping video plays once it takes over, as a multiple of normal speed.', state.playbackRate, 0.25, 2, 0.05, function (v) { state.playbackRate = v; layout(); }));
     } else {
       inspector.innerHTML += '<div class="empty-inspector">Click a clip on the timeline to edit it.</div>';
@@ -485,11 +599,31 @@
   still.style.opacity = '0'; // the still is flacara.css's no-JS fallback only; this tool always has the clip loaded
   video.pause();
 
+  video.addEventListener('loadedmetadata', function () {
+    sourceDuration = video.duration || 0;
+    if (selected === videoClip) renderInspector(); // picks up the real length in the hint text
+  });
+  if (video.readyState >= 1 && video.duration) sourceDuration = video.duration;
+
+  /* native `loop` only repeats the *whole* source clip — it has no concept of
+     trimStart/trimEnd, so during real playback (not scrubbing) this watches
+     for the trimmed-out point itself and jumps back to the trimmed-in point.
+     Scrubbing/stepping while paused doesn't need this: renderAtTime seeks
+     directly and already stays inside [trimStart, duration-trimEnd]. */
+  video.addEventListener('timeupdate', function () {
+    if (!isPlaying || !sourceDuration) return;
+    var outPoint = sourceDuration - state.trimEnd;
+    if (video.currentTime >= outPoint - 0.015) {
+      try { video.currentTime = state.trimStart; } catch (e) {}
+    }
+  });
+
   var isPlaying = false, currentTime = 0, playAnchor = 0, raf = null;
 
   function renderAtTime(t) {
     t = clamp(t, 0, totalSpan());
-    var hs = handoffStart();
+    var os = outlineStart();
+    var vs = videoStart();
 
     paths.forEach(function (p) {
       var i = parseFloat(p.getAttribute('data-i'));
@@ -498,20 +632,25 @@
       p.style.strokeDashoffset = (1 - easeOut(prog)).toString();
     });
 
-    var outEased = easeOut(clamp01((t - hs) / state.outlineFadeDuration));
+    var fadeCurveFn = (FADE_CURVES[state.outlineFadeCurve] || FADE_CURVES.out).fn;
+    var outEased = fadeCurveFn(clamp01((t - os) / state.outlineFadeDuration));
     outlineSvg.style.opacity = (1 - outEased).toString();
-    outlineSvg.style.transform = 'scale(' + (1 + (state.outlineShrink - 1) * outEased).toFixed(4) + ')';
+    // the zoom runs on its own clock — it can finish faster or slower than the
+    // opacity dissolve, they just happen to share a start time (os)
+    var zoomEased = easeOut(clamp01((t - os) / state.outlineZoomDuration));
+    outlineSvg.style.transform = 'scale(' + (1 + (state.outlineShrink - 1) * zoomEased).toFixed(4) + ')';
 
-    var vidEased = easeOut(clamp01((t - hs) / state.videoFadeDuration));
+    var vidEased = easeOut(clamp01((t - vs) / state.videoFadeDuration));
     video.style.opacity = vidEased.toString();
 
-    if (t >= hs) {
-      var vt = (t - hs) * state.playbackRate;
-      if (video.duration) vt = vt % video.duration;
-      /* kept in sync every frame, not just when play() is first called, so
-         dragging the speed slider mid-playback takes effect immediately
-         instead of waiting for the next pause/play cycle */
-      if (video.playbackRate !== state.playbackRate) video.playbackRate = state.playbackRate;
+    /* kept in sync every frame, not just when play() is first called, so
+       dragging the speed slider mid-playback takes effect immediately
+       instead of waiting for the next pause/play cycle */
+    if (video.playbackRate !== state.playbackRate) video.playbackRate = state.playbackRate;
+
+    if (t >= vs) {
+      var usable = Math.max(0.1, (sourceDuration || 0) - state.trimStart - state.trimEnd);
+      var vt = state.trimStart + (sourceDuration ? ((t - vs) * state.playbackRate) % usable : 0);
       if (isPlaying) {
         if (video.paused) video.play().catch(function () {});
       } else {
@@ -520,7 +659,8 @@
       }
     } else {
       if (!video.paused) video.pause();
-      if (video.currentTime !== 0.001) { try { video.currentTime = 0.001; } catch (e) {} }
+      var restFrame = state.trimStart + 0.001;
+      if (Math.abs(video.currentTime - restFrame) > 0.02) { try { video.currentTime = restFrame; } catch (e) {} }
     }
 
     currentTime = t;
@@ -630,9 +770,68 @@
         + '  --fl-reveal-dur-in: ' + state.videoFadeDuration.toFixed(2) + 's;  /* video/still fades in */\n'
         + '}\n';
     }
-    css += '.fl-reveal.is-handed-off .fl-outline { transform: scale(' + state.outlineShrink.toFixed(2) + '); }\n\n'
-      + '/* motion.js — set right after clip.play() inside the handoff */\n'
-      + 'clip.playbackRate = ' + state.playbackRate.toFixed(2) + ';';
+
+    var opacityVar = sameDur ? '--fl-reveal-dur' : '--fl-reveal-dur-out';
+    var zoomMatchesFade = Math.abs(state.outlineZoomDuration - state.outlineFadeDuration) < 0.005;
+    var curveIsDefault = state.outlineFadeCurve === 'out';
+    var opacityEase = curveIsDefault ? 'var(--fl-ease-out)' : FADE_CURVES[state.outlineFadeCurve].css;
+
+    if (zoomMatchesFade && curveIsDefault) {
+      css += '.fl-reveal.is-handed-off .fl-outline { transform: scale(' + state.outlineShrink.toFixed(2) + '); }\n\n';
+    } else {
+      var notes = [];
+      if (!zoomMatchesFade) notes.push('the zoom no longer takes as long as the opacity fade');
+      if (!curveIsDefault) notes.push('the fade’s own pacing (' + FADE_CURVES[state.outlineFadeCurve].label + ') no longer matches the site’s shared --fl-ease-out');
+      css += '/* ' + notes.join(', and ').replace(/^./, function (c) { return c.toUpperCase(); }) + ',\n'
+        + '   so the shared "transition: opacity VAR, transform VAR" on .fl-reveal\n'
+        + '   .fl-outline needs to split: */\n'
+        + '.fl-reveal { --fl-reveal-zoom-dur: ' + state.outlineZoomDuration.toFixed(2) + 's; }\n'
+        + '.fl-reveal .fl-outline { transition: opacity var(' + opacityVar + ') ' + opacityEase + ', transform var(--fl-reveal-zoom-dur) var(--fl-ease-out); }\n'
+        + '.fl-reveal.is-handed-off .fl-outline { transform: scale(' + state.outlineShrink.toFixed(2) + '); }\n\n';
+    }
+
+    var outlineDelayed = Math.abs(state.outlineDelay) > 0.005;
+    var videoDelayed = Math.abs(state.videoDelay) > 0.005;
+    if (outlineDelayed || videoDelayed) {
+      var outlineAbsMs = Math.round(outlineStart() * 1000);
+      var videoAbsMs = Math.round(videoStart() * 1000);
+      css += '/* The outline fade and the video track no longer both start exactly at\n'
+        + '   the handoff, so a single is-handed-off class can’t drive both anymore —\n'
+        + '   it needs to split into two classes. Scheduled here as two timers from\n'
+        + '   the same zero point the trace animation itself counts from (not chained\n'
+        + '   off one shared handoff signal), since that’s the only way to let one\n'
+        + '   layer fire before the trace-complete / video-ready check that currently\n'
+        + '   gates the handoff. NOTE this trades away the "wait until the video has\n'
+        + '   actually loaded" guarantee from the rest of motion.js for whichever layer\n'
+        + '   now starts before that signal fires — worth a deliberate second pass,\n'
+        + '   not a blind copy-paste. */\n'
+        + 'setTimeout(function () { handoff.classList.add(\'outline-faded\'); }, ' + outlineAbsMs + '); // was ' + Math.round(handoffStart() * 1000) + 'ms\n'
+        + 'setTimeout(function () {\n'
+        + '  handoff.classList.add(\'video-visible\');\n'
+        + '  clip.currentTime = ' + state.trimStart.toFixed(2) + ';\n'
+        + '  clip.play();\n'
+        + '}, ' + videoAbsMs + '); // was ' + Math.round(handoffStart() * 1000) + 'ms\n'
+        + '// then swap every ".is-handed-off .fl-outline" rule in flacara.css for\n'
+        + '// ".outline-faded .fl-outline", and every ".is-handed-off .fl-reveal__vid"\n'
+        + '// (etc.) for ".video-visible .fl-reveal__vid"\n\n';
+    } else {
+      css += '// outlineDelay and videoDelay are both 0, so the existing single\n'
+        + '// is-handed-off class still covers both — no changes needed here.\n'
+        + 'clip.currentTime = ' + state.trimStart.toFixed(2) + ';\n\n';
+    }
+    css += 'clip.playbackRate = ' + state.playbackRate.toFixed(2) + ';\n';
+    if (state.trimStart > 0.005 || state.trimEnd > 0.005) {
+      css += '\n// native `loop` repeats the whole file — it can’t stop short of the end,\n'
+        + '// so swap the <video loop> attribute for this instead:\n'
+        + 'clip.removeAttribute(\'loop\');\n'
+        + 'clip.addEventListener(\'timeupdate\', function () {\n'
+        + '  if (clip.currentTime >= clip.duration - ' + state.trimEnd.toFixed(2) + ' - 0.015) {\n'
+        + '    clip.currentTime = ' + state.trimStart.toFixed(2) + ';\n'
+        + '  }\n'
+        + '});';
+    } else {
+      css += '\n// trimStart/trimEnd are both 0, so the existing <video loop> attribute still covers it.';
+    }
     codeOut.textContent = css;
   }
 

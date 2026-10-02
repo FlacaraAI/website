@@ -12,6 +12,13 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="flacara.css">
 <!-- No page-local stylesheet. Every component here lives in flacara.css. -->
+<!-- the hero phone is a real WebGL render (phone3d.js), not a CSS mockup -->
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
 </head>
 <body class="fl-lit">
 
@@ -61,20 +68,29 @@
 <main>
 
 <!-- ============ hero ============ -->
-<section class="fl-hero-mat" style="padding-bottom:64px">
+<section class="fl-hero-mat fl-hero-mat--blue">
   <div class="fl-wrap">
-    <span class="fl-badge">Software</span>
-    <h1 class="fl-display-xl" data-reveal>Introducing the Flacara app.</h1>
+    <div class="fl-hero-mat__grid">
+      <div data-reveal="left" data-parallax>
+        <span class="fl-badge">Software</span>
+        <h1 class="fl-display-xl" data-reveal>Introducing the <span class="fl-hero-accent">Flacara</span> app.</h1>
+      </div>
+      <div data-reveal="scale" style="--fl-reveal-delay:140ms">
+        <div class="fl-phone3d-stage" data-phone3d data-screen="images/app-mesh.png" role="img" aria-label="The Flacara app's tracking screen, shown on a phone"></div>
+      </div>
+    </div>
+  </div>
+  <div class="fl-scroll-hint" aria-hidden="true">
+    <span class="fl-label">Scroll</span>
+    <svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
 </section>
 
 <!-- ============ scroll-swap: five things the app does ============ -->
-<section class="fl-section fl-swap-section" aria-labelledby="swap-h">
+<section class="fl-section fl-swap-section" aria-label="What the app does">
   <div class="fl-wrap">
-    <span class="fl-label fl-kicker" data-reveal>What it does</span>
-    <h2 class="fl-display-m" id="swap-h" data-reveal style="margin-top:8px">One app, four screens.</h2>
 
-    <div class="fl-swap" data-fl-swap style="margin-top:56px">
+    <div class="fl-swap" data-fl-swap>
       <div class="fl-swap__pinned">
 
         <div class="fl-swap__row">
@@ -195,6 +211,7 @@
 </footer>
 
 <script src="motion.js" defer></script>
+<script type="module" src="phone3d.js"></script>
 
 </body>
 </html>

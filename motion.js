@@ -26,6 +26,18 @@
     navState();
   }
 
+  /* ---------- hero text: sinks slightly as you scroll past it, rather
+     than sitting frozen until the page shoves it off ---------- */
+  var parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+  if (parallaxEls.length && !reduceMotion) {
+    var onParallax = function () {
+      var shift = Math.min(70, window.scrollY * 0.18);
+      parallaxEls.forEach(function (el) { el.style.setProperty('--fl-parallax', (-shift).toFixed(1)); });
+    };
+    document.addEventListener('scroll', onParallax, { passive: true });
+    onParallax();
+  }
+
   /* ---------- reveal on scroll ---------- */
   var revealEls = document.querySelectorAll('[data-reveal]');
   if (revealEls.length && 'IntersectionObserver' in window) {

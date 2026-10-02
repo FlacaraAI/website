@@ -519,11 +519,17 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   height: 56px; padding: 0 8px 0 12px;
   display: flex; align-items: center; gap: 14px;
   border-radius: var(--fl-radius-card);
-  background: rgba(242, 244, 245, 0.46);          /* --fl-surface, translucent */
-  -webkit-backdrop-filter: blur(28px) saturate(1.8);
-          backdrop-filter: blur(28px) saturate(1.8);
-  /* the rim the note above promises: a 1px inset, not a shadow (§4) */
-  box-shadow: inset 0 0 0 1px var(--fl-rule);
+  background: rgba(242, 244, 245, 0.62);          /* --fl-surface, translucent */
+  -webkit-backdrop-filter: blur(30px) saturate(1.9);
+          backdrop-filter: blur(30px) saturate(1.9);
+  /* it floats over a dark hero on every page now, so it gets a real edge:
+     a bright top rim and a hairline rim for the glass, over a cast shadow
+     that lifts it off the mat rather than sitting flush on it. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .72),
+    inset 0 0 0 1px rgba(255, 255, 255, .42),
+    0 22px 44px -14px rgba(10, 12, 16, .55),
+    0 6px 14px -6px rgba(10, 12, 16, .35);
 }
 /* no blur support: fall back to the opaque surface the bar always had */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -686,8 +692,19 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   /* starts at the top of the document, same device as .fl-hero-mat: the nav
      pill floats on it instead of sitting above a hard seam. */
   margin-top: -72px;
-  padding: 136px 24px 88px;
-  background: var(--fl-ground-lit);
+  /* bottom padding is the heavier of the two on purpose: the box centres its
+     content, so the extra below lifts the copy clear of the fade-out. */
+  padding: 136px 24px 196px;
+  color: var(--fl-on-mat);
+  /* Same depth the two domain heroes run at, but carrying both hues rather
+     than one: blue banked into the top-left, red into the top-right, over a
+     dark base that dissolves to nothing at the bottom so the lit ground
+     below takes over without a seam. Devices is red's hero and software is
+     blue's; home is the page that owes you both. */
+  background:
+    radial-gradient(85% 68% at 2% 0%, #122a52 0%, rgba(18, 42, 82, .72) 34%, rgba(18, 42, 82, 0) 76%),
+    radial-gradient(85% 68% at 98% 2%, #4a2018 0%, rgba(74, 32, 24, .66) 34%, rgba(74, 32, 24, 0) 76%),
+    linear-gradient(to bottom, #171a28 0%, #171a28 68%, rgba(23, 26, 40, .58) 84%, rgba(23, 26, 40, 0) 100%);
 }
 /* three blue/red blobs behind the apertures, each drifting and fading on
    its own cycle. Kept deliberately light on the GPU: no blend mode, a
@@ -761,6 +778,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper .fl-body--l { margin-top: 18px; }
 .fl-hero-aper__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 32px; }
 .fl-hero-aper__stats { justify-content: center; margin-top: 44px; }
+/* the hero runs dark now, so everything in it takes the on-mat palette and
+   the lockup drops the light-ground shadows it was wearing. */
+.fl-hero-aper .fl-tagline { color: var(--fl-on-mat-muted); }
+.fl-hero-aper__stats .fl-label { color: var(--fl-on-mat-muted); }
+.fl-hero-aper__stats .fl-stat-row__value { color: var(--fl-on-mat); }
+.fl-hero-aper__stats > div { border-left-color: var(--fl-mat-raised); }
+.fl-hero-aper .fl-lock .ico,
+.fl-hero-aper .fl-lock .logo { filter: none; }
 
 /* one staggered page load, nothing else moves */
 .fl-rise { opacity: 0; animation: fl-rise .8s var(--fl-ease) var(--d, 0ms) forwards; }
@@ -827,17 +852,51 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   position: relative; overflow: hidden; isolation: isolate;
   color: var(--fl-on-mat);
   /* the mat dissolves to nothing rather than to a colour: the body's lit ground
-     is background-attachment:fixed, so any hard-coded hand-off value would seam. */
-  background: linear-gradient(to bottom,
-    #1F2225 0%, #1F2225 52%, rgba(31,34,37,.86) 68%, rgba(31,34,37,.42) 85%, rgba(31,34,37,0) 100%);
+     is background-attachment:fixed, so any hard-coded hand-off value would seam.
+     Plain dark fallback — each page picks a colour below. */
+  background: linear-gradient(to bottom, #1F2225 0%, #1F2225 56%, rgba(31,34,37,0) 100%);
   /* starts at the top of the document; the nav pill floats on it */
   margin-top: -72px;
-  padding: 216px 0 208px;
+  padding: 196px 0 152px;
+}
+/* the two domains get one colour each, not a shared black — software is
+   blue's hero, devices is red's. Each is the deep end of the brand's own
+   ramp rather than black-plus-a-tint, so the whole hero reads as that
+   colour, with the mark's own hue as a brighter glow inside it. */
+.fl-hero-mat--blue {
+  background:
+    radial-gradient(55% 60% at 18% 6%, rgba(201,218,248,.32), transparent 65%),
+    linear-gradient(to bottom, #122a52 0%, #122a52 56%, rgba(18,42,82,0) 100%);
+}
+.fl-hero-mat--red {
+  background:
+    radial-gradient(55% 60% at 82% 8%, rgba(219,157,145,.3), transparent 65%),
+    linear-gradient(to bottom, #4a2018 0%, #4a2018 56%, rgba(74,32,24,0) 100%);
 }
 .fl-hero-mat > * { position: relative; z-index: 1; }
-.fl-hero-mat h1, .fl-hero-mat .fl-display-xl { color: var(--fl-on-mat); }
+.fl-hero-mat h1, .fl-hero-mat .fl-display-xl {
+  color: var(--fl-on-mat); font-size: clamp(3.25rem, 5.4vw, 5.25rem);
+}
 .fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
 .fl-hero-mat .fl-label { color: var(--fl-blue); }
+.fl-hero-mat--red .fl-label { color: var(--fl-red); }
+/* a brighter, gradient-filled word inside the headline — the same move
+   the wordmark itself uses (background-clip: text on the brand ramp),
+   just one hue deep instead of the full blue-to-red sweep, so it reads as
+   this page's colour rather than the logo. */
+.fl-hero-accent {
+  background: linear-gradient(135deg, var(--fl-blue) 0%, var(--fl-blue-deep) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.fl-hero-mat--red .fl-hero-accent {
+  background: linear-gradient(135deg, var(--fl-red) 0%, var(--fl-red-deep) 100%);
+  -webkit-background-clip: text; background-clip: text;
+}
+/* the text sinks slightly as the page scrolls past it, instead of sitting
+   dead still until it's shoved off — motion.js drives this via --parallax. */
+[data-parallax] { transform: translateY(calc(var(--fl-parallax, 0) * 1px)); will-change: transform; }
+@media (prefers-reduced-motion: reduce) { [data-parallax] { transform: none; } }
 .fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
 .fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
 .fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
@@ -854,6 +913,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
   .fl-hero-mat .fl-reveal { width: 100%; max-width: 420px; margin: 0; }
 }
+
+/* a nudge that there's more below — easy to miss on a hero that's
+   otherwise just a headline on a dark field. */
+.fl-scroll-hint {
+  position: absolute; left: 50%; bottom: 32px; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--fl-on-mat-muted);
+  animation: fl-scroll-bob 2.2s ease-in-out infinite;
+}
+.fl-scroll-hint svg { display: block; }
+@keyframes fl-scroll-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 7px); }
+}
+@media (prefers-reduced-motion: reduce) { .fl-scroll-hint { animation: none; } }
 
 /* ---------- feature row ---------- */
 .fl-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
@@ -1220,11 +1294,19 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* the one landscape capture: the device itself tips onto its side rather
    than letterboxing the image inside a portrait frame. The source image
    (app-compare-rot.png) is pre-rotated the other way, so the two cancel out
-   and the content reads upright once the phone has turned. Full size, not
-   scaled down — the caption for this step sits below rather than beside it,
-   so the wider footprint has the room to stay the same size as every other
-   screen. */
-.fl-phone--rotated { transform: rotate(90deg); }
+   and the content reads upright once the phone has turned. Only a touch
+   smaller than upright, not shrunk — close enough to read as the same
+   device, not a different, smaller one. */
+.fl-phone--rotated { transform: rotate(90deg) scale(.88); }
+/* the hero mockup: a real WebGL render (phone3d.js) rather than a CSS
+   mockup — a rounded-box mesh, lit and rendered with an actual perspective
+   camera, so the edges are a real 3D surface instead of an approximation
+   that falls apart up close. This is just its canvas's box. */
+.fl-phone3d-stage {
+  width: 100%; max-width: 360px; aspect-ratio: 9 / 15.5; margin: 0 auto;
+  filter: drop-shadow(20px 36px 46px rgba(8,16,32,.45));
+}
+.fl-phone3d-stage canvas { display: block; width: 100%; height: 100%; }
 .fl-phone__btn { position: absolute; background: linear-gradient(90deg, #45484a, #191a1b); z-index: 0; }
 .fl-phone__btn--action   { left: -2.5px; top: 78px;  width: 3px; height: 26px; border-radius: 2px 0 0 2px; }
 .fl-phone__btn--vol-up   { left: -2.5px; top: 128px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
@@ -1263,17 +1345,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   background: radial-gradient(closest-side, rgba(21,22,22,.22), transparent 72%);
   animation: fl-phone-shadow 6s ease-in-out infinite;
 }
-/* the float wrapper also owns the landscape reflow: its height collapses
-   toward the rotated phone's shorter visual footprint so the caption below
-   it follows the phone up instead of waiting out the full portrait height.
-   Transform doesn't affect layout, so this is a second, independent change
-   timed to match the phone's own rotation. */
 .fl-phone-float {
   height: 650px; display: flex; align-items: center; justify-content: center;
-  animation: fl-phone-float 6s ease-in-out infinite;
-  transition: height 1.8s var(--fl-ease-out); will-change: transform;
+  animation: fl-phone-float 6s ease-in-out infinite; will-change: transform;
 }
-.fl-phone-float.is-landscape { height: 340px; }
 @keyframes fl-phone-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -1288,9 +1363,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-swap__row { flex-direction: column; gap: 16px; }
   .fl-swap__caption, .fl-swap__caption--below { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
   .fl-phone { width: 240px; }
-  .fl-phone--rotated { transform: rotate(90deg) scale(.48); }
+  .fl-phone--rotated { transform: rotate(90deg) scale(.66); }
   .fl-phone-float { height: 520px; }
-  .fl-phone-float.is-landscape { height: 180px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fl-swap__cap, .fl-phone__view, .fl-phone { transition: none; }
