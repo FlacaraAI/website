@@ -326,7 +326,8 @@
         steps.forEach(function (s, i) {
           var r = s.getBoundingClientRect();
           var p = Math.max(0, Math.min(1, (mid - r.top) / r.height));
-          var shift = (0.5 - p) * 90;
+          // full travel: enters well below its slot, exits well above it
+          var shift = (0.5 - p) * 280;
           captions.forEach(function (c) {
             if (c.getAttribute('data-swap-caption') === String(i)) c.style.setProperty('--cap-shift', shift.toFixed(1) + 'px');
           });

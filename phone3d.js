@@ -77,7 +77,7 @@ async function initOne(container) {
   scene.add(pivot);
 
   const tallest = Math.max(size.x, size.y, size.z);
-  camera.position.set(0, 0, tallest * 2.15);
+  camera.position.set(0, 0, tallest * 2.75);
   camera.lookAt(0, 0, 0);
 
   // a soft key from the upper right on top of the environment, so the
@@ -91,7 +91,9 @@ async function initOne(container) {
   // leaned back with the screen tipped up toward the viewer, only a light
   // turn to the side, and a slight roll — a floating product shot rather
   // than a phone standing edge-on
-  const baseY = -0.34, baseX = -0.38, baseZ = 0.12;
+  // the screen's normal points up and to the left — toward the headline —
+  // while still mostly at the viewer: a clean three-quarter product angle
+  const baseY = -0.46, baseX = -0.24, baseZ = 0.04;
   pivot.rotation.set(baseX, baseY, baseZ);
   let pointerX = 0, pointerY = 0, pointer = false;
 
@@ -125,11 +127,12 @@ async function initOne(container) {
     raf = requestAnimationFrame(frame);
     t += 1 / 60;
     // slow drift through angles when idle, like it's turning in zero-g
-    const driftY = pointer ? 0 : Math.sin(t * 0.32) * 0.22;
-    const driftX = pointer ? 0 : Math.sin(t * 0.23 + 1) * 0.08;
-    const targetY = baseY + driftY + pointerY + scrollP * 0.9;
-    const targetX = baseX + driftX + pointerX + scrollP * 0.32;
-    const targetZ = baseZ - scrollP * 0.12 + Math.sin(t * 0.27) * 0.03;
+    const driftY = pointer ? 0 : Math.sin(t * 0.32) * 0.1;
+    const driftX = pointer ? 0 : Math.sin(t * 0.23 + 1) * 0.05;
+    // scrolling eases it round to face you squarely as the hero leaves
+    const targetY = baseY + driftY + pointerY + scrollP * 0.4;
+    const targetX = baseX + driftX + pointerX + scrollP * 0.18;
+    const targetZ = baseZ + Math.sin(t * 0.27) * 0.02;
     pivot.rotation.x += (targetX - pivot.rotation.x) * 0.05;
     pivot.rotation.y += (targetY - pivot.rotation.y) * 0.05;
     pivot.rotation.z += (targetZ - pivot.rotation.z) * 0.05;

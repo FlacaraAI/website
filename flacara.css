@@ -715,17 +715,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     #000 0%, #000 58%, rgba(0,0,0,.92) 65%, rgba(0,0,0,.76) 72%, rgba(0,0,0,.54) 79%,
     rgba(0,0,0,.32) 86%, rgba(0,0,0,.14) 93%, rgba(0,0,0,.04) 97%, transparent 100%);
 }
-/* Software's blue and devices' rust, exactly — the same two hexes and the
-   same light glows those heroes use, set side by side: home is the page
-   that owes you both. No neutral base under them, and blended in OKLCH so
-   the middle stays a live plum rather than greying out the way two dark
-   colours do when mixed in sRGB. */
+/* The other two heroes each take one hue at its deepest; home takes both
+   at the brand's mid-tones instead — the same blue/rust pair the filled
+   Pre-order button is made of (--fl-blue-ink, --fl-red-ink), so the hero
+   and its CTA are one colour story. Mid-tones rather than the deep ends
+   because two deep hues side by side read as a dark void here, and mixed
+   in OKLAB, not OKLCH: OKLCH swings the hue through purple on the way from
+   blue to rust, where OKLAB just passes through a soft mauve-grey. The two
+   glows are the other heroes' own, a touch stronger for the lighter base. */
 .fl-hero-aper__bg::before {
   content: ""; position: absolute; inset: 0; z-index: -3;
   background:
-    radial-gradient(55% 60% at 14% 6%, rgba(201, 218, 248, .32), transparent 65%),
-    radial-gradient(55% 60% at 86% 8%, rgba(219, 157, 145, .30), transparent 65%),
-    linear-gradient(in oklch 100deg, #122a52 0%, #122a52 18%, #4a2018 82%, #4a2018 100%);
+    radial-gradient(55% 60% at 14% 6%, rgba(201, 218, 248, .42), transparent 65%),
+    radial-gradient(55% 60% at 86% 8%, rgba(219, 157, 145, .40), transparent 65%),
+    linear-gradient(in oklab 100deg, #3a5a95 0%, var(--fl-blue-ink) 26%, var(--fl-red-ink) 74%, #8f4c39 100%);
 }
 /* three blue/red blobs behind the apertures, each drifting and fading on
    its own cycle. Kept deliberately light on the GPU: no blend mode, a
@@ -799,14 +802,19 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper .fl-body--l { margin-top: 18px; }
 .fl-hero-aper__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 32px; }
 .fl-hero-aper__stats { justify-content: center; margin-top: 44px; }
-/* the hero runs dark now, so everything in it takes the on-mat palette and
-   the lockup drops the light-ground shadows it was wearing. */
-.fl-hero-aper .fl-tagline { color: var(--fl-on-mat-muted); }
-.fl-hero-aper__stats .fl-label { color: var(--fl-on-mat-muted); }
-.fl-hero-aper__stats .fl-stat-row__value { color: var(--fl-on-mat); }
-.fl-hero-aper__stats > div { border-left-color: var(--fl-mat-raised); }
+/* On the mid-tone sweep the on-mat greys and the pastel ramp wordmark both
+   wash out, so the copy goes white — the same white the other heroes' own
+   headlines use — and the lockup drops its light-ground shadows. The disc
+   keeps the brand ramp; only the word goes solid. */
+.fl-hero-aper .fl-tagline { color: rgba(255, 255, 255, .82); }
+.fl-hero-aper__stats .fl-label { color: rgba(255, 255, 255, .72); }
+.fl-hero-aper__stats .fl-stat-row__value { color: #fff; }
+.fl-hero-aper__stats > div { border-left-color: rgba(255, 255, 255, .3); }
 .fl-hero-aper .fl-lock .ico,
 .fl-hero-aper .fl-lock .logo { filter: none; }
+.fl-hero-aper .fl-lock .logo {
+  background: none; color: #fff; -webkit-text-fill-color: #fff;
+}
 
 /* one staggered page load, nothing else moves */
 .fl-rise { opacity: 0; animation: fl-rise .8s var(--fl-ease) var(--d, 0ms) forwards; }
@@ -936,7 +944,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* the software hero's headline: bigger and shorter, so the point lands at a glance */
 .fl-hero-mat .fl-hero-title--xl { font-size: clamp(3.75rem, 7.4vw, 7rem); line-height: .98; max-width: none; }
 .fl-hero-kicker {
-  margin-top: 28px; max-width: 30ch;
+  margin-top: 28px; max-width: 40ch;
   font-family: var(--fl-text); font-weight: 500; font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.45;
   color: var(--fl-on-mat);
 }
@@ -1316,17 +1324,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap__caption { position: relative; width: 300px; flex: none; min-height: 170px; }
 .fl-swap__caption--right { text-align: left; }
 .fl-swap__caption--below { width: 100%; max-width: 420px; min-height: 110px; margin-top: 8px; text-align: center; }
+/* --cap-shift is scroll-driven (motion.js): each caption enters low and
+   rises through its slot as you scroll. A short transform transition only
+   smooths the scroll steps; opacity does the real crossfade. */
 .fl-swap__cap {
-  position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(18px);
-  transition: opacity .65s var(--fl-ease-out), transform .65s var(--fl-ease-out);
+  position: absolute; inset: 0 0 auto 0; opacity: 0;
+  transform: translateY(var(--cap-shift, 18px));
+  transition: opacity .55s var(--fl-ease-out), transform .08s linear;
 }
-.fl-swap__cap.is-active { opacity: 1; transform: translateY(0); }
+.fl-swap__cap.is-active { opacity: 1; }
 .fl-swap__num { display: block; margin-bottom: 10px; }
 /* the trigger track: invisible, just scroll real-estate — one screen-height
    per step gives the scrub a comfortable pace without being tedious. */
 .fl-swap__triggers { display: flex; flex-direction: column; }
-.fl-swap__triggers > div { height: 85vh; }
-.fl-swap__triggers > div:last-child { height: 50vh; }
+.fl-swap__triggers > div { height: 60vh; }
+.fl-swap__triggers > div:last-child { height: 40vh; }
 
 /* a titanium-ish frame instead of the flat dark rect: brushed edge gradient,
    a real dynamic-island pill floating over the glass rather than a notch cut
@@ -1341,7 +1353,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     inset 0 2px 2px rgba(255,255,255,.22),
     inset 0 -3px 4px rgba(0,0,0,.55),
     0 56px 90px -26px rgba(21,22,22,.4), 0 16px 32px -12px rgba(21,22,22,.28);
-  transition: transform 1.8s var(--fl-ease-out);
+  transition: transform 2.4s cubic-bezier(.45, 0, .2, 1);
 }
 /* the one landscape capture: the device itself tips onto its side rather
    than letterboxing the image inside a portrait frame. The source image
@@ -1555,12 +1567,34 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   box-shadow: inset 0 0 0 1px rgba(79,114,174,.25);
   font-weight: 500; letter-spacing: .12em;
 }
-.fl-swap-section .fl-swap__cap .fl-title::after {
-  content: ""; display: block; width: 28px; height: 2px; margin-top: 12px;
-  background: var(--fl-blue-ink); border-radius: 2px;
+/* side captions: display face at a real heading size, one key word lit in
+   the page's blue, a ramp rule that grows in when the caption arrives, and
+   the line underneath in ink rather than grey so it reads at a glance */
+.fl-swap-section .fl-swap__cap .fl-title {
+  font-family: var(--fl-display); font-weight: 600;
+  font-size: clamp(1.9rem, 2.6vw, 2.5rem); line-height: 1.05; letter-spacing: -.025em;
+  margin-top: 16px;
 }
-.fl-swap-section .fl-swap__caption--below .fl-title::after { margin-left: auto; margin-right: auto; }
-.fl-swap-section .fl-swap__cap .fl-body { color: var(--fl-muted); }
+.fl-swap-section .fl-swap__cap mark {
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--fl-blue-ink) 0%, #6f8fca 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.fl-swap-section .fl-swap__cap .fl-title::after {
+  content: ""; display: block; width: 44px; height: 3px; margin-top: 16px;
+  background: var(--fl-ramp-even); border-radius: 3px;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform .7s var(--fl-ease-out) .15s;
+}
+.fl-swap-section .fl-swap__cap.is-active .fl-title::after { transform: scaleX(1); }
+.fl-swap-section .fl-swap__caption--below .fl-title::after { margin-left: auto; margin-right: auto; transform-origin: center; }
+.fl-swap-section .fl-swap__cap .fl-body {
+  color: var(--fl-ink); font-size: 1.1875rem; line-height: 1.5; margin-top: 16px !important; max-width: 26ch;
+}
+.fl-swap-section .fl-swap__caption--below .fl-body { margin-inline: auto; max-width: 34ch; }
+.fl-swap-section .fl-swap__cap .fl-body strong { font-weight: 600; color: var(--fl-blue-ink); }
+.fl-swap-section .fl-swap__caption { width: 340px; min-height: 230px; }
 .fl-swap-section .fl-swap__stage { position: relative; }
 .fl-swap-section .fl-swap__stage::before {
   content: ""; position: absolute; left: 50%; top: 45%; z-index: -1;
