@@ -929,24 +929,30 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   position: absolute; left: 50%; top: 50%; aspect-ratio: 1; border-radius: 50%;
   transform: translate(-50%, -50%); pointer-events: none;
 }
-.fl-intro__rings { top: 54%; width: min(60%, 500px); border: 1.5px solid rgba(255, 255, 255, .34); z-index: 0; }
-.fl-intro__rings::before { content: ""; width: 140%; border: 1.5px solid rgba(255, 255, 255, .18); }
+/* one ring set under each render, centred where the render is; the outer
+   ring is kept small enough that the two sets never touch */
+.fl-intro__rings { width: min(36%, 380px); border: 1.5px solid rgba(255, 255, 255, .34); z-index: 0; }
+.fl-intro__rings--front { left: 28%; }
+.fl-intro__rings--side  { left: 72%; }
+.fl-intro__rings::before { content: ""; width: 120%; border: 1.5px solid rgba(255, 255, 255, .18); }
 .fl-intro__rings::after  { content: ""; width: 68%;  border: 1.5px solid rgba(255, 255, 255, .24); }
 
-/* the renders carry a lot of transparent margin, so they're sized past the
-   stage and centred on it; each bobs on the same cycle half a beat apart */
+/* Two renders, each in its own half of the stage — never overlapping. The
+   images carry a lot of transparent margin (the housing is only about half
+   the image's width), so each image is sized past its half and centred on
+   it; the housings themselves land with a clear gap between them. Each bobs
+   on the same cycle half a beat apart. */
 .fl-intro__shot {
-  position: absolute; top: 50%; left: 50%; height: auto; max-width: none; pointer-events: none;
+  position: absolute; top: 50%; height: auto; max-width: none; pointer-events: none;
+  width: min(64%, 680px); transform: translate(-50%, -50%);
   filter: drop-shadow(0 34px 38px rgba(10, 12, 16, .38));
   transition: scale .6s var(--fl-ease-out);
 }
-.fl-intro__shot--front { z-index: 2; width: min(80%, 820px); transform: translate(-60%, -50%);
-  animation: fl-float 7s ease-in-out infinite; }
-.fl-intro__shot--side  { z-index: 1; width: min(66%, 680px); transform: translate(-26%, -47%);
-  opacity: .94; animation: fl-float 7s ease-in-out -3.5s infinite; }
+.fl-intro__shot--front { left: 28%; animation: fl-float 7s ease-in-out infinite; }
+.fl-intro__shot--side  { left: 72%; animation: fl-float 7s ease-in-out -3.5s infinite; }
 @keyframes fl-float { 0%, 100% { translate: 0 -9px; } 50% { translate: 0 9px; } }
 .fl-intro__stage:hover .fl-intro__shot--front { scale: 1.035; }
-.fl-intro__stage:hover .fl-intro__shot--side  { scale: 1.02; }
+.fl-intro__stage:hover .fl-intro__shot--side  { scale: 1.035; }
 .fl-intro__cue {
   position: absolute; left: 24px; bottom: 22px; z-index: 3;
   font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
@@ -976,8 +982,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 @media (max-width: 640px) {
   .fl-intro__stage { margin-top: 40px; border-radius: 20px; }
-  .fl-intro__shot--front { width: 104%; transform: translate(-56%, -50%); }
-  .fl-intro__shot--side  { width: 86%; transform: translate(-28%, -46%); }
+  /* phones: the two renders stack, one above the other, on a taller stage */
+  .fl-intro__stage { height: 600px; }
+  .fl-intro__shot { width: 96%; left: 50%; }
+  .fl-intro__shot--front { top: 28%; }
+  .fl-intro__shot--side  { top: 73%; }
+  .fl-intro__rings { width: 58%; left: 50%; }
+  .fl-intro__rings--front { top: 28%; }
+  .fl-intro__rings--side  { top: 73%; }
   .fl-intro__specs { grid-template-columns: 1fr 1fr; row-gap: 28px; }
   .fl-intro__specs > div:nth-child(3) { border-left: 0; }
 }
