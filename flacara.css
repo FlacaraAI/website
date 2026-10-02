@@ -958,11 +958,22 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 [data-parallax] { transform: translateY(calc(var(--fl-parallax, 0) * 1px)); will-change: transform; }
 @media (prefers-reduced-motion: reduce) { [data-parallax] { transform: none; } }
 .fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
-/* the copy is pinned a fixed distance from the top rather than centred on
-   the visual beside it — the Devices and Software visuals are different
-   heights, and centring on each put the two titles at different heights. */
+/* desktop: the grid is one screen tall (less the nav), so the copy and the
+   visual are centred in what's visible on open, not in a box sized by
+   whichever visual happens to be taller on that page. */
 @media (min-width: 861px) {
-  .fl-hero-mat__grid > :first-child { align-self: start; margin-top: clamp(96px, 16vh, 168px); }
+  .fl-hero-mat { padding-top: 88px; }
+  .fl-hero-mat__grid { min-height: calc(100svh - 160px); }
+  /* on short screens the visual would otherwise outgrow that height and push
+     the grid (and the copy's centre) down; cap it to the screen instead */
+  .fl-hero-mat .fl-hero-mat__grid .fl-reveal {
+    --rw: min(122%, calc((100svh - 170px) * 1236 / 1280));
+    width: var(--rw); margin: 0 calc((100% - var(--rw)) / 2);
+  }
+  .fl-hero-mat .fl-hero-mat__grid .fl-phone3d-stage {
+    --rw: min(118%, 560px, calc((100svh - 170px) * 4 / 5));
+    width: var(--rw); max-width: none; margin: 0 calc((100% - var(--rw)) / 2);
+  }
 }
 .fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
 .fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
