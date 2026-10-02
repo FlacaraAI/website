@@ -1297,12 +1297,13 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    exactly one screen tall, so the frame sits dead centre while the page
    scrolls underneath. Shots behind the current one have lifted away, shots
    ahead are waiting below, so every swap reads as moving forward or back. */
-.fl-scrub { position: relative; height: calc(var(--n, 3) * 85vh + 15vh); margin-top: 24px; }
+.fl-section--scrub { padding-top: 32px; }
+.fl-scrub { position: relative; height: calc(var(--n, 3) * 100vh + 10vh); }
 .fl-scrub__sticky {
   position: sticky; top: 0; height: 100vh; height: 100svh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding-top: 72px; gap: 24px;
-  --s: min(520px, 88vw, calc(100svh - 360px));
+  padding-top: 72px; gap: 20px;
+  --s: min(640px, 90vw, calc(100svh - 290px));
 }
 
 .fl-scrub__rail { position: relative; display: flex; gap: 4px; width: var(--s); min-width: min(360px, 88vw); }
@@ -1328,10 +1329,11 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-scrub__shot.is-past { transform: translateY(-5%) scale(.92); }
 .fl-scrub__shot.is-active { opacity: 1; transform: none; pointer-events: auto; z-index: 1; }
-.fl-scrub__shot .fl-plate { height: 100%; padding: 14px; }
+.fl-scrub__body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.fl-scrub__shot .fl-plate { height: 100%; padding: 16px; }
 .fl-scrub__shot .fl-slider { max-width: none; width: 100%; height: 100%; aspect-ratio: auto; }
 
-.fl-scrub__captions { position: relative; width: min(520px, 88vw); min-height: 112px; text-align: center; }
+.fl-scrub__captions { position: relative; width: min(560px, 90vw); min-height: 104px; text-align: center; }
 .fl-scrub__cap {
   position: absolute; inset: 0 0 auto 0;
   opacity: 0; transform: translateY(16px);
@@ -1341,8 +1343,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-scrub__cap.is-active { opacity: 1; transform: none; transition-delay: .12s; }
 .fl-scrub__cap .fl-body { margin: 8px auto 0; max-width: 46ch; color: var(--fl-muted); }
 
+/* wide screens: the caption steps out to the left of the frame, which gives
+   the vertical space back to the photograph — the frame grows to nearly the
+   full screen height and stays centred. */
+@media (min-width: 1100px) {
+  .fl-scrub__sticky { padding-top: 84px; --s: min(780px, calc(100svh - 170px), calc(100vw - 700px)); }
+  .fl-scrub__captions {
+    position: absolute; top: 50%; right: calc(100% + 56px); width: 270px;
+    min-height: 0; margin-top: -90px; text-align: left;
+  }
+  .fl-scrub__cap .fl-title { font-size: 1.5rem; line-height: 1.2; }
+  .fl-scrub__cap .fl-body { margin: 12px 0 0; }
+}
 @media (max-width: 640px) {
-  .fl-scrub__sticky { padding-top: 64px; gap: 16px; --s: min(88vw, calc(100svh - 330px)); }
+  .fl-scrub__sticky { padding-top: 64px; gap: 16px; --s: min(92vw, calc(100svh - 300px)); }
   .fl-scrub__tab { font-size: .625rem; letter-spacing: .08em; gap: 5px; }
   .fl-scrub__shot .fl-plate { padding: 10px; }
 }
