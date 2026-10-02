@@ -1220,9 +1220,11 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* the one landscape capture: the device itself tips onto its side rather
    than letterboxing the image inside a portrait frame. The source image
    (app-compare-rot.png) is pre-rotated the other way, so the two cancel out
-   and the content reads upright once the phone has turned. Scaled down so
-   the wider footprint still sits comfortably between the two captions. */
-.fl-phone--rotated { transform: rotate(90deg) scale(.6); }
+   and the content reads upright once the phone has turned. Full size, not
+   scaled down — the caption for this step sits below rather than beside it,
+   so the wider footprint has the room to stay the same size as every other
+   screen. */
+.fl-phone--rotated { transform: rotate(90deg); }
 .fl-phone__btn { position: absolute; background: linear-gradient(90deg, #45484a, #191a1b); z-index: 0; }
 .fl-phone__btn--action   { left: -2.5px; top: 78px;  width: 3px; height: 26px; border-radius: 2px 0 0 2px; }
 .fl-phone__btn--vol-up   { left: -2.5px; top: 128px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
@@ -1271,7 +1273,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   animation: fl-phone-float 6s ease-in-out infinite;
   transition: height 1.8s var(--fl-ease-out); will-change: transform;
 }
-.fl-phone-float.is-landscape { height: 220px; }
+.fl-phone-float.is-landscape { height: 340px; }
 @keyframes fl-phone-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -1437,7 +1439,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap-section .fl-swap__stage::before {
   content: ""; position: absolute; left: 50%; top: 45%; z-index: -1;
   width: 640px; max-width: 150vw; aspect-ratio: 1; transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, var(--fl-blue-quiet) 0%, rgba(235,241,252,.6) 45%, transparent 100%);
+  background: radial-gradient(closest-side, rgba(201,218,248,.75) 0%, rgba(235,241,252,.7) 50%, transparent 100%);
   pointer-events: none;
 }
 .fl-swap-section .fl-swap__stage::after {
