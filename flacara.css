@@ -958,6 +958,12 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 [data-parallax] { transform: translateY(calc(var(--fl-parallax, 0) * 1px)); will-change: transform; }
 @media (prefers-reduced-motion: reduce) { [data-parallax] { transform: none; } }
 .fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
+/* the copy is pinned a fixed distance from the top rather than centred on
+   the visual beside it — the Devices and Software visuals are different
+   heights, and centring on each put the two titles at different heights. */
+@media (min-width: 861px) {
+  .fl-hero-mat__grid > :first-child { align-self: start; margin-top: clamp(96px, 16vh, 168px); }
+}
 .fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
 .fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
   position: absolute; inset: 0; width: 100%; height: 100%; }
