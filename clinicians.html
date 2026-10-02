@@ -121,136 +121,121 @@
   </div>
 </section>
 
-<!-- ============ 01 resolution ============ -->
-<section class="fl-section" aria-labelledby="resolution">
+<!-- ============ 01 proof: resolution, a real lesion, alignment — one scroll-swap ============ -->
+<section class="fl-section" aria-labelledby="proof">
   <div class="fl-wrap">
     <div class="fl-pill" data-reveal aria-hidden="true"></div>
-    <h2 class="fl-display-m" id="resolution" data-reveal>Read the fine print.</h2>
+    <h2 class="fl-display-m" id="proof" data-reveal>Decide for yourself.</h2>
 
-    <div class="fl-feature" style="margin-top:48px;align-items:start">
-      <figure data-reveal="left">
-        <div class="fl-plate">
-          <div class="fl-slider" data-fl-slider style="--pos:50%">
-            <img class="fl-slider__img fl-slider__img--base" src="images/target-dl4-aligned.jpg" alt="The same resolution target photographed with a DermLite DL4" width="3240" height="4320">
-            <img class="fl-slider__img fl-slider__img--reveal" src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="3240" height="4320">
-            <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span></div>
-            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
-            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
-            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
+    <div class="fl-swap" data-fl-swap style="margin-top:48px">
+      <div class="fl-swap__stage fl-swap__stage--plate" data-tilt data-reveal="scale">
+        <div class="fl-swap__device">
+          <div class="fl-swap__screen is-active" data-swap-screen="0">
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/target-dl4-aligned.jpg" alt="The same resolution target photographed with a DermLite DL4" width="1080" height="1080">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/target-flacara.JPG" alt="A printed resolution target photographed with Flacara" width="1080" height="1080">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same resolution target">
+              </div>
+            </div>
+          </div>
+
+          <div class="fl-swap__screen" data-swap-screen="1">
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/lesion-01-dl4-aligned.jpg" alt="A skin lesion photographed with a DermLite DL4" width="1068" height="1068">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/lesion-01-flacara.JPG" alt="The same skin lesion photographed with Flacara" width="1068" height="1068">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same lesion">
+              </div>
+            </div>
+          </div>
+
+          <div class="fl-swap__screen" data-swap-screen="2">
+            <div class="fl-plate">
+              <div class="fl-slider" data-fl-slider style="--pos:50%">
+                <img class="fl-slider__img fl-slider__img--base" src="images/align-1-aligned.jpg" alt="The capture 1 frame after the app registered it to a common reference" width="772" height="772">
+                <img class="fl-slider__img fl-slider__img--reveal" src="images/align-2-aligned.jpg" alt="The capture 2 frame after the app registered it to the same reference as capture 1" width="772" height="772">
+                <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span></div>
+                <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Capture 1</span>
+                <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">Capture 2</span>
+                <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare capture 1 and capture 2 after the app has registered both to the same reference frame">
+              </div>
+            </div>
           </div>
         </div>
-        <figcaption class="fl-caption" style="margin-top:12px">Resolution target, same target, same session, same working distance</figcaption>
-      </figure>
-
-      <div data-reveal="right" style="--fl-reveal-delay:100ms">
-        <p class="fl-body">A resolution check, not a clinical comparison: the same printed target, the
-          same working distance, the same session. Drag the divider, Flacara on one side, a DermLite
-          DL4 on the other, and judge the optical detail for yourself.</p>
-
-        <dl class="fl-stat-row" style="margin-top:32px">
-          <div>
-            <dt class="fl-label">Flacara resolves</dt>
-            <dd class="fl-stat-row__value">≈16 µm</dd>
-          </div>
-          <div>
-            <dt class="fl-label">Unaided eye</dt>
-            <dd class="fl-stat-row__value">≈100 µm</dd>
-          </div>
-          <div>
-            <dt class="fl-label">DermLite DL4, this target</dt>
-            <dd class="fl-stat-row__value fl-stat-row__value--text">Clinically indistinguishable<sup>1</sup></dd>
-          </div>
-        </dl>
-
-        <p class="fl-body" style="margin-top:24px">That resolving power comes from the phone's own
-          sensor and the software behind it, which is how Flacara gets a purpose-built dermatoscope's
-          functional resolution for a fraction of the cost. Line pairs on this target resolve more
-          than six times finer than what the unaided eye can pick apart at normal reading distance.</p>
-
-        <p class="fl-small fl-note" style="margin-top:24px;max-width:64ch"><sup>1</sup> Dermatologists
-          rating the same lesions across five image resolutions found 768×512-pixel images equivalent
-          to substantially higher resolutions for recognizing clinically relevant detail — Bittorf et
-          al., <em>J Am Acad Dermatol</em> 1997;37(2):195–8. DermLite is a trademark of its owner and
-          there is no affiliation.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ============ 01b lesion ============ -->
-<section class="fl-section fl-proof" aria-labelledby="lesion-compare">
-  <div class="fl-wrap">
-    <div class="fl-proof__intro">
-      <div class="fl-pill" data-reveal aria-hidden="true"></div>
-      <h2 class="fl-display-m" id="lesion-compare" data-reveal>Not just a test chart.</h2>
-      <p class="fl-body fl-body--l" data-reveal style="--fl-reveal-delay:60ms">The target on the
-        previous section is a controlled way to measure resolving power. This is the thing that
-        number is supposed to predict: the same mole, same sitting, Flacara on one side and a
-        DermLite DL4 on the other.</p>
-    </div>
+      <div class="fl-swap__steps">
+        <div class="fl-swap__step is-active" data-swap-step="0">
+          <span class="fl-label fl-swap__num">01 · Resolution</span>
+          <h3 class="fl-title">Read the fine print.</h3>
+          <p class="fl-body" style="margin-top:16px">A resolution check, not a clinical comparison:
+            the same printed target, the same working distance, the same session. Drag the divider,
+            Flacara on one side, a DermLite DL4 on the other, and judge the optical detail for
+            yourself.</p>
 
-    <figure class="fl-proof__stage" data-reveal="scale" style="--fl-reveal-delay:120ms">
-      <div class="fl-plate fl-plate--proof">
-        <div class="fl-slider fl-slider--square" data-fl-slider style="--pos:50%">
-          <img class="fl-slider__img fl-slider__img--base" src="images/lesion-01-dl4-aligned.jpg" alt="A skin lesion photographed with a DermLite DL4" width="1068" height="1068">
-          <img class="fl-slider__img fl-slider__img--reveal" src="images/lesion-01-flacara.JPG" alt="The same skin lesion photographed with Flacara" width="1068" height="1068">
-          <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span></div>
-          <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Flacara</span>
-          <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
-          <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the Flacara capture against the DermLite DL4 capture of the same lesion">
+          <dl class="fl-stat-row" style="margin-top:24px">
+            <div>
+              <dt class="fl-label">Flacara resolves</dt>
+              <dd class="fl-stat-row__value">≈16 µm</dd>
+            </div>
+            <div>
+              <dt class="fl-label">Unaided eye</dt>
+              <dd class="fl-stat-row__value">≈100 µm</dd>
+            </div>
+            <div>
+              <dt class="fl-label">DermLite DL4, this target</dt>
+              <dd class="fl-stat-row__value fl-stat-row__value--text">Clinically indistinguishable<sup>1</sup></dd>
+            </div>
+          </dl>
+
+          <p class="fl-small fl-note" style="margin-top:20px"><sup>1</sup> Dermatologists rating the
+            same lesions across five image resolutions found 768×512-pixel images equivalent to
+            substantially higher resolutions for recognizing clinically relevant detail — Bittorf et
+            al., <em>J Am Acad Dermatol</em> 1997;37(2):195–8. DermLite is a trademark of its owner
+            and there is no affiliation.</p>
+        </div>
+
+        <div class="fl-swap__step" data-swap-step="1">
+          <span class="fl-label fl-swap__num">02 · A real lesion</span>
+          <h3 class="fl-title">Not just a test chart.</h3>
+          <p class="fl-body" style="margin-top:16px">The target above is a controlled way to measure
+            resolving power. This is the thing that number is supposed to predict: the same mole,
+            same sitting, Flacara on one side and a DermLite DL4 on the other.</p>
+          <p class="fl-small fl-note" style="margin-top:20px">A single photograph pair from one
+            session, not a study, and not a diagnostic comparison. Neither image is an assessment of
+            this lesion. DermLite is a trademark of its owner and there is no affiliation.</p>
+        </div>
+
+        <div class="fl-swap__step" data-swap-step="2">
+          <span class="fl-label fl-swap__num">03 · Alignment</span>
+          <h3 class="fl-title">It finds the frame for you.</h3>
+          <p class="fl-body" style="margin-top:16px">Point the housing at a spot you have photographed
+            before and the app registers the new frame against the old one, correcting for rotation
+            and offset before the shutter fires. You are not asked to hold still and guess.</p>
         </div>
       </div>
-      <figcaption class="fl-caption fl-proof__caption">Same lesion · same session · same working distance — drag to compare</figcaption>
-    </figure>
-
-    <p class="fl-small fl-note fl-proof__fine">A single photograph pair from one session, not a
-      study, and not a diagnostic comparison. Neither image is an assessment of this lesion.
-      DermLite is a trademark of its owner and there is no affiliation.</p>
-  </div>
-</section>
-
-
-<!-- ============ 03 alignment ============ -->
-<section class="fl-section" aria-labelledby="alignment">
-  <div class="fl-wrap">
-    <div class="fl-feature fl-feature--flip">
-      <div data-reveal="right">
-        <div class="fl-pill" aria-hidden="true"></div>
-        <h2 class="fl-display-m" id="alignment">It finds the frame for you.</h2>
-        <p class="fl-body" style="margin-top:16px">Point the housing at a spot you have photographed
-          before and the app registers the new frame against the old one, correcting for rotation
-          and offset before the shutter fires. You are not asked to hold still and guess.</p>
-      </div>
-      <figure data-reveal="left" data-tilt style="--fl-reveal-delay:100ms;margin:0">
-        <div class="fl-plate">
-          <div class="fl-slider" data-fl-slider style="--pos:50%;aspect-ratio:4/3;max-width:none">
-            <img class="fl-slider__img fl-slider__img--base" src="images/align-1-aligned.jpg" alt="The capture 1 frame after the app registered it to a common reference">
-            <img class="fl-slider__img fl-slider__img--reveal" src="images/align-2-aligned.jpg" alt="The capture 2 frame after the app registered it to the same reference as capture 1">
-            <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span></div>
-            <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">Capture 1</span>
-            <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">Capture 2</span>
-            <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare capture 1 and capture 2 after the app has registered both to the same reference frame">
-          </div>
-        </div>
-        <figcaption class="fl-caption" style="margin-top:12px">FIG. B: we register every new capture
-          to your reference frame before the shutter fires, so two visits can be compared on equal
-          footing. Drag to compare this pair, aligned.</figcaption>
-      </figure>
     </div>
   </div>
 </section>

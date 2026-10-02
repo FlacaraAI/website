@@ -574,6 +574,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-nav .fl-wrap { width: auto; height: auto; min-height: 56px; flex-wrap: wrap;
                      justify-content: center; gap: 10px; padding: 10px; }
   .fl-nav__links a:not(.fl-btn) { padding: 6px 11px; }
+  .fl-hero-aper { margin-top: -68px; padding: 110px 24px 64px; }
 }
 
 /* ---------- footer (Stage 1 §9) ---------- */
@@ -695,9 +696,12 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    gradient reading as the optic it came from, not a decorative wash. */
 .fl-hero-aper {
   position: relative; overflow: hidden; isolation: isolate;
-  min-height: calc(100vh - 72px);
+  min-height: 100vh;
   display: grid; place-items: center;
-  padding: 64px 24px 88px;
+  /* starts at the top of the document, same device as .fl-hero-mat: the nav
+     pill floats on it instead of sitting above a hard seam. */
+  margin-top: -72px;
+  padding: 136px 24px 88px;
   background: var(--fl-ground-lit);
 }
 /* three blue/red blobs behind the apertures, each drifting and fading on
@@ -1190,36 +1194,112 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    parent + align-self:start + position:sticky on the stage itself), the same
    device used for .fl-buy — the sticky element hugs its own content instead
    of stretching, while its cell stays as tall as the step list next to it. */
-.fl-swap { display: grid; grid-template-columns: 1fr .85fr; gap: 0 64px; align-items: start; }
-.fl-swap__steps { display: grid; gap: 128px; padding-bottom: 40vh; }
-.fl-swap__step { opacity: .32; transition: opacity .4s var(--fl-ease-out); max-width: 46ch; }
-.fl-swap__step.is-active { opacity: 1; }
+/* the phone is the constant: centered, pinned, the one thing that never
+   moves. The pinned block (phone + caption) stays fixed under the nav while
+   an invisible, taller trigger track scrolls behind it — each trigger
+   crossing the centre band swaps the screen and crossfades the caption in
+   place, so the text "comes up" without ever scrolling behind the phone. */
+.fl-swap { position: relative; }
+.fl-swap__pinned { position: sticky; top: 88px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.fl-swap__caption { position: relative; width: 100%; max-width: 440px; margin: 28px auto 0; min-height: 150px; }
+.fl-swap__cap {
+  position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(14px);
+  transition: opacity .4s var(--fl-ease-out), transform .4s var(--fl-ease-out);
+}
+.fl-swap__cap.is-active { opacity: 1; transform: translateY(0); }
 .fl-swap__num { display: block; margin-bottom: 10px; }
-.fl-swap__stage { position: sticky; top: 96px; align-self: start; }
+/* the trigger track: invisible, just scroll real-estate — one screen-height
+   per step gives the scrub a comfortable pace without being tedious. */
+.fl-swap__triggers { display: flex; flex-direction: column; }
+.fl-swap__triggers > div { height: 85vh; }
+.fl-swap__triggers > div:last-child { height: 50vh; }
 
+/* a titanium-ish frame instead of the flat dark rect: brushed edge gradient,
+   a real dynamic-island pill floating over the glass rather than a notch cut
+   into it, side control nubs, a home indicator, and a soft diagonal glare so
+   the screen reads as glass, not a solid colour. */
 .fl-phone {
-  position: relative; width: 280px; max-width: 100%; aspect-ratio: 280 / 572;
-  margin: 0 auto; border-radius: 34px; background: var(--fl-mat-deep);
-  box-shadow: inset 0 0 0 1px var(--fl-mat-edge), inset 0 0 0 8px var(--fl-mat);
-  padding: 8px; overflow: hidden;
+  position: relative; width: 300px; max-width: 76vw; aspect-ratio: 9 / 18.5;
+  margin: 0 auto; border-radius: 48px; padding: 12px;
+  background: linear-gradient(160deg, #5c5f62 0%, #28292b 9%, #0b0c0d 42%, #000 56%, #28292b 91%, #5c5f62 100%);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.14),
+    inset 0 2px 2px rgba(255,255,255,.22),
+    inset 0 -3px 4px rgba(0,0,0,.55),
+    0 56px 90px -26px rgba(21,22,22,.4), 0 16px 32px -12px rgba(21,22,22,.28);
 }
-.fl-phone__notch {
-  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-  width: 84px; height: 18px; border-radius: 0 0 12px 12px; background: var(--fl-mat-deep); z-index: 2;
+.fl-phone__btn { position: absolute; background: linear-gradient(90deg, #45484a, #191a1b); z-index: 0; }
+.fl-phone__btn--action   { left: -2.5px; top: 78px;  width: 3px; height: 26px; border-radius: 2px 0 0 2px; }
+.fl-phone__btn--vol-up   { left: -2.5px; top: 128px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
+.fl-phone__btn--vol-down { left: -2.5px; top: 176px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
+.fl-phone__btn--power    { right: -2.5px; top: 140px; width: 3px; height: 62px; border-radius: 0 2px 2px 0; }
+.fl-phone__screen { position: relative; width: 100%; height: 100%; border-radius: 37px; overflow: hidden; background: #000; }
+.fl-phone__island {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  width: 84px; height: 26px; border-radius: 16px; background: #000; z-index: 3;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
 }
-.fl-phone__screen { position: relative; width: 100%; height: 100%; border-radius: 26px; overflow: hidden; }
+.fl-phone__home {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  width: 108px; height: 4px; border-radius: 3px; background: rgba(255,255,255,.55); z-index: 3;
+}
+.fl-phone__screen::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background: linear-gradient(115deg, rgba(255,255,255,.09) 0%, transparent 16%, transparent 84%, rgba(255,255,255,.05) 100%);
+}
 .fl-phone__view {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; transform: translateY(10px); transition: opacity .45s var(--fl-ease-out), transform .45s var(--fl-ease-out);
 }
 .fl-phone__view.is-active { opacity: 1; transform: translateY(0); }
+.fl-phone__view img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* the one landscape capture: letterboxed on the screen's own black rather
+   than cropped or forcing the frame to rotate. */
+.fl-phone__view--landscape img { object-fit: contain; }
 
-@media (max-width: 860px) {
-  .fl-swap { grid-template-columns: 1fr; }
-  .fl-swap__steps { gap: 64px; padding-bottom: 0; }
-  .fl-swap__step { opacity: 1; max-width: none; }
-  .fl-swap__stage { position: static; margin-bottom: 40px; order: -1; }
+/* grounding: a soft shadow the phone actually sits in, so it reads as
+   resting on the page rather than cut out and pasted over it — plus a slow
+   idle float so the stage has life even before anyone scrolls or points at it. */
+.fl-swap__stage { text-align: center; }
+.fl-swap__stage::after {
+  content: ""; display: block; width: 180px; height: 28px; margin: 18px auto 0;
+  background: radial-gradient(closest-side, rgba(21,22,22,.22), transparent 72%);
+  animation: fl-phone-shadow 6s ease-in-out infinite;
+}
+.fl-phone { animation: fl-phone-float 6s ease-in-out infinite; will-change: transform; }
+@keyframes fl-phone-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes fl-phone-shadow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(.88); opacity: .7; }
+}
+
+@media (max-width: 640px) {
+  .fl-swap__pinned { top: 72px; }
+  .fl-phone { width: 240px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fl-swap__step, .fl-phone__view { transition: none; }
+  .fl-swap__cap, .fl-phone__view { transition: none; }
+  .fl-phone { animation: none; }
+  .fl-swap__stage::after { animation: none; }
+}
+
+/* ---------- swap, plate variant: same rig as the phone, but the thing
+   pinned in the centre is a real comparison slider on a mat rather than a
+   device mockup. Screens stack absolutely inside a fixed square so they can
+   crossfade in place instead of resizing the page as they swap. ---------- */
+.fl-swap__stage--plate { width: 100%; max-width: 480px; }
+.fl-swap__device { position: relative; width: 100%; aspect-ratio: 1 / 1; }
+.fl-swap__screen {
+  position: absolute; inset: 0; opacity: 0; transform: translateY(10px);
+  transition: opacity .45s var(--fl-ease-out), transform .45s var(--fl-ease-out);
+  pointer-events: none;
+}
+.fl-swap__screen.is-active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.fl-swap__screen .fl-plate { height: 100%; }
+.fl-swap__screen .fl-slider { max-width: none; width: 100%; height: 100%; aspect-ratio: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .fl-swap__screen { transition: none; }
 }

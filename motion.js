@@ -292,11 +292,12 @@
   document.querySelectorAll('[data-fl-swap]').forEach(function (swap) {
     var steps = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-step]'));
     var screens = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-screen]'));
+    var captions = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-caption]'));
     if (!steps.length || !screens.length) return;
 
     function activate(idx) {
-      steps.forEach(function (s) { s.classList.toggle('is-active', s === steps[idx]); });
       screens.forEach(function (s) { s.classList.toggle('is-active', s === screens[idx]); });
+      captions.forEach(function (c) { c.classList.toggle('is-active', c === captions[idx]); });
     }
     activate(0);
 

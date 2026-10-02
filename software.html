@@ -77,57 +77,19 @@
 <section class="fl-section fl-swap-section" aria-labelledby="swap-h">
   <div class="fl-wrap">
     <span class="fl-label fl-kicker" data-reveal>What it does</span>
-    <h2 class="fl-display-m" id="swap-h" data-reveal style="margin-top:8px">One photograph, five jobs.</h2>
+    <h2 class="fl-display-m" id="swap-h" data-reveal style="margin-top:8px">One photograph, six jobs.</h2>
 
     <div class="fl-swap" data-fl-swap style="margin-top:56px">
-      <div class="fl-swap__steps">
-
-        <div class="fl-swap__step" data-swap-step="0">
-          <span class="fl-label fl-swap__num">01</span>
-          <h3 class="fl-title">Point, and it's already right.</h3>
-          <p class="fl-body" style="margin-top:12px">The viewfinder holds the same working distance
-            every time, and shows you polarized or unpolarized light with one tap. There's no
-            focusing to get wrong.</p>
-        </div>
-
-        <div class="fl-swap__step" data-swap-step="1">
-          <span class="fl-label fl-swap__num">02</span>
-          <h3 class="fl-title">It finds the same spot again.</h3>
-          <p class="fl-body" style="margin-top:12px">Point the housing at a spot you've photographed
-            before and the app registers the new frame against the old one — correcting rotation
-            and offset before the shutter fires.</p>
-        </div>
-
-        <div class="fl-swap__step" data-swap-step="2">
-          <span class="fl-label fl-swap__num">03</span>
-          <h3 class="fl-title">Location stops being prose.</h3>
-          <p class="fl-body" style="margin-top:12px">A patented technique maps each lesion spatially
-            onto the body. Finding it again means looking at where it is, not parsing a sentence
-            about where it used to be.</p>
-        </div>
-
-        <div class="fl-swap__step" data-swap-step="3">
-          <span class="fl-label fl-swap__num">04</span>
-          <h3 class="fl-title">Today, next to before.</h3>
-          <p class="fl-body" style="margin-top:12px">Comparison happens on the phone. Drag between
-            two visits of the same spot and see the difference directly, instead of holding two
-            photos side by side in your memory.</p>
-        </div>
-
-        <div class="fl-swap__step" data-swap-step="4">
-          <span class="fl-label fl-swap__num">05</span>
-          <h3 class="fl-title">It reports what it measured.</h3>
-          <p class="fl-body" style="margin-top:12px">A known reference in every frame lets the app
-            normalise colour to the same white point. It states the measurement. It does not tell
-            you what the measurement means.</p>
-        </div>
-
-      </div>
-
-      <div class="fl-swap__stage">
+      <div class="fl-swap__pinned">
+        <div class="fl-swap__stage" data-tilt data-reveal="scale">
         <div class="fl-phone">
-          <div class="fl-phone__notch" aria-hidden="true"></div>
+          <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
+          <span class="fl-phone__btn fl-phone__btn--vol-up" aria-hidden="true"></span>
+          <span class="fl-phone__btn fl-phone__btn--vol-down" aria-hidden="true"></span>
+          <span class="fl-phone__btn fl-phone__btn--power" aria-hidden="true"></span>
           <div class="fl-phone__screen">
+            <div class="fl-phone__island" aria-hidden="true"></div>
+            <div class="fl-phone__home" aria-hidden="true"></div>
 
             <svg class="fl-phone__view" data-swap-screen="0" viewBox="0 0 280 460" aria-hidden="true">
               <rect x="0" y="0" width="280" height="460" fill="var(--fl-mat)"/>
@@ -160,36 +122,13 @@
               <text x="140" y="358" fill="#EAECED" font-family="ui-monospace,monospace" font-size="9" letter-spacing="1" text-anchor="middle">REGISTERED TO LAST VISIT</text>
             </svg>
 
-            <svg class="fl-phone__view" data-swap-screen="2" viewBox="0 0 280 460" aria-hidden="true">
-              <rect x="0" y="0" width="280" height="460" fill="var(--fl-mat)"/>
-              <g fill="none" stroke="#5F6060" stroke-width="1.4">
-                <circle cx="140" cy="98" r="22"/>
-                <path d="M140 120 L140 230 M140 150 L102 210 M140 150 L178 210 M140 230 L108 330 M140 230 L172 330"/>
-              </g>
-              <circle cx="118" cy="176" r="7" fill="#DB9D91"/>
-              <circle cx="160" cy="268" r="7" fill="#C9DAF8"/>
-              <circle cx="122" cy="300" r="5" fill="#979A9C"/>
-              <text x="140" y="60" fill="#979A9C" font-family="ui-monospace,monospace" font-size="10" letter-spacing="1.5" text-anchor="middle">MAP</text>
-              <rect x="66" y="376" width="148" height="34" rx="17" fill="none" stroke="#404346"/>
-              <text x="140" y="398" fill="#EAECED" font-family="ui-monospace,monospace" font-size="9" letter-spacing="1" text-anchor="middle">3 TRACKED SPOTS</text>
-            </svg>
+            <div class="fl-phone__view" data-swap-screen="2">
+              <img src="images/app-mesh.png" alt="The Flacara app's tracking screen: a body scan with tracked points marked on the torso" width="620" height="1348">
+            </div>
 
-            <svg class="fl-phone__view" data-swap-screen="3" viewBox="0 0 280 460" aria-hidden="true">
-              <rect x="0" y="0" width="280" height="460" fill="var(--fl-mat)"/>
-              <defs>
-                <clipPath id="swapHalfL"><rect x="70" y="140" width="70" height="140"/></clipPath>
-              </defs>
-              <rect x="70" y="140" width="140" height="140" fill="none" stroke="#404346" stroke-width="1"/>
-              <g clip-path="url(#swapHalfL)">
-                <circle cx="140" cy="210" r="58" fill="#8E5F4C" opacity=".5"/>
-              </g>
-              <circle cx="140" cy="210" r="58" fill="none" stroke="#5F6060" stroke-width="1" stroke-dasharray="2 3" transform="translate(0,0)"/>
-              <line x1="140" y1="140" x2="140" y2="280" stroke="#EAECED" stroke-width="1.5"/>
-              <circle cx="140" cy="210" r="9" fill="#EAECED"/>
-              <text x="105" y="300" fill="#979A9C" font-family="ui-monospace,monospace" font-size="9" text-anchor="middle">BEFORE</text>
-              <text x="175" y="300" fill="#979A9C" font-family="ui-monospace,monospace" font-size="9" text-anchor="middle">TODAY</text>
-              <text x="140" y="60" fill="#979A9C" font-family="ui-monospace,monospace" font-size="10" letter-spacing="1.5" text-anchor="middle">COMPARE</text>
-            </svg>
+            <div class="fl-phone__view fl-phone__view--landscape" data-swap-screen="3">
+              <img src="images/app-compare.png" alt="The Flacara app's lesion comparison screen, two captures of the same spot side by side">
+            </div>
 
             <svg class="fl-phone__view" data-swap-screen="4" viewBox="0 0 280 460" aria-hidden="true">
               <rect x="0" y="0" width="280" height="460" fill="var(--fl-mat)"/>
@@ -211,9 +150,67 @@
               <text x="140" y="60" fill="#979A9C" font-family="ui-monospace,monospace" font-size="10" letter-spacing="1.5" text-anchor="middle">MEASURED</text>
             </svg>
 
+            <div class="fl-phone__view" data-swap-screen="5">
+              <img src="images/app-notes.png" alt="The Flacara app's clinician notes screen, with a capture and a comment field">
+            </div>
+
           </div>
         </div>
-        <p class="fl-caption" style="margin-top:16px;text-align:center">Illustrative — the app is in development and these are not screenshots.</p>
+        </div>
+
+        <div class="fl-swap__caption">
+          <div class="fl-swap__cap is-active" data-swap-caption="0">
+            <span class="fl-label fl-swap__num">01</span>
+            <h3 class="fl-title">Point, and it's already right.</h3>
+            <p class="fl-body" style="margin-top:12px">The viewfinder holds the same working distance
+              every time, and shows you polarized or unpolarized light with one tap. There's no
+              focusing to get wrong.</p>
+          </div>
+          <div class="fl-swap__cap" data-swap-caption="1">
+            <span class="fl-label fl-swap__num">02</span>
+            <h3 class="fl-title">It finds the same spot again.</h3>
+            <p class="fl-body" style="margin-top:12px">Point the housing at a spot you've photographed
+              before and the app registers the new frame against the old one — correcting rotation
+              and offset before the shutter fires.</p>
+          </div>
+          <div class="fl-swap__cap" data-swap-caption="2">
+            <span class="fl-label fl-swap__num">03</span>
+            <h3 class="fl-title">Location stops being prose.</h3>
+            <p class="fl-body" style="margin-top:12px">A patented technique maps each lesion spatially
+              onto the body. Finding it again means looking at where it is, not parsing a sentence
+              about where it used to be. AR tracking is in beta — free for early customers.</p>
+          </div>
+          <div class="fl-swap__cap" data-swap-caption="3">
+            <span class="fl-label fl-swap__num">04</span>
+            <h3 class="fl-title">Today, next to before.</h3>
+            <p class="fl-body" style="margin-top:12px">Comparison happens on the phone. Put two visits
+              of the same spot side by side and see the difference directly, instead of holding two
+              photos side by side in your memory.</p>
+          </div>
+          <div class="fl-swap__cap" data-swap-caption="4">
+            <span class="fl-label fl-swap__num">05</span>
+            <h3 class="fl-title">It reports what it measured.</h3>
+            <p class="fl-body" style="margin-top:12px">A known reference in every frame lets the app
+              normalise colour to the same white point. It states the measurement. It does not tell
+              you what the measurement means.</p>
+          </div>
+          <div class="fl-swap__cap" data-swap-caption="5">
+            <span class="fl-label fl-swap__num">06</span>
+            <h3 class="fl-title">A second opinion, attached.</h3>
+            <p class="fl-body" style="margin-top:12px">A clinician can leave a note directly on a
+              capture, and the app can draft a first pass of the writeup from it. The record stays
+              with the photograph instead of living in a separate system.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="fl-swap__triggers" aria-hidden="true">
+        <div data-swap-step="0"></div>
+        <div data-swap-step="1"></div>
+        <div data-swap-step="2"></div>
+        <div data-swap-step="3"></div>
+        <div data-swap-step="4"></div>
+        <div data-swap-step="5"></div>
       </div>
     </div>
   </div>
