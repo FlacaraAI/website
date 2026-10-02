@@ -172,10 +172,8 @@ a:hover { text-decoration-thickness: 2px; }
   background: var(--fl-ramp-tail); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
 }
-/* the disc takes the head of the ramp when the wordmark follows it */
-.fl-lock .ico { --disc: url(#ramp-head); }
-/* a mark standing on its own carries the whole ramp */
-.ico.solo { --disc: url(#ramp-full); }
+/* the disc is always half blue, half red — in a lockup and standing alone */
+.fl-lock .ico, .ico.solo { --disc: url(#ramp-split); }
 
 /* tagline — sits under the wordmark, not under the icon */
 .fl-tagline {
@@ -834,6 +832,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper__stats .fl-label { color: rgba(255, 255, 255, .72); }
 .fl-hero-aper__stats .fl-stat-row__value { color: #fff; }
 .fl-hero-aper__stats > div { border-left-color: rgba(255, 255, 255, .3); }
+/* on phones the third stat wraps to its own line; it shouldn't drag its divider along */
+@media (max-width: 480px) { .fl-hero-aper__stats > div:nth-child(3) { border-left: 0; padding-left: 0; } }
 .fl-hero-aper .fl-lock .ico,
 .fl-hero-aper .fl-lock .logo { filter: none; }
 .fl-hero-aper .fl-lock .logo {
@@ -895,6 +895,94 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-device { grid-template-columns: 1fr; }
   .fl-device__frame { padding: 40px 24px; }
   .fl-device__body { padding: 32px 24px; justify-items: center; text-align: center; }
+}
+
+/* ---------- devices (home): the product, introduced ----------
+   A product reveal rather than a listing: centred headline, both renders on
+   one stage in the hero's blue-to-rust, the specs as big numbers, then the
+   price and the two ways in. The stage is the hero's own sweep in a frame,
+   with a pale spotlight behind the housing so the dark render reads, and
+   the hero's rings drawn thin behind it. */
+.fl-intro__head { max-width: 760px; margin: 0 auto; display: grid; justify-items: center; text-align: center; }
+.fl-intro__head .fl-kicker { justify-content: center; }
+.fl-intro__head .fl-display-l { max-width: 18ch; }
+.fl-intro__head .fl-body { margin-top: 18px; max-width: 56ch; }
+.fl-intro__accent {
+  background: linear-gradient(110deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+
+.fl-intro__stage {
+  position: relative; display: block; overflow: hidden; isolation: isolate;
+  margin-top: 56px; height: clamp(380px, 44vw, 580px); border-radius: 28px;
+  text-decoration: none;
+  background:
+    radial-gradient(40% 58% at 50% 56%, rgba(255, 255, 255, .58), rgba(255, 255, 255, 0) 72%),
+    radial-gradient(55% 70% at 8% 0%, rgba(201, 218, 248, .5), transparent 65%),
+    radial-gradient(55% 70% at 92% 0%, rgba(219, 157, 145, .45), transparent 65%),
+    linear-gradient(in oklab 110deg, #3a5a95 0%, var(--fl-blue-ink) 30%, var(--fl-red-ink) 70%, #8f4c39 100%);
+  box-shadow: 0 40px 80px -30px rgba(21, 22, 22, .45), inset 0 0 0 1px rgba(255, 255, 255, .2);
+}
+.fl-intro__stage:hover { text-decoration: none; }
+.fl-intro__rings, .fl-intro__rings::before, .fl-intro__rings::after {
+  position: absolute; left: 50%; top: 50%; aspect-ratio: 1; border-radius: 50%;
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+.fl-intro__rings { top: 54%; width: min(60%, 500px); border: 1.5px solid rgba(255, 255, 255, .34); z-index: 0; }
+.fl-intro__rings::before { content: ""; width: 140%; border: 1.5px solid rgba(255, 255, 255, .18); }
+.fl-intro__rings::after  { content: ""; width: 68%;  border: 1.5px solid rgba(255, 255, 255, .24); }
+
+/* the renders carry a lot of transparent margin, so they're sized past the
+   stage and centred on it; each bobs on the same cycle half a beat apart */
+.fl-intro__shot {
+  position: absolute; top: 50%; left: 50%; height: auto; max-width: none; pointer-events: none;
+  filter: drop-shadow(0 34px 38px rgba(10, 12, 16, .38));
+  transition: scale .6s var(--fl-ease-out);
+}
+.fl-intro__shot--front { z-index: 2; width: min(80%, 820px); transform: translate(-60%, -50%);
+  animation: fl-float 7s ease-in-out infinite; }
+.fl-intro__shot--side  { z-index: 1; width: min(66%, 680px); transform: translate(-26%, -47%);
+  opacity: .94; animation: fl-float 7s ease-in-out -3.5s infinite; }
+@keyframes fl-float { 0%, 100% { translate: 0 -9px; } 50% { translate: 0 9px; } }
+.fl-intro__stage:hover .fl-intro__shot--front { scale: 1.035; }
+.fl-intro__stage:hover .fl-intro__shot--side  { scale: 1.02; }
+.fl-intro__cue {
+  position: absolute; left: 24px; bottom: 22px; z-index: 3;
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
+  color: #fff; opacity: .85;
+}
+.fl-intro__cue::after { content: " →"; }
+
+.fl-intro__specs { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 980px; margin: 52px auto 0; }
+.fl-intro__specs > div { text-align: center; padding: 2px 16px; border-left: 1px solid var(--fl-rule); }
+.fl-intro__specs > div:first-child { border-left: 0; }
+.fl-intro__specs dt {
+  font-family: var(--fl-mono); font-weight: 500; font-size: .6875rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fl-muted);
+}
+.fl-intro__specs dd {
+  margin: 10px 0 0; font-family: var(--fl-display); font-weight: 600; line-height: 1;
+  font-size: clamp(2rem, 3.4vw, 2.75rem); letter-spacing: -.02em; color: var(--fl-ink);
+}
+.fl-intro__specs dd small {
+  font-family: var(--fl-text); font-weight: 500; font-size: .4em; letter-spacing: 0;
+  margin-left: .3em; color: var(--fl-muted);
+}
+
+.fl-intro__buy { margin-top: 52px; display: grid; justify-items: center; gap: 20px; text-align: center; }
+.fl-intro__buy .fl-buy__price { justify-content: center; }
+.fl-intro__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+@media (max-width: 640px) {
+  .fl-intro__stage { margin-top: 40px; border-radius: 20px; }
+  .fl-intro__shot--front { width: 104%; transform: translate(-56%, -50%); }
+  .fl-intro__shot--side  { width: 86%; transform: translate(-28%, -46%); }
+  .fl-intro__specs { grid-template-columns: 1fr 1fr; row-gap: 28px; }
+  .fl-intro__specs > div:nth-child(3) { border-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-intro__shot { animation: none; transition: none; }
 }
 
 /* ---------- dark hero, fading into the page (device page) ----------
@@ -1167,9 +1255,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 
 /* ---------- nav: settles into a smaller pill once the page has moved ---------- */
-.fl-nav .fl-wrap { transition: height .3s var(--fl-ease-out), padding .3s var(--fl-ease-out), background-color .3s var(--fl-ease-out); }
+/* the pill holds its size when the page moves; only the glass firms up */
 .fl-nav.is-scrolled .fl-wrap {
-  height: 48px;
   background:
     linear-gradient(rgba(255, 255, 255, .94), rgba(255, 255, 255, .88)) padding-box,
     linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
@@ -1238,20 +1325,31 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 
 /* ---------- hero handoff: the outline dissolves into the video's first frame ----------
-   One duration, --fl-reveal-dur, drives every layer in the handoff, so there is
-   nothing to re-measure or keep in sync by hand when the clip changes: the
-   wireframe and the video/still/canvas always cross exactly together, at
-   whatever size the box renders at. motion.js decides *when* is-handed-off is
-   added (once the clip is actually ready to play, not on a fixed clock); this
-   file only decides what that moment looks like. */
-.fl-reveal { --fl-reveal-dur: .6s; }
+   Two layers, two independent timers: the outline's own fade-out (opacity +
+   a pull-back zoom) and the video/still/canvas fading in no longer have to
+   start or finish together, so each gets its own duration variable and its
+   own class — outline-faded and video-visible — instead of sharing one
+   is-handed-off. motion.js decides *when* each class is added (both still
+   anchored to the same trace-complete + video-ready signal, just offset from
+   it by a fixed, small amount — never a blind clock from page load, which is
+   what kept this looking different depending on device/connection speed);
+   this file only decides what each moment looks like. */
+.fl-reveal {
+  --fl-reveal-dur-out: 1.18s;  /* outline fades out (opacity) */
+  --fl-reveal-zoom-dur: 2.44s; /* outline's own pull-back zoom, independent of its fade */
+  --fl-reveal-dur-in: 2.50s;   /* video/still/canvas fades in */
+}
 .fl-reveal .fl-outline {
-  transform-origin: 50% 50%; transition: opacity var(--fl-reveal-dur) var(--fl-ease-out),
-    transform var(--fl-reveal-dur) var(--fl-ease-out);
+  transform-origin: 50% 50%; transition: opacity var(--fl-reveal-dur-out) cubic-bezier(.42,0,1,1),
+    transform var(--fl-reveal-zoom-dur) var(--fl-ease-out);
 }
 .fl-reveal__vid, .fl-reveal__still, .fl-reveal__canvas {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-  opacity: 0; transition: opacity var(--fl-reveal-dur) var(--fl-ease-out);
+  opacity: 0; transition: opacity var(--fl-reveal-dur-in) var(--fl-ease-out);
+  /* hidden, not just transparent, until the handoff: Safari can composite a
+     decoding video layer for a frame or two regardless of opacity: 0, which
+     showed as the device flashing behind the outline on load */
+  visibility: hidden; pointer-events: none;
   /* the subject runs off its own frame for a third of the clip; a feathered edge
      is kinder than the hard crop, and the page behind it is transparent anyway */
   -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 82%, transparent 100%);
@@ -1265,11 +1363,11 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-reveal__canvas { display: none; }
 .fl-reveal.is-keyed .fl-reveal__vid { opacity: 0 !important; }
 .fl-reveal.is-keyed .fl-reveal__canvas { display: block; }
-.fl-reveal.is-handed-off .fl-outline { opacity: 0; transform: scale(.94); }
-.fl-reveal.is-handed-off .fl-reveal__vid,
-.fl-reveal.is-handed-off .fl-reveal__still,
-.fl-reveal.is-handed-off .fl-reveal__canvas { opacity: 1; }
-.fl-reveal.is-keyed.is-handed-off .fl-reveal__vid { opacity: 0 !important; }
+.fl-reveal.outline-faded .fl-outline { opacity: 0; transform: scale(.35); }
+.fl-reveal.video-visible .fl-reveal__vid,
+.fl-reveal.video-visible .fl-reveal__still,
+.fl-reveal.video-visible .fl-reveal__canvas { opacity: 1; visibility: visible; }
+.fl-reveal.is-keyed.video-visible .fl-reveal__vid { opacity: 0 !important; }
 @media (prefers-reduced-motion: reduce) {
   .fl-reveal .fl-outline, .fl-reveal__vid, .fl-reveal__still, .fl-reveal__canvas { transition: opacity .3s linear; }
 }
@@ -1279,7 +1377,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    similar platform policies block a silent play() with no visible signal
    otherwise, which reads as broken rather than as "tap to continue" */
 .fl-reveal__play {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.94);
+  position: absolute; top: 50%; left: 50%; z-index: 2; transform: translate(-50%, -50%) scale(.94);
   display: flex; align-items: center; gap: 10px; white-space: nowrap;
   padding: 15px 26px; border-radius: 12px; border: none;
   background: var(--fl-ramp-even-ink); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
@@ -1289,7 +1387,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   transition: opacity .3s var(--fl-ease-out), transform .3s var(--fl-ease-spring), background .15s var(--fl-ease-out);
 }
 .fl-reveal__play svg { flex: none; }
-.fl-reveal.is-handed-off.awaiting-play .fl-reveal__play {
+.fl-reveal.video-visible.awaiting-play .fl-reveal__play {
   opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
 }
 .fl-reveal__play:hover { background: var(--fl-ramp-even-ink-deep); }
@@ -1399,7 +1497,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     inset 0 2px 2px rgba(255,255,255,.22),
     inset 0 -3px 4px rgba(0,0,0,.55),
     0 56px 90px -26px rgba(21,22,22,.4), 0 16px 32px -12px rgba(21,22,22,.28);
-  transition: transform 2.4s cubic-bezier(.45, 0, .2, 1);
+  transition: transform .12s linear;
 }
 /* the one landscape capture: the device itself tips onto its side rather
    than letterboxing the image inside a portrait frame. The source image
@@ -1668,3 +1766,36 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     radial-gradient(65% 95% at 100% 100%, rgba(219,157,145,.62), transparent 70%);
   opacity: 1; -webkit-mask: none; mask: none;
 }
+
+/* once the phone has turned landscape it's barely half as tall, but its
+   box keeps the full upright height — pull the step-04 caption up into
+   that freed space so the phone and its caption share one view */
+.fl-swap__caption--below { transition: margin-top .5s var(--fl-ease-out); }
+.fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__caption--below { margin-top: -190px; }
+@media (max-width: 900px) {
+  .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__caption--below { margin-top: -150px; }
+}
+.fl-swap__stage::after { transition: opacity .4s var(--fl-ease-out); }
+.fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__stage::after { opacity: 0; }
+.fl-swap-section .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__stage::after { opacity: 0; }
+
+/* hardware captions: same treatment as the software side captions, in red —
+   display-face title with one key phrase lit, ink body with a bold red lead */
+.fl-scrub__cap .fl-title {
+  font-family: var(--fl-display); font-weight: 600;
+  font-size: clamp(1.9rem, 2.8vw, 2.6rem); line-height: 1.05; letter-spacing: -.025em;
+}
+.fl-scrub__cap mark {
+  background: linear-gradient(135deg, var(--fl-red-ink) 0%, var(--fl-red) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; white-space: nowrap;
+}
+.fl-scrub__cap .fl-body { color: var(--fl-ink); font-size: 1.1875rem; line-height: 1.5; max-width: 40ch; }
+.fl-scrub__cap .fl-body strong { font-weight: 600; color: var(--fl-red-ink); white-space: nowrap; }
+.fl-scrub__captions { min-height: 150px; }
+/* step 04's caption sits right under the phone, so it may rise into its
+   slot from below but never past it — otherwise the scroll drift carries
+   it up over the phone */
+.fl-swap__caption--below .fl-swap__cap { transform: translateY(max(0px, var(--cap-shift, 0px))); }
+.fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__caption--below { margin-top: -165px; }
+.fl-swap-section .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__stage::after { animation: none; opacity: 0; }

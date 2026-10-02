@@ -31,6 +31,14 @@
       <stop offset="0" stop-color="#C9DAF8"/>
       <stop offset="1" stop-color="#CCD1EA"/>
     </linearGradient>
+    <!-- the disc as a true half-and-half: blue to one side of the diagonal,
+         red to the other, with a short soft seam rather than a long blend -->
+    <linearGradient id="ramp-split" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAF8"/>
+      <stop offset="0.44" stop-color="#C9DAF8"/>
+      <stop offset="0.56" stop-color="#DB9D91"/>
+      <stop offset="1" stop-color="#DB9D91"/>
+    </linearGradient>
     <filter id="flame-lift" x="-15%" y="-15%" width="135%" height="135%">
       <feDropShadow dx="10.5" dy="10.5" stdDeviation="14.8" flood-color="#000" flood-opacity="0.30"/>
     </filter>
@@ -105,45 +113,41 @@
   </div>
 </section>
 
-<!-- ============ devices ============ -->
-<section class="fl-section--tall" id="devices" aria-labelledby="devices-h">
+<!-- ============ devices: the product, introduced ============ -->
+<section class="fl-section--tall fl-intro" id="devices" aria-labelledby="devices-h">
   <div class="fl-wrap">
-    <div class="fl-pill" data-reveal aria-hidden="true"></div>
-    <h2 class="fl-display-m" id="devices-h" data-reveal style="--fl-reveal-delay:60ms">Devices</h2>
-    <p class="fl-body fl-body--l" style="margin-top:16px;max-width:56ch;--fl-reveal-delay:120ms" data-reveal>The only optics-free
-      instrument that comes close to the resolution the work needs. It seats over your phone's
-      camera and supplies the light, polarized or not, at a fixed distance.</p>
+    <div class="fl-intro__head">
+      <span class="fl-label fl-kicker" data-reveal>Devices</span>
+      <h2 class="fl-display-l" id="devices-h" data-reveal style="--fl-reveal-delay:60ms">Meet
+        <span class="fl-intro__accent">flacara h1</span>.</h2>
+      <p class="fl-body fl-body--l" data-reveal style="--fl-reveal-delay:120ms">The only optics-free
+        instrument that comes close to the resolution the work needs. It seats over your phone's
+        camera and supplies the light, polarized or not, at a fixed distance.</p>
+    </div>
 
-    <div class="fl-devices" style="margin-top:64px">
-      <a class="fl-device" href="clinicians.html" data-reveal="scale" data-tilt style="--fl-reveal-delay:180ms">
-        <div class="fl-device__frame">
-          <img class="fl-device__shot" src="flacara_full.png" alt="The Flacara housing seated over a phone camera array" width="960" height="720">
-        </div>
-        <div class="fl-device__body">
-          <span class="fl-device__name">flacara h1</span>
-          <div class="fl-buy__price" style="margin-top:4px">
-            <span class="amt">$199</span>
-            <span class="qual">USD · directional, may change before launch</span>
-          </div>
-          <p class="fl-device__note">Polarized and unpolarized light, a fixed working distance, and a
-            record of the same spot over time. Also an aluminium-top edition for specialists, from $249.</p>
-          <dl class="fl-stat-row" style="margin-top:8px">
-            <div>
-              <dt class="fl-label">Resolution</dt>
-              <dd class="fl-stat-row__value">≈16 µm</dd>
-            </div>
-            <div>
-              <dt class="fl-label">Lighting</dt>
-              <dd class="fl-stat-row__value fl-stat-row__value--text">2 modes</dd>
-            </div>
-            <div>
-              <dt class="fl-label">Charging</dt>
-              <dd class="fl-stat-row__value fl-stat-row__value--text">USB-C</dd>
-            </div>
-          </dl>
-          <span class="fl-btn fl-btn--secondary" style="margin-top:12px">See the device</span>
-        </div>
-      </a>
+    <a class="fl-intro__stage" href="clinicians.html" data-reveal="scale" style="--fl-reveal-delay:160ms">
+      <span class="fl-intro__rings" aria-hidden="true"></span>
+      <img class="fl-intro__shot fl-intro__shot--side" src="flacara_full_side.png" alt="" width="1920" height="1080">
+      <img class="fl-intro__shot fl-intro__shot--front" src="flacara_full.png" alt="The flacara h1 housing, front and three-quarter views" width="1920" height="1080">
+      <span class="fl-intro__cue">See the device</span>
+    </a>
+
+    <dl class="fl-intro__specs" data-reveal style="--fl-reveal-delay:120ms">
+      <div><dt>Resolution</dt><dd>≈16<small>µm</small></dd></div>
+      <div><dt>Lighting</dt><dd>2<small>modes</small></dd></div>
+      <div><dt>Charging</dt><dd>USB-C</dd></div>
+      <div><dt>Works with</dt><dd>iPhone</dd></div>
+    </dl>
+
+    <div class="fl-intro__buy" data-reveal style="--fl-reveal-delay:160ms">
+      <div class="fl-buy__price">
+        <span class="amt">From $199</span>
+        <span class="qual">USD · aluminium edition $249 · directional, may change before launch</span>
+      </div>
+      <div class="fl-intro__ctas">
+        <a class="fl-btn fl-btn--primary" href="clinicians.html#pre-order">Pre-order</a>
+        <a class="fl-btn fl-btn--secondary" href="clinicians.html">See the device</a>
+      </div>
     </div>
   </div>
 </section>

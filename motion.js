@@ -189,56 +189,95 @@
       handoff.classList.remove('has-video', 'is-keyed'); /* falls back to the still */
     });
 
-    /* Low Power Mode (confirmed on a real device) suppresses autoplay
-       outright — a script-triggered play() rejects with NotAllowedError.
-       Not fixable from here; the platform only honours a play() that traces
-       back to a genuine user gesture. Retry on the page's first one, so it
-       recovers instead of sitting frozen forever — 'ended' also leaves
-       paused true, so that has to be checked too or a later click would
-       restart the clip instead of leaving it settled on its last frame. */
-    var gestureKinds = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
-    function retryOnGesture() {
-      if (clip.ended || !clip.paused) { gestureKinds.forEach(function (k) { document.removeEventListener(k, retryOnGesture); }); return; }
-      clip.play().catch(function () {});
-    }
-    if (isSafari) gestureKinds.forEach(function (k) { document.addEventListener(k, retryOnGesture, { passive: true }); });
+    /* the two signals the handoff is waiting on (trace done, a frame decoded).
+       Both layers anchor to that one moment: outline-faded fires on it,
+       video-visible a fixed 157ms later — a small offset on top of the
+       readiness gate, not a clock from page load, so the gap is the same on a
+       fast connection and a slow one. */
+    var traceDone = false, clipReady = false, stalled = false;
+    var VIDEO_LAYER_DELAY = 157;
+    /* how long after the trace finishes to keep waiting for a decoded frame.
+       Low Power Mode can withhold the clip's data until a user gesture, so
+       without this the outline would sit there forever with no way forward. */
+    var STALL_MS = 1500;
 
-    /* there is no API to ask the platform "is autoplay being blocked" — the
-       only signal available is whether play() actually took, checked a beat
-       after asking. If it didn't, show an explicit control rather than
-       leaving the frozen frame with no clue that a tap would start it. */
+    function maybeHandOff() {
+      if (!traceDone || !clipReady || handoff.classList.contains('outline-faded')) return;
+      handoff.classList.add('outline-faded');
+      setTimeout(function () {
+        handoff.classList.add('video-visible');
+        clip.loop = true;
+        clip.playbackRate = 1.00;
+        clip.play().catch(function () {});
+        setTimeout(function () {
+          if (playBtn && (clip.paused || stalled) && !clip.ended) handoff.classList.add('awaiting-play');
+        }, 400);
+      }, VIDEO_LAYER_DELAY);
+    }
+
+    /* Low Power Mode (confirmed on a real device) suppresses autoplay: a
+       script-triggered play() rejects until the page sees a real user gesture.
+       The page's first gesture is used to unlock the clip — but if it lands
+       before the handoff, the clip is paused straight back onto frame 0, so
+       the crossfade still lands on the frame the outline was traced from
+       instead of somewhere mid-clip. After the handoff the gesture simply
+       starts it. 'ended' also leaves paused true, hence that check too. */
+    var gestureKinds = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    function stopListening() {
+      gestureKinds.forEach(function (k) { document.removeEventListener(k, onGesture); });
+    }
+    function onGesture() {
+      if (clip.ended || !clip.paused) { stopListening(); return; }
+      var p = clip.play();
+      if (!p || !p.then) return;
+      p.then(function () {
+        stopListening();
+        if (handoff.classList.contains('video-visible')) return;
+        clip.pause();
+        clip.currentTime = 0;
+        clipReady = true;
+        maybeHandOff();
+      }).catch(function () {});
+    }
+    if (isSafari) gestureKinds.forEach(function (k) { document.addEventListener(k, onGesture, { passive: true }); });
+
+    /* there is no API to ask "is autoplay being blocked" — the only signal is
+       whether play() actually took, checked a beat after asking. If it didn't,
+       show an explicit control rather than a frozen frame with no clue that a
+       tap would start it. */
     if (playBtn) {
-      playBtn.hidden = false; /* CSS now owns visibility via .awaiting-play */
+      playBtn.hidden = false; /* CSS owns visibility via .awaiting-play */
       playBtn.addEventListener('click', function () {
+        /* a stalled request won't resume on its own; a tap is allowed to fetch */
+        if (clip.readyState < 2) clip.load();
         clip.play().catch(function () {});
       });
-      clip.addEventListener('playing', function () { handoff.classList.remove('awaiting-play'); });
     }
-
-    /* the two signals the handoff is waiting on; see the comment above */
-    var traceDone = false, clipReady = false;
-    function maybeHandOff() {
-      if (!traceDone || !clipReady || handoff.classList.contains('is-handed-off')) return;
-      handoff.classList.add('is-handed-off');
-      clip.loop = true;
-      clip.playbackRate = 1.00;
-      clip.play().catch(function () {});
-      setTimeout(function () {
-        if (playBtn && clip.paused && !clip.ended) handoff.classList.add('awaiting-play');
-      }, 400);
-    }
+    clip.addEventListener('playing', function () {
+      handoff.classList.remove('awaiting-play');
+      /* a stalled handoff showed the still in the clip's place; the clip's
+         first frame is that same still, so swapping back is seamless */
+      if (stalled) { stalled = false; handoff.classList.add('has-video'); }
+    });
 
     var pending = handoff.querySelectorAll('.fl-outline path').length;
     handoff.addEventListener('animationend', function (e) {
       if (e.animationName !== 'fl-trace' || --pending) return;
       traceDone = true;
       maybeHandOff();
+      setTimeout(function () {
+        if (clipReady) return;
+        stalled = true;
+        handoff.classList.remove('has-video'); /* the still stands in for frame 0 */
+        clipReady = true;
+        maybeHandOff();
+      }, STALL_MS);
     });
 
     /* readyState 2 (HAVE_CURRENT_DATA) means a frame has actually decoded, so
-       the crossfade lands on real video rather than a blank layer on a slow
-       connection. Already there by the time this runs on most repeat views,
-       hence the synchronous check as well as the event. */
+       the crossfade lands on real video rather than a blank layer. Already
+       there by the time this runs on most repeat views, hence the synchronous
+       check as well as the event. */
     if (clip.readyState >= 2) {
       clipReady = true;
     } else {
@@ -318,6 +357,8 @@
     /* each caption rises with the scroll while its step is on screen:
        it comes in low, drifts up through its slot, and leaves high — the
        text moves with your scrolling instead of sitting parked. */
+    var landscapeScreen = screens.filter(function (sc) { return sc.classList.contains('fl-phone__view--landscape'); })[0];
+    var landscapeStep = landscapeScreen ? steps[parseInt(landscapeScreen.getAttribute('data-swap-screen'), 10)] : null;
     if (!reduceMotion) {
       var capRaf = null;
       var drift = function () {
@@ -332,6 +373,16 @@
             if (c.getAttribute('data-swap-caption') === String(i)) c.style.setProperty('--cap-shift', shift.toFixed(1) + 'px');
           });
         });
+        /* the landscape flip is scrubbed by scroll, not timed: it turns
+           across a 45vh window centred on the moment its screen swaps in,
+           so it moves exactly as fast as you scroll — and reverses too. */
+        if (phone && landscapeStep) {
+          var lr = landscapeStep.getBoundingClientRect();
+          var span = window.innerHeight * 0.45;
+          var lp = Math.max(0, Math.min(1, (mid + span / 2 - lr.top) / span));
+          var e = lp * lp * (3 - 2 * lp);
+          phone.style.transform = 'rotate(' + (90 * e).toFixed(2) + 'deg) scale(' + (1 - 0.12 * e).toFixed(3) + ')';
+        }
       };
       window.addEventListener('scroll', function () { if (!capRaf) capRaf = requestAnimationFrame(drift); }, { passive: true });
       drift();
