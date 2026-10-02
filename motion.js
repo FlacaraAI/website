@@ -270,6 +270,7 @@
     var screens = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-screen]'));
     var captions = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-caption]'));
     var phone = swap.querySelector('.fl-phone');
+    var float = swap.querySelector('.fl-phone-float');
     if (!steps.length || !screens.length) return;
 
     /* matched by the data attribute's value, not array position — the
@@ -283,7 +284,9 @@
         if (on) activeScreen = s;
       });
       captions.forEach(function (c) { c.classList.toggle('is-active', c.getAttribute('data-swap-caption') === key); });
-      if (phone) phone.classList.toggle('fl-phone--rotated', !!activeScreen && activeScreen.classList.contains('fl-phone__view--landscape'));
+      var landscape = !!activeScreen && activeScreen.classList.contains('fl-phone__view--landscape');
+      if (phone) phone.classList.toggle('fl-phone--rotated', landscape);
+      if (float) float.classList.toggle('is-landscape', landscape);
     }
     activate(0);
 

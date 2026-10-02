@@ -752,6 +752,30 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @keyframes fl-aper-in {
   from { opacity: 0; transform: translate(-50%, -50%) scale(calc(var(--k, 1) * .82)); }
 }
+/* the device outline, traced in behind the mark. Same .fl-outline the device
+   page uses — the per-path fl-trace animation is global, so it draws itself
+   on load with no script. Ink at low opacity: a technical drawing under the
+   wordmark, not a second thing competing with it. */
+.fl-hero-aper__wire {
+  position: absolute; left: 50%; top: 50%; z-index: -1;
+  /* Sized and nudged so the outline's outer ring lands exactly on the --k:1
+     aperture rather than floating at its own scale. The aperture's visible
+     ring sits at .4225 of its box (59.75% of a farthest-corner gradient,
+     .7071 of the box); the outline's outer ring is r=207.86 in a 460 viewBox,
+     so .45186 of its box — hence a box .935x the aperture's. That ring's
+     centre also sits 8.88/460 = 1.93% above its own box centre, so the whole
+     thing drops by that much to end up concentric. Re-derive both if either
+     the mask stops or the outline art change. */
+  width: min(72.9vmin, 673px); aspect-ratio: 1; pointer-events: none;
+  transform: translate(-50%, calc(-50% + 1.93%));
+  /* the apertures land at 320ms + 1.5s; the outline starts drawing after */
+  --fl-trace-start: 1900ms;
+}
+.fl-hero-aper__wire .fl-outline {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  color: var(--fl-ink); opacity: .16;
+}
+
 .fl-hero-aper__in { position: relative; display: grid; justify-items: center; text-align: center; max-width: 720px; margin: 0 auto; }
 .fl-hero-aper .fl-lock { font-size: clamp(3rem, 11vw, 6.5rem); }
 .fl-hero-aper .fl-lock--sm { font-size: 1.75rem; margin-bottom: 20px; }
@@ -838,18 +862,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-mat h1, .fl-hero-mat .fl-display-xl { color: var(--fl-on-mat); }
 .fl-hero-mat .fl-body { color: var(--fl-on-mat-muted); }
 .fl-hero-mat .fl-label { color: var(--fl-blue); }
-/* the wireframe/device reveal now plays as ambient motion behind the copy,
-   not beside it in its own column — full-bleed across the hero, dimmed so
-   the headline on top of it stays the thing being read. */
-.fl-hero-mat__bg {
-  position: absolute; inset: 0; z-index: 0;
-  display: grid; place-items: center;
-  opacity: .4; pointer-events: none;
-}
-.fl-hero-mat__bg .fl-reveal { position: relative; width: min(85vw, 820px); aspect-ratio: 1236 / 1280; }
+.fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
+.fl-hero-mat .fl-reveal { position: relative; width: 122%; margin: 0 -11%; aspect-ratio: 1236 / 1280; }
 .fl-hero-mat .fl-outline { color: var(--fl-on-mat); opacity: .9; filter: none;
   position: absolute; inset: 0; width: 100%; height: 100%; }
-.fl-hero-mat__content { position: relative; z-index: 1; max-width: 640px; }
 .fl-rail { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; padding-top: 20px;
   border-top: 1px solid var(--fl-mat-raised); }
 .fl-rail div { display: grid; gap: 4px; }
@@ -859,8 +875,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-on-mat); font-variant-numeric: tabular-nums; }
 @media (max-width: 860px) {
   .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
-  .fl-hero-mat__bg { opacity: .2; }
-  .fl-hero-mat__bg .fl-reveal { width: min(70vw, 320px); }
+  .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
+  .fl-hero-mat .fl-reveal { width: 100%; max-width: 420px; margin: 0; }
 }
 
 /* ---------- feature row ---------- */
@@ -1058,7 +1074,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    clinicians.html; nothing had wired them to a keyframe until now. ---------- */
 .fl-outline path {
   stroke-dasharray: 1; stroke-dashoffset: 1;
-  animation: fl-trace 1.1s var(--fl-ease-out) calc(var(--i, 0) * 55ms + 200ms) both;
+  animation: fl-trace 1.1s var(--fl-ease-out) calc(var(--i, 0) * 55ms + var(--fl-trace-start, 200ms)) both;
 }
 @keyframes fl-trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -1193,15 +1209,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    whichever side caption belongs to it, so text rises in beside the phone
    without ever scrolling behind it. */
 .fl-swap { position: relative; }
-.fl-swap__pinned {
-  position: sticky; top: 112px; z-index: 2;
-  display: flex; align-items: center; justify-content: center; gap: 40px;
-}
+.fl-swap__pinned { position: sticky; top: 112px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.fl-swap__row { display: flex; align-items: center; justify-content: center; gap: 40px; }
 .fl-swap__caption { position: relative; width: 300px; flex: none; min-height: 170px; }
 .fl-swap__caption--right { text-align: left; }
+.fl-swap__caption--below { width: 100%; max-width: 420px; min-height: 110px; margin-top: 8px; text-align: center; }
 .fl-swap__cap {
-  position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(14px);
-  transition: opacity .4s var(--fl-ease-out), transform .4s var(--fl-ease-out);
+  position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(18px);
+  transition: opacity .65s var(--fl-ease-out), transform .65s var(--fl-ease-out);
 }
 .fl-swap__cap.is-active { opacity: 1; transform: translateY(0); }
 .fl-swap__num { display: block; margin-bottom: 10px; }
@@ -1224,7 +1239,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     inset 0 2px 2px rgba(255,255,255,.22),
     inset 0 -3px 4px rgba(0,0,0,.55),
     0 56px 90px -26px rgba(21,22,22,.4), 0 16px 32px -12px rgba(21,22,22,.28);
-  transition: transform .9s var(--fl-ease-out);
+  transition: transform 1.8s var(--fl-ease-out);
 }
 /* the one landscape capture: the device itself tips onto its side rather
    than letterboxing the image inside a portrait frame. The source image
@@ -1270,7 +1285,17 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   background: radial-gradient(closest-side, rgba(21,22,22,.22), transparent 72%);
   animation: fl-phone-shadow 6s ease-in-out infinite;
 }
-.fl-phone-float { animation: fl-phone-float 6s ease-in-out infinite; will-change: transform; }
+/* the float wrapper also owns the landscape reflow: its height collapses
+   toward the rotated phone's shorter visual footprint so the caption below
+   it follows the phone up instead of waiting out the full portrait height.
+   Transform doesn't affect layout, so this is a second, independent change
+   timed to match the phone's own rotation. */
+.fl-phone-float {
+  height: 650px; display: flex; align-items: center; justify-content: center;
+  animation: fl-phone-float 6s ease-in-out infinite;
+  transition: height 1.8s var(--fl-ease-out); will-change: transform;
+}
+.fl-phone-float.is-landscape { height: 220px; }
 @keyframes fl-phone-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -1281,29 +1306,41 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 
 @media (max-width: 900px) {
-  .fl-swap__pinned { flex-direction: column; top: 72px; gap: 16px; }
-  .fl-swap__caption { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
+  .fl-swap__pinned { top: 72px; gap: 16px; }
+  .fl-swap__row { flex-direction: column; gap: 16px; }
+  .fl-swap__caption, .fl-swap__caption--below { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
   .fl-phone { width: 240px; }
   .fl-phone--rotated { transform: rotate(90deg) scale(.48); }
+  .fl-phone-float { height: 520px; }
+  .fl-phone-float.is-landscape { height: 180px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fl-swap__cap, .fl-phone__view, .fl-phone { transition: none; }
-  .fl-phone-float { animation: none; }
+  .fl-phone-float { animation: none; transition: none; }
   .fl-swap__stage::after { animation: none; }
 }
 
-/* ---------- scrub: one pinned square frame, scroll swaps what's in it ----------
+/* ---------- scrub: a pinned gallery strip, scroll moves it sideways ----------
    The outer block is n screen-heights tall; the inner block is sticky and
-   exactly one screen tall, so the frame sits dead centre while the page
-   scrolls underneath. Shots behind the current one have lifted away, shots
-   ahead are waiting below, so every swap reads as moving forward or back. */
-.fl-section--scrub { padding-top: 32px; }
-.fl-scrub { position: relative; height: calc(var(--n, 3) * 100vh + 10vh); }
+   exactly one screen tall. Inside it the shots sit side by side on one strip:
+   the current one centred, the next waiting at the right edge, the ones
+   already seen gone off to the left, so scrolling down reads as walking along
+   a gallery wall. Hardware palette: red and white — the red is the accent,
+   never the photograph's frame colour. */
+.fl-section--scrub { padding-top: 32px; overflow-x: clip; }
+.fl-scrub { position: relative; height: calc(var(--n, 3) * 100vh + 10vh); --idx: 0; --gap: 48px; }
 .fl-scrub__sticky {
   position: sticky; top: 0; height: 100vh; height: 100svh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding-top: 72px; gap: 20px;
-  --s: min(640px, 90vw, calc(100svh - 290px));
+  --s: min(640px, 84vw, calc(100svh - 290px));
+}
+/* a soft red-white wash the frame sits in, instead of a grey page */
+.fl-scrub__sticky::before {
+  content: ""; position: absolute; left: 50%; top: 56%; z-index: -1;
+  width: calc(var(--s) * 1.9); aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--fl-red-quiet) 0%, rgba(245,231,228,.55) 45%, transparent 100%);
+  pointer-events: none;
 }
 
 .fl-scrub__rail { position: relative; display: flex; gap: 4px; width: var(--s); min-width: min(360px, 88vw); }
@@ -1311,55 +1348,95 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   flex: 1; display: flex; align-items: baseline; justify-content: center; gap: 8px;
   padding: 10px 4px 14px; border: 0; background: none; cursor: pointer;
   font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--fl-muted); opacity: .6; transition: opacity .3s var(--fl-ease-out), color .3s var(--fl-ease-out);
+  color: var(--fl-muted); opacity: .7; transition: opacity .3s var(--fl-ease-out), color .3s var(--fl-ease-out);
 }
-.fl-scrub__tab .n { opacity: .6; }
-.fl-scrub__tab:hover { opacity: 1; }
-.fl-scrub__tab.is-active { color: var(--fl-ink); opacity: 1; }
-.fl-scrub__tab:focus-visible { outline: 2px solid var(--fl-ink); outline-offset: 2px; border-radius: 4px; }
-.fl-scrub__track { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--fl-rule); border-radius: 2px; overflow: hidden; }
-.fl-scrub__fill { position: absolute; inset: 0; background: var(--fl-ink); transform-origin: left; transform: scaleX(var(--p, 0)); }
+.fl-scrub__tab .n { color: var(--fl-red-deep); }
+.fl-scrub__tab:hover { opacity: 1; color: var(--fl-ink); }
+.fl-scrub__tab.is-active { color: var(--fl-red-ink); opacity: 1; }
+.fl-scrub__tab.is-active .n { color: var(--fl-red-ink); }
+.fl-scrub__tab:focus-visible { outline: 2px solid var(--fl-red-ink); outline-offset: 2px; border-radius: 4px; }
+.fl-scrub__track { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--fl-red-quiet); border-radius: 2px; overflow: hidden; }
+.fl-scrub__fill {
+  position: absolute; inset: 0; transform-origin: left; transform: scaleX(var(--p, 0));
+  background: linear-gradient(90deg, var(--fl-red) 0%, var(--fl-red-ink) 100%);
+}
 
+.fl-scrub__body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .fl-scrub__frame { position: relative; width: var(--s); aspect-ratio: 1 / 1; flex: none; }
 .fl-scrub__shot {
   position: absolute; inset: 0; margin: 0;
-  opacity: 0; transform: translateY(14%) scale(.94);
-  transition: opacity .6s var(--fl-ease-out), transform .8s var(--fl-ease-out);
-  pointer-events: none;
+  transform: translateX(calc((var(--i) - var(--idx)) * (var(--s) + var(--gap)))) scale(.84);
+  opacity: .45; cursor: pointer;
+  transition: transform .9s var(--fl-ease-out), opacity .6s var(--fl-ease-out);
 }
-.fl-scrub__shot.is-past { transform: translateY(-5%) scale(.92); }
-.fl-scrub__shot.is-active { opacity: 1; transform: none; pointer-events: auto; z-index: 1; }
-.fl-scrub__body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.fl-scrub__shot .fl-plate { height: 100%; padding: 16px; }
+.fl-scrub__shot.is-past { opacity: 0; pointer-events: none; }
+.fl-scrub__shot.is-active { transform: translateX(0) scale(1); opacity: 1; cursor: auto; z-index: 1; }
+.fl-scrub__shot.is-next:hover { opacity: .7; }
+
+/* white mount with a red hairline, in place of the dark mat */
+.fl-scrub__shot .fl-plate {
+  height: 100%; padding: 14px; background: #fff; border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(198,124,109,.35);
+}
 .fl-scrub__shot .fl-slider { max-width: none; width: 100%; height: 100%; aspect-ratio: auto; }
+.fl-scrub .fl-slider__divider { width: 2px; background: #fff; }
+.fl-scrub .fl-slider__grip {
+  width: 40px; height: 40px; background: var(--fl-red-ink); color: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.9);
+}
+.fl-scrub .fl-slider__tag { background: rgba(255,255,255,.92); color: var(--fl-ink); border-radius: 4px; }
+.fl-scrub .fl-slider__tag--left { background: var(--fl-red-ink); color: #fff; }
+.fl-scrub .fl-slider__input:focus-visible ~ .fl-slider__divider { background: var(--fl-red-quiet); }
+
+.fl-scrub__arrow {
+  position: absolute; top: calc(var(--s) / 2); z-index: 2; transform: translateY(-50%);
+  width: 48px; height: 48px; border-radius: 999px; border: 0; cursor: pointer;
+  display: grid; place-items: center;
+  background: #fff; color: var(--fl-red-ink); box-shadow: inset 0 0 0 1px rgba(198,124,109,.45);
+  transition: background-color .25s var(--fl-ease-out), color .25s var(--fl-ease-out), opacity .3s var(--fl-ease-out);
+}
+.fl-scrub__arrow--prev { left: -24px; }
+.fl-scrub__arrow--next { right: -24px; }
+.fl-scrub__arrow:hover { background: var(--fl-red-ink); color: #fff; }
+.fl-scrub__arrow:focus-visible { outline: 2px solid var(--fl-red-ink); outline-offset: 3px; }
+.fl-scrub__arrow:disabled { opacity: 0; pointer-events: none; }
 
 .fl-scrub__captions { position: relative; width: min(560px, 90vw); min-height: 104px; text-align: center; }
 .fl-scrub__cap {
   position: absolute; inset: 0 0 auto 0;
-  opacity: 0; transform: translateY(16px);
-  transition: opacity .45s var(--fl-ease-out), transform .6s var(--fl-ease-out);
+  opacity: 0; transform: translateX(32px);
+  transition: opacity .45s var(--fl-ease-out), transform .7s var(--fl-ease-out);
 }
-.fl-scrub__cap.is-past { transform: translateY(-16px); }
-.fl-scrub__cap.is-active { opacity: 1; transform: none; transition-delay: .12s; }
-.fl-scrub__cap .fl-body { margin: 8px auto 0; max-width: 46ch; color: var(--fl-muted); }
+.fl-scrub__cap.is-past { transform: translateX(-32px); }
+.fl-scrub__cap.is-active { opacity: 1; transform: none; transition-delay: .15s; }
+.fl-scrub__cap .fl-title::after {
+  content: ""; display: block; width: 28px; height: 2px; margin: 12px auto 0;
+  background: var(--fl-red-ink); border-radius: 2px;
+}
+.fl-scrub__cap .fl-body { margin: 12px auto 0; max-width: 46ch; color: var(--fl-muted); }
 
-/* wide screens: the caption steps out to the left of the frame, which gives
-   the vertical space back to the photograph — the frame grows to nearly the
-   full screen height and stays centred. */
+/* wide screens: the caption steps out to the left of the frame (where the
+   shots already seen have left), which gives the vertical space back to the
+   photograph; the next shot still waits on the right. */
 @media (min-width: 1100px) {
-  .fl-scrub__sticky { padding-top: 84px; --s: min(780px, calc(100svh - 170px), calc(100vw - 700px)); }
+  .fl-scrub__sticky { padding-top: 84px; --s: min(760px, calc(100svh - 170px), calc(100vw - 720px)); }
   .fl-scrub__captions {
-    position: absolute; top: 50%; right: calc(100% + 56px); width: 270px;
+    position: absolute; top: 50%; right: calc(100% + 72px); width: 270px;
     min-height: 0; margin-top: -90px; text-align: left;
   }
   .fl-scrub__cap .fl-title { font-size: 1.5rem; line-height: 1.2; }
-  .fl-scrub__cap .fl-body { margin: 12px 0 0; }
+  .fl-scrub__cap .fl-title::after { margin-left: 0; }
+  .fl-scrub__cap .fl-body { margin: 14px 0 0; }
 }
 @media (max-width: 640px) {
-  .fl-scrub__sticky { padding-top: 64px; gap: 16px; --s: min(92vw, calc(100svh - 300px)); }
+  .fl-scrub { --gap: 20px; }
+  .fl-scrub__sticky { padding-top: 64px; gap: 16px; --s: min(80vw, calc(100svh - 300px)); }
   .fl-scrub__tab { font-size: .625rem; letter-spacing: .08em; gap: 5px; }
-  .fl-scrub__shot .fl-plate { padding: 10px; }
+  .fl-scrub__shot .fl-plate { padding: 8px; }
+  .fl-scrub__arrow { width: 40px; height: 40px; }
+  .fl-scrub__arrow--prev { left: -14px; }
+  .fl-scrub__arrow--next { right: -14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fl-scrub__shot, .fl-scrub__cap, .fl-scrub__tab { transition: none; }
+  .fl-scrub__shot, .fl-scrub__cap, .fl-scrub__tab, .fl-scrub__arrow { transition: none; }
 }

@@ -508,6 +508,10 @@
     if (t >= hs) {
       var vt = (t - hs) * state.playbackRate;
       if (video.duration) vt = vt % video.duration;
+      /* kept in sync every frame, not just when play() is first called, so
+         dragging the speed slider mid-playback takes effect immediately
+         instead of waiting for the next pause/play cycle */
+      if (video.playbackRate !== state.playbackRate) video.playbackRate = state.playbackRate;
       if (isPlaying) {
         if (video.paused) video.play().catch(function () {});
       } else {
