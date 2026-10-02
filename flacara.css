@@ -752,30 +752,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @keyframes fl-aper-in {
   from { opacity: 0; transform: translate(-50%, -50%) scale(calc(var(--k, 1) * .82)); }
 }
-/* the device outline, traced in behind the mark. Same .fl-outline the device
-   page uses — the per-path fl-trace animation is global, so it draws itself
-   on load with no script. Ink at low opacity: a technical drawing under the
-   wordmark, not a second thing competing with it. */
-.fl-hero-aper__wire {
-  position: absolute; left: 50%; top: 50%; z-index: -1;
-  /* Sized and nudged so the outline's outer ring lands exactly on the --k:1
-     aperture rather than floating at its own scale. The aperture's visible
-     ring sits at .4225 of its box (59.75% of a farthest-corner gradient,
-     .7071 of the box); the outline's outer ring is r=207.86 in a 460 viewBox,
-     so .45186 of its box — hence a box .935x the aperture's. That ring's
-     centre also sits 8.88/460 = 1.93% above its own box centre, so the whole
-     thing drops by that much to end up concentric. Re-derive both if either
-     the mask stops or the outline art change. */
-  width: min(72.9vmin, 673px); aspect-ratio: 1; pointer-events: none;
-  transform: translate(-50%, calc(-50% + 1.93%));
-  /* the apertures land at 320ms + 1.5s; the outline starts drawing after */
-  --fl-trace-start: 1900ms;
-}
-.fl-hero-aper__wire .fl-outline {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  color: var(--fl-ink); opacity: .16;
-}
-
 .fl-hero-aper__in { position: relative; display: grid; justify-items: center; text-align: center; max-width: 720px; margin: 0 auto; }
 .fl-hero-aper .fl-lock { font-size: clamp(3rem, 11vw, 6.5rem); }
 .fl-hero-aper .fl-lock--sm { font-size: 1.75rem; margin-bottom: 20px; }
@@ -1074,7 +1050,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    clinicians.html; nothing had wired them to a keyframe until now. ---------- */
 .fl-outline path {
   stroke-dasharray: 1; stroke-dashoffset: 1;
-  animation: fl-trace 1.1s var(--fl-ease-out) calc(var(--i, 0) * 55ms + var(--fl-trace-start, 200ms)) both;
+  animation: fl-trace 1.1s var(--fl-ease-out) calc(var(--i, 0) * 55ms + 200ms) both;
 }
 @keyframes fl-trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -1333,7 +1309,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   position: sticky; top: 0; height: 100vh; height: 100svh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding-top: 72px; gap: 20px;
-  --s: min(640px, 84vw, calc(100svh - 290px));
+  --s: min(640px, 84vw, calc(100svh - 330px));
 }
 /* a soft red-white wash the frame sits in, instead of a grey page */
 .fl-scrub__sticky::before {
@@ -1439,4 +1415,31 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fl-scrub__shot, .fl-scrub__cap, .fl-scrub__tab, .fl-scrub__arrow { transition: none; }
+}
+
+/* ---------- software palette: blue and white ----------
+   The software page's counterpart to the devices page's red: the same
+   accents (step number, heading rule, the wash the object sits in), in blue. */
+.fl-swap-section .fl-kicker { color: var(--fl-blue-ink); }
+.fl-swap-section .fl-swap__num {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  background: var(--fl-blue-quiet); color: var(--fl-blue-ink);
+  box-shadow: inset 0 0 0 1px rgba(79,114,174,.25);
+  font-weight: 500; letter-spacing: .12em;
+}
+.fl-swap-section .fl-swap__cap .fl-title::after {
+  content: ""; display: block; width: 28px; height: 2px; margin-top: 12px;
+  background: var(--fl-blue-ink); border-radius: 2px;
+}
+.fl-swap-section .fl-swap__caption--below .fl-title::after { margin-left: auto; margin-right: auto; }
+.fl-swap-section .fl-swap__cap .fl-body { color: var(--fl-muted); }
+.fl-swap-section .fl-swap__stage { position: relative; }
+.fl-swap-section .fl-swap__stage::before {
+  content: ""; position: absolute; left: 50%; top: 45%; z-index: -1;
+  width: 640px; max-width: 150vw; aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--fl-blue-quiet) 0%, rgba(235,241,252,.6) 45%, transparent 100%);
+  pointer-events: none;
+}
+.fl-swap-section .fl-swap__stage::after {
+  background: radial-gradient(closest-side, rgba(79,114,174,.28), transparent 72%);
 }
