@@ -519,21 +519,28 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   height: 56px; padding: 0 8px 0 12px;
   display: flex; align-items: center; gap: 14px;
   border-radius: var(--fl-radius-card);
-  background: rgba(242, 244, 245, 0.62);          /* --fl-surface, translucent */
+  /* Near-white glass with a blue-to-red edge: the old grey frost went dull
+     against the coloured heroes. The edge is the brand ramp drawn as a
+     border-box layer under a padding-box fill, so it's a true 2px
+     gradient ring, not a shadow. The cast shadow lifts it off the hero. */
+  border: 2px solid transparent;
+  background:
+    linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .82)) padding-box,
+    linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
   -webkit-backdrop-filter: blur(30px) saturate(1.9);
           backdrop-filter: blur(30px) saturate(1.9);
-  /* it floats over a dark hero on every page now, so it gets a real edge:
-     a bright top rim and a hairline rim for the glass, over a cast shadow
-     that lifts it off the mat rather than sitting flush on it. */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .72),
-    inset 0 0 0 1px rgba(255, 255, 255, .42),
-    0 22px 44px -14px rgba(10, 12, 16, .55),
-    0 6px 14px -6px rgba(10, 12, 16, .35);
+    inset 0 1px 0 rgba(255, 255, 255, .95),
+    0 26px 52px -16px rgba(10, 12, 16, .55),
+    0 10px 20px -10px rgba(10, 12, 16, .32);
 }
 /* no blur support: fall back to the opaque surface the bar always had */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .fl-nav .fl-wrap { background: var(--fl-surface); }
+  .fl-nav .fl-wrap {
+    background:
+      linear-gradient(var(--fl-surface), var(--fl-surface)) padding-box,
+      linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
+  }
 }
 .fl-nav .ico.solo { width: 32px; height: 32px; display: block; overflow: visible; --flame: var(--fl-surface); }
 .fl-nav__mark { display: flex; align-items: center; text-decoration: none; }
@@ -543,17 +550,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    filled CTA beside it stays the only "action" on the bar. */
 .fl-nav__links {
   display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 3px;
-  border-radius: 999px; background: rgba(213, 215, 216, 0.5);   /* --fl-sunken, translucent */
-  box-shadow: inset 0 0 0 1px var(--fl-rule);
+  /* a faint well, not the old grey slab, so the white pill reads clean */
+  border-radius: 999px; background: rgba(21, 22, 22, .05);
+  box-shadow: inset 0 0 0 1px rgba(21, 22, 22, .08);
 }
 .fl-nav__links a:not(.fl-btn) {
   display: block; padding: 6px 14px; border-radius: 999px;
   font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem;
-  color: var(--fl-muted); text-decoration: none;
+  color: #45484a; text-decoration: none;
   transition: color .15s var(--fl-ease), background-color .15s var(--fl-ease);
 }
 .fl-nav__links a:not(.fl-btn):hover { color: var(--fl-ink); text-decoration: none; }
-.fl-nav__links a[aria-current="page"] { color: var(--fl-ink); background: linear-gradient(135deg, var(--fl-blue-quiet), var(--fl-red-quiet)); }
+.fl-nav__links a[aria-current="page"] {
+  color: var(--fl-ink); background: linear-gradient(135deg, #dce6fa, #f6ddd6);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9), 0 1px 3px rgba(21, 22, 22, .14);
+}
 .fl-nav .fl-btn { flex: none; }
 /* the bar's one action reads as its own object: fully round, against the
    16px bar and the 999px track it sits between. */
@@ -686,7 +697,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    The ramp as concentric apertures. §2.6 place 1: this is the mark's own
    gradient reading as the optic it came from, not a decorative wash. */
 .fl-hero-aper {
-  position: relative; overflow: hidden; isolation: isolate;
+  /* clip sideways only: the colour wash below has to be free to run past
+     the hero's bottom edge into the next section */
+  position: relative; overflow-x: clip; overflow-y: visible; isolation: isolate;
+  --fl-hero-tail: 36vh;
   min-height: 100vh;
   display: grid; place-items: center;
   /* starts at the top of the document, same device as .fl-hero-mat: the nav
@@ -698,14 +712,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-on-mat);
   background: none;
 }
-/* Every decorative layer — colour sweep, blobs, rings — sits in one box
-   that carries the fade, so they all lift off together. Masking only the
-   colour left the blobs and rings hard-clipped by overflow at the hero's
-   bottom edge, which read as a seam. The box is its own stacking context,
-   so the sweep (-3), blobs (-2) and rings (-1) keep their order inside it.
-   The tail is long and eased rather than a straight ramp, so scrolling into
-   the product section below reads as the colour lifting off the page, not
-   a band ending. */
+/* The blobs and rings sit in one masked box that dissolves them by the
+   hero's bottom edge — left unmasked they were hard-clipped there, which
+   read as a seam. The colour sweep is NOT in this box: it lives on the
+   hero's own ::before (below) so its fade can run on past the hero. */
 .fl-hero-aper__bg {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom,
@@ -722,14 +732,28 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    because two deep hues side by side read as a dark void here, and mixed
    in OKLAB, not OKLCH: OKLCH swings the hue through purple on the way from
    blue to rust, where OKLAB just passes through a soft mauve-grey. The two
-   glows are the other heroes' own, a touch stronger for the lighter base. */
-.fl-hero-aper__bg::before {
-  content: ""; position: absolute; inset: 0; z-index: -3;
+   glows are the other heroes' own, a touch stronger for the lighter base.
+
+   The wash runs --fl-hero-tail past the hero's bottom edge and thins out
+   over that whole distance, so the section below opens already tinted and
+   the colour lifts off gradually as you scroll, instead of the hero ending
+   and plain ground starting at one line. The section after the hero is
+   positioned (below) so its copy paints over this tail, not under it. */
+.fl-hero-aper::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0;
+  bottom: calc(-1 * var(--fl-hero-tail)); z-index: -2; pointer-events: none;
   background:
-    radial-gradient(55% 60% at 14% 6%, rgba(201, 218, 248, .42), transparent 65%),
-    radial-gradient(55% 60% at 86% 8%, rgba(219, 157, 145, .40), transparent 65%),
+    radial-gradient(55% 45% at 14% 4%, rgba(201, 218, 248, .42), transparent 65%),
+    radial-gradient(55% 45% at 86% 6%, rgba(219, 157, 145, .40), transparent 65%),
     linear-gradient(in oklab 100deg, #3a5a95 0%, var(--fl-blue-ink) 26%, var(--fl-red-ink) 74%, #8f4c39 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
+    rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
+          mask-image: linear-gradient(to bottom,
+    #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
+    rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
 }
+.fl-hero-aper + section { position: relative; z-index: 1; }
 /* three blue/red blobs behind the apertures, each drifting and fading on
    its own cycle. Kept deliberately light on the GPU: no blend mode, a
    moderate blur radius, and only three animating layers — five plus a
@@ -1144,7 +1168,12 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 /* ---------- nav: settles into a smaller pill once the page has moved ---------- */
 .fl-nav .fl-wrap { transition: height .3s var(--fl-ease-out), padding .3s var(--fl-ease-out), background-color .3s var(--fl-ease-out); }
-.fl-nav.is-scrolled .fl-wrap { height: 48px; background: rgba(242, 244, 245, 0.66); }
+.fl-nav.is-scrolled .fl-wrap {
+  height: 48px;
+  background:
+    linear-gradient(rgba(255, 255, 255, .94), rgba(255, 255, 255, .88)) padding-box,
+    linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
+}
 .fl-nav__mark .ico { transition: transform .4s var(--fl-ease-spring); }
 .fl-nav__mark:hover .ico { transform: rotate(-16deg) scale(1.1); }
 .fl-nav__links a[aria-current="page"] { transition: color .15s var(--fl-ease), background-color .3s var(--fl-ease-spring); }
@@ -1355,7 +1384,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    per step gives the scrub a comfortable pace without being tedious. */
 .fl-swap__triggers { display: flex; flex-direction: column; }
 .fl-swap__triggers > div { height: 60vh; }
-.fl-swap__triggers > div:last-child { height: 40vh; }
+.fl-swap__triggers > div:last-child { height: 75vh; }
 
 /* a titanium-ish frame instead of the flat dark rect: brushed edge gradient,
    a real dynamic-island pill floating over the glass rather than a notch cut
@@ -1610,8 +1639,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-ink); font-size: 1.1875rem; line-height: 1.5; margin-top: 16px !important; max-width: 26ch;
 }
 .fl-swap-section .fl-swap__caption--below .fl-body { margin-inline: auto; max-width: 34ch; }
-.fl-swap-section .fl-swap__cap .fl-body strong { font-weight: 600; color: var(--fl-blue-ink); }
-.fl-swap-section .fl-swap__caption { width: 340px; min-height: 230px; }
+.fl-swap-section .fl-swap__cap .fl-body strong { font-weight: 600; color: var(--fl-blue-ink); white-space: nowrap; }
+.fl-swap-section .fl-swap__caption--left, .fl-swap-section .fl-swap__caption--right { width: 340px; min-height: 230px; }
 .fl-swap-section .fl-swap__stage { position: relative; }
 .fl-swap-section .fl-swap__stage::before {
   content: ""; position: absolute; left: 50%; top: 45%; z-index: -1;
@@ -1621,4 +1650,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-swap-section .fl-swap__stage::after {
   background: radial-gradient(closest-side, rgba(79,114,174,.28), transparent 72%);
+}
+
+/* ---------- centred call-to-action band ----------
+   .fl-display-m caps its width at 16ch for left-aligned layouts; centring
+   the text inside that box still left the box itself hugging the left
+   edge. Here everything is a centred column. */
+.fl-band--cta { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.fl-band--cta .fl-display-m { max-width: 22ch; margin-inline: auto; }
+.fl-band--cta .fl-body { margin-inline: auto; }
+/* the CTA band carries both brand colours equally: a full blue-to-red
+   ramp across the card instead of a blue card with a red corner wash */
+.fl-band--cta { background: linear-gradient(120deg, var(--fl-blue-quiet) 0%, #f0eaf2 50%, var(--fl-red-quiet) 100%); }
+.fl-band--cta::before {
+  background:
+    radial-gradient(65% 95% at 0% 0%, rgba(157,187,234,.85), transparent 70%),
+    radial-gradient(65% 95% at 100% 100%, rgba(219,157,145,.62), transparent 70%);
+  opacity: 1; -webkit-mask: none; mask: none;
 }

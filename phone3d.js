@@ -88,12 +88,10 @@ async function initOne(container) {
 
   container.appendChild(renderer.domElement);
 
-  // leaned back with the screen tipped up toward the viewer, only a light
-  // turn to the side, and a slight roll — a floating product shot rather
-  // than a phone standing edge-on
-  // the screen's normal points up and to the left — toward the headline —
-  // while still mostly at the viewer: a clean three-quarter product angle
-  const baseY = -0.46, baseX = -0.24, baseZ = 0.04;
+  // the phone points up: its top corner rises to the upper right, while
+  // the screen tips back and turns toward the headline, so the screen's
+  // own vector aims up-left and still mostly at the viewer
+  const baseY = -0.38, baseX = -0.22, baseZ = -0.26;
   pivot.rotation.set(baseX, baseY, baseZ);
   let pointerX = 0, pointerY = 0, pointer = false;
 
@@ -105,8 +103,6 @@ async function initOne(container) {
   });
   container.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; pointer = false; });
 
-  // scrolling turns it through more angles: it swings round and stands up
-  // as the hero leaves the screen
   let scrollP = 0;
   const onScroll = () => { scrollP = Math.min(1, window.scrollY / window.innerHeight); };
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -129,10 +125,11 @@ async function initOne(container) {
     // slow drift through angles when idle, like it's turning in zero-g
     const driftY = pointer ? 0 : Math.sin(t * 0.32) * 0.1;
     const driftX = pointer ? 0 : Math.sin(t * 0.23 + 1) * 0.05;
-    // scrolling eases it round to face you squarely as the hero leaves
-    const targetY = baseY + driftY + pointerY + scrollP * 0.4;
-    const targetX = baseX + driftX + pointerX + scrollP * 0.18;
-    const targetZ = baseZ + Math.sin(t * 0.27) * 0.02;
+    // scrolling unwinds it toward upright as the hero leaves
+    const ease = 1 - scrollP * 0.7;
+    const targetY = baseY * ease + driftY + pointerY;
+    const targetX = baseX * ease + driftX + pointerX;
+    const targetZ = baseZ * ease + Math.sin(t * 0.27) * 0.02;
     pivot.rotation.x += (targetX - pivot.rotation.x) * 0.05;
     pivot.rotation.y += (targetY - pivot.rotation.y) * 0.05;
     pivot.rotation.z += (targetZ - pivot.rotation.z) * 0.05;
