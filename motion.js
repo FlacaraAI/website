@@ -206,7 +206,7 @@
       handoff.classList.add('outline-faded');
       setTimeout(function () {
         handoff.classList.add('video-visible');
-        clip.loop = true;
+        clip.loop = false; /* plays through once, then holds on its last frame — no replay */
         clip.playbackRate = 1.00;
         clip.play().catch(function () {});
         setTimeout(function () {
@@ -352,7 +352,9 @@
       if (phone) phone.classList.toggle('fl-phone--rotated', landscape);
       if (float) float.classList.toggle('is-landscape', landscape);
     }
-    activate(0);
+    var current = -1;
+    function setStep(idx) { if (idx !== current) { current = idx; activate(idx); } }
+    setStep(0);
 
     /* each caption rises with the scroll while its step is on screen:
        it comes in low, drifts up through its slot, and leaves high — the
@@ -364,6 +366,11 @@
       var drift = function () {
         capRaf = null;
         var mid = window.innerHeight / 2;
+        // the step under the screen's middle drives the phone — the same
+        // read the turn below uses, so screen, caption and turn never disagree
+        var under = -1;
+        steps.forEach(function (s, i) { var r = s.getBoundingClientRect(); if (r.top <= mid) under = i; });
+        setStep(Math.max(0, under));
         steps.forEach(function (s, i) {
           var r = s.getBoundingClientRect();
           var p = Math.max(0, Math.min(1, (mid - r.top) / r.height));
@@ -381,19 +388,24 @@
           var span = window.innerHeight * 0.45;
           var lp = Math.max(0, Math.min(1, (mid + span / 2 - lr.top) / span));
           var e = lp * lp * (3 - 2 * lp);
-          phone.style.transform = 'rotate(' + (90 * e).toFixed(2) + 'deg) scale(' + (1 - 0.12 * e).toFixed(3) + ')';
+          // how far it shrinks once sideways comes from the CSS, so a phone
+          // screen can turn it smaller than the desktop's .88
+          var land = parseFloat(getComputedStyle(phone).getPropertyValue('--land-scale')) || 0.88;
+          phone.style.transform = 'rotate(' + (90 * e).toFixed(2) + 'deg) scale(' + (1 - (1 - land) * e).toFixed(3) + ')';
         }
       };
       window.addEventListener('scroll', function () { if (!capRaf) capRaf = requestAnimationFrame(drift); }, { passive: true });
       drift();
     }
 
-    if (!('IntersectionObserver' in window)) return;
+    /* with motion on, the scroll handler above already picks the step;
+       an observer as well would deliver late entries that fight it */
+    if (!reduceMotion || !('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         var idx = steps.indexOf(entry.target);
-        if (idx > -1) activate(idx);
+        if (idx > -1) setStep(idx);
       });
     }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
     steps.forEach(function (s) { io.observe(s); });

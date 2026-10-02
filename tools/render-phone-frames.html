@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- Offline renderer for the software hero's phone. Not linked from the
+     site: open it in a browser (or run tools/render-phone-frames.mjs) to
+     regenerate images/phone/frame-NN.webp after changing the pose, screen
+     image or lighting. The live page only ever loads the resulting images. -->
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}</style>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const W = 960, H = 1200;           // 4:5, the stage's aspect, at ~2x display size
+const SCREEN = '../images/app-mesh.png';
+
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
+const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(24, W / H, 0.01, 100);
+
+const [gltf, tex] = await Promise.all([
+  loader.loadAsync('../models/iphone-15-pro.glb'),
+  new THREE.TextureLoader().loadAsync(SCREEN),
+]);
+tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
+const phone = gltf.scene;
+const screen = phone.getObjectByName('xXDHkMplTIDAXLN');
+if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+
+const box = new THREE.Box3().setFromObject(phone);
+const size = box.getSize(new THREE.Vector3());
+phone.position.sub(box.getCenter(new THREE.Vector3()));
+const facing = new THREE.Group(); facing.add(phone); facing.rotation.y = Math.PI;
+const pivot = new THREE.Group(); pivot.add(facing); scene.add(pivot);
+const tallest = Math.max(size.x, size.y, size.z);
+camera.position.set(0, 0, tallest * 2.75); camera.lookAt(0, 0, 0);
+const key = new THREE.DirectionalLight(0xffffff, 1.2); key.position.set(3, 4, 5); scene.add(key);
+
+// the hero pose (screen vector up-left, top corner rising to the right),
+// unwinding toward upright as the hero scrolls away — frame 0 is the pose,
+// the last frame is fully scrolled
+const base = { x: -0.22, y: -0.38, z: -0.26 };
+window.renderFrame = (i, n) => {
+  const p = n > 1 ? i / (n - 1) : 0;
+  const ease = 1 - p * 0.7;
+  pivot.rotation.set(base.x * ease, base.y * ease, base.z * ease);
+  renderer.render(scene, camera);
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script>

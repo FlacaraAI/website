@@ -12,7 +12,8 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="flacara.css">
 <!-- No page-local stylesheet. Every component here lives in flacara.css. -->
-<!-- the hero phone is a real WebGL render (phone3d.js), not a CSS mockup -->
+<link rel="preload" as="image" href="images/phone-hero.webp" fetchpriority="high">
+<!-- only used by the deferred 3D upgrade (phone3d.js); costs nothing until imported -->
 <script type="importmap">
 { "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -89,7 +90,11 @@
       </div>
       <div data-parallax="0.22">
         <div data-reveal="scale" style="--fl-reveal-delay:140ms">
-          <div class="fl-phone3d-stage" data-phone3d data-screen="images/app-mesh.png" role="img" aria-label="The Flacara app's tracking screen, shown on a phone"></div>
+          <div class="fl-phone3d-stage" data-phone-float data-screen="images/app-mesh.png">
+            <div class="fl-phone-hero">
+              <img src="images/phone-hero.webp" width="960" height="1200" fetchpriority="high" alt="The Flacara app's tracking screen, shown on an iPhone">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -211,8 +216,7 @@
         <li><a href="software.html">Software</a></li>
         <li><a href="clinicians.html#pre-order">Pre-order</a></li>
       </ul>
-      <p>Flacara is a camera accessory. It is not a medical device, it does not diagnose anything,
-        and nothing it produces is a medical opinion.</p>
+      <p>Flacara, a division of Lumo Imaging, is an FDA registered medical device.</p>
       <p class="fl-caption">iPhone model: <a href="https://sketchfab.com/3d-models/apple-iphone-15-pro-max-black-df17520841214c1792fb8a44c6783ee7">“Apple iPhone 15 Pro Max Black”</a>
         by polyman, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. iPhone is a trademark of Apple Inc.</p>
     </div>
@@ -220,7 +224,7 @@
 </footer>
 
 <script src="motion.js" defer></script>
-<script type="module" src="phone3d.js"></script>
+<script src="phone-frames.js" defer></script>
 
 </body>
 </html>

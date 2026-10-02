@@ -505,6 +505,12 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    not a shadow, the same device .fl-plate already uses.
    Radius is 8px: §1.2's ceiling for functional elements, not the 10px the
    augen reference uses. */
+/* the space the floating nav takes at the top of the page (its top margin +
+   its height). Heroes pull up by exactly this so the nav floats on them;
+   change it in one place when the bar's size changes. */
+:root { --fl-nav-h: 72px; }
+@media (max-width: 640px) { :root { --fl-nav-h: 64px; } }
+
 .fl-nav {
   position: sticky; top: 16px; z-index: 10;
   margin: 16px auto 0;
@@ -513,33 +519,24 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-nav .fl-wrap {
   /* fits its contents rather than the 1200px column: the bar is a pill, not a
-     band, so there is no empty middle to explain. */
+     band, so there is no empty middle to explain. One row at every width —
+     it tightens on phones rather than wrapping. */
   width: max-content; max-width: 100%; margin-inline: auto;
   height: 56px; padding: 0 8px 0 12px;
   display: flex; align-items: center; gap: 14px;
   border-radius: var(--fl-radius-card);
-  /* Near-white glass with a blue-to-red edge: the old grey frost went dull
-     against the coloured heroes. The edge is the brand ramp drawn as a
-     border-box layer under a padding-box fill, so it's a true 2px
-     gradient ring, not a shadow. The cast shadow lifts it off the hero. */
+  /* Solid white with a blue-to-red edge, the same at every scroll position.
+     It used to be translucent glass, which let the coloured heroes tint it
+     at the top of the page and read white only further down. The edge is
+     the brand ramp drawn as a border-box layer under a padding-box fill, so
+     it's a true 2px gradient ring, not a shadow. */
   border: 2px solid transparent;
   background:
-    linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .82)) padding-box,
+    linear-gradient(#fff, #fff) padding-box,
     linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
-  -webkit-backdrop-filter: blur(30px) saturate(1.9);
-          backdrop-filter: blur(30px) saturate(1.9);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .95),
     0 26px 52px -16px rgba(10, 12, 16, .55),
     0 10px 20px -10px rgba(10, 12, 16, .32);
-}
-/* no blur support: fall back to the opaque surface the bar always had */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .fl-nav .fl-wrap {
-    background:
-      linear-gradient(var(--fl-surface), var(--fl-surface)) padding-box,
-      linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
-  }
 }
 .fl-nav .ico.solo { width: 32px; height: 32px; display: block; overflow: visible; }
 .fl-nav__mark { display: flex; align-items: center; text-decoration: none; }
@@ -568,14 +565,25 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* the bar's one action reads as its own object: fully round, against the
    16px bar and the 999px track it sits between. */
 .fl-nav .fl-btn--primary { border-radius: 999px; padding-inline: 23px; }
+/* phones: same single row, tightened — smaller mark, type and padding —
+   instead of wrapping the button onto a second line */
 @media (max-width: 640px) {
-  /* ponytail: the track plus the button cannot share 335px with the mark. Let
-     the row wrap; the pill grows rather than the content shrinking. */
   .fl-nav { padding: 0 12px; margin-top: 12px; top: 12px; }
-  .fl-nav .fl-wrap { width: auto; height: auto; min-height: 56px; flex-wrap: wrap;
-                     justify-content: center; gap: 10px; padding: 10px; }
-  .fl-nav__links a:not(.fl-btn) { padding: 6px 11px; }
-  .fl-hero-aper { margin-top: -68px; padding: 110px 24px 64px; }
+  .fl-nav .fl-wrap { height: 52px; gap: 8px; padding: 0 5px 0 8px; }
+  .fl-nav .ico.solo { width: 28px; height: 28px; }
+  .fl-nav__links a:not(.fl-btn) { padding: 6px 10px; font-size: .8125rem; }
+  .fl-nav .fl-btn--primary { padding: 8px 14px; font-size: .8125rem; }
+  .fl-hero-aper { padding: 110px 24px 64px; }
+}
+@media (max-width: 400px) {
+  .fl-nav .fl-wrap { gap: 6px; padding: 0 4px 0 6px; }
+  .fl-nav__links a:not(.fl-btn) { padding: 6px 8px; font-size: .78rem; }
+  .fl-nav .fl-btn--primary { padding: 8px 12px; font-size: .78rem; }
+}
+/* the narrowest phones: the mark already goes home, so the Home tab gives
+   way rather than the bar overflowing */
+@media (max-width: 352px) {
+  .fl-nav__links li:first-child { display: none; }
 }
 
 /* ---------- footer (Stage 1 §9) ---------- */
@@ -704,7 +712,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   display: grid; place-items: center;
   /* starts at the top of the document, same device as .fl-hero-mat: the nav
      pill floats on it instead of sitting above a hard seam. */
-  margin-top: -72px;
+  margin-top: calc(-1 * var(--fl-nav-h));
   /* bottom padding is the heavier of the two on purpose: the box centres its
      content, so the extra below lifts the copy clear of the fade-out. */
   padding: 136px 24px 196px;
@@ -1010,7 +1018,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
      Plain dark fallback — each page picks a colour below. */
   background: linear-gradient(to bottom, #1F2225 0%, #1F2225 56%, rgba(31,34,37,0) 100%);
   /* starts at the top of the document; the nav pill floats on it */
-  margin-top: -72px;
+  margin-top: calc(-1 * var(--fl-nav-h));
   padding: 196px 0 152px;
 }
 /* the two domains get one colour each, not a shared black — software is
@@ -1110,10 +1118,23 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   text-transform: uppercase; color: var(--fl-on-mat-muted); }
 .fl-rail .v { font-family: var(--fl-mono); font-size: .875rem;
   color: var(--fl-on-mat); font-variant-numeric: tabular-nums; }
+/* Tablets and phones: one column, and the copy plus the visual fit inside
+   the first screen, so the device's wireframe draws and hands off where it
+   can be seen rather than below the fold. The visual is centred and sized
+   to the screen instead of bleeding past its column (it's the only column
+   now, so a bleed means off the edge). Scroll parallax is off here: on
+   touch it made the copy drift over the visual. */
 @media (max-width: 860px) {
-  .fl-hero-mat { margin-top: -68px; padding: 168px 0 168px; }
-  .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 40px; }
-  .fl-hero-mat .fl-reveal { width: 100%; max-width: 420px; margin: 0; }
+  .fl-hero-mat { padding: calc(var(--fl-nav-h) + 40px) 0 72px; }
+  .fl-hero-mat__grid { grid-template-columns: 1fr; gap: 24px; justify-items: center; }
+  .fl-hero-mat__grid > * { width: 100%; }
+  .fl-hero-mat .fl-reveal { width: min(78vw, 360px); max-width: none; margin: 0 auto; }
+  .fl-hero-mat .fl-phone3d-stage { width: min(72vw, 340px); max-width: none; margin: 0 auto; }
+  .fl-hero-mat .fl-rail { gap: 18px 32px; margin-top: 24px; }
+  [data-parallax] { transform: none; will-change: auto; }
+}
+@media (max-width: 640px) {
+  .fl-hero-mat h1, .fl-hero-mat .fl-display-xl { font-size: clamp(2.5rem, 11vw, 3.25rem); }
 }
 
 /* a nudge that there's more below — easy to miss on a hero that's
@@ -1267,13 +1288,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
 
-/* ---------- nav: settles into a smaller pill once the page has moved ---------- */
-/* the pill holds its size when the page moves; only the glass firms up */
-.fl-nav.is-scrolled .fl-wrap {
-  background:
-    linear-gradient(rgba(255, 255, 255, .94), rgba(255, 255, 255, .88)) padding-box,
-    linear-gradient(120deg, var(--fl-blue-ink) 0%, var(--fl-red-ink) 100%) border-box;
-}
+/* ---------- nav: hover life (the pill itself never changes with scroll) ---------- */
 .fl-nav__mark .ico { transition: transform .4s var(--fl-ease-spring); }
 .fl-nav__mark:hover .ico { transform: rotate(-16deg) scale(1.1); }
 .fl-nav__links a[aria-current="page"] { transition: color .15s var(--fl-ease), background-color .3s var(--fl-ease-spring); }
@@ -1519,15 +1534,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    smaller than upright, not shrunk — close enough to read as the same
    device, not a different, smaller one. */
 .fl-phone--rotated { transform: rotate(90deg) scale(.88); }
-/* the hero mockup: a real WebGL render (phone3d.js) rather than a CSS
-   mockup — a rounded-box mesh, lit and rendered with an actual perspective
-   camera, so the edges are a real 3D surface instead of an approximation
-   that falls apart up close. This is just its canvas's box. */
+/* the hero mockup: one pre-rendered snapshot of a real iPhone model;
+   phone-frames.js floats and tilts it */
 .fl-phone3d-stage {
   width: 118%; max-width: 560px; aspect-ratio: 4 / 5; margin: 0 -9%;
   filter: drop-shadow(20px 36px 46px rgba(8,16,32,.45));
+  perspective: 1400px;
 }
-.fl-phone3d-stage canvas { display: block; width: 100%; height: 100%; }
+.fl-phone-hero { position: relative; width: 100%; height: 100%; will-change: transform; }
+.fl-phone-hero img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* the live 3D canvas lands exactly on the snapshot, then fades in */
+.fl-phone-hero__canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity .9s var(--fl-ease-out);
+}
+.fl-phone-hero.is-3d .fl-phone-hero__canvas { opacity: 1; }
 .fl-phone__btn { position: absolute; background: linear-gradient(90deg, #45484a, #191a1b); z-index: 0; }
 .fl-phone__btn--action   { left: -2.5px; top: 78px;  width: 3px; height: 26px; border-radius: 2px 0 0 2px; }
 .fl-phone__btn--vol-up   { left: -2.5px; top: 128px; width: 3px; height: 42px; border-radius: 2px 0 0 2px; }
@@ -1812,3 +1833,37 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap__caption--below .fl-swap__cap { transform: translateY(max(0px, var(--cap-shift, 0px))); }
 .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__caption--below { margin-top: -165px; }
 .fl-swap-section .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__stage::after { animation: none; opacity: 0; }
+
+/* phones: the side-by-side layout stacks into something taller than the
+   screen, so the pinned block can't stay pinned. Instead the phone sits on
+   top, sized to leave room, and all four captions share one slot under it,
+   crossfading in place exactly as they do beside it on desktop. */
+@media (max-width: 900px) {
+  .fl-swap-section { --ph-w: clamp(150px, calc((100svh - 400px) * .486), 220px); }
+  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 20px); }
+  .fl-swap__row { display: contents; }
+  .fl-phone-float { grid-area: stage; height: calc(var(--ph-w) * 18.5 / 9 + 16px); }
+  .fl-phone { width: var(--ph-w); max-width: none; border-radius: 34px; padding: 8px; }
+  .fl-phone__screen { border-radius: 27px; }
+  .fl-phone__island { top: 10px; width: 60px; height: 18px; }
+  .fl-phone__home { width: 78px; }
+  .fl-phone__btn { display: none; }
+  .fl-phone { --land-scale: .72; }
+  .fl-phone--rotated { transform: rotate(90deg) scale(.72); }
+  /* it's pinned the whole time, so there's nothing for a reveal to add */
+  .fl-swap__stage[data-reveal] { opacity: 1; transform: none; }
+  .fl-swap__stage::after { width: 130px; height: 20px; margin-top: 10px; }
+  .fl-swap-section .fl-swap__stage::before { width: 420px; }
+  .fl-swap__caption,
+  .fl-swap-section .fl-swap__caption--left,
+  .fl-swap-section .fl-swap__caption--right,
+  .fl-swap__caption--below,
+  .fl-swap__pinned:has(.fl-phone-float.is-landscape) .fl-swap__caption--below {
+    grid-area: cap; width: 100%; max-width: 360px; min-height: 180px; margin-top: 14px; text-align: center;
+  }
+  /* on a narrow screen the slow rise reads as drift; keep captions put */
+  .fl-swap__cap, .fl-swap__caption--below .fl-swap__cap { transform: none; }
+  .fl-swap-section .fl-swap__cap .fl-title { font-size: clamp(1.5rem, 7vw, 1.875rem); margin-top: 10px; }
+  .fl-swap-section .fl-swap__cap .fl-title::after { margin: 10px auto 0; transform-origin: center; }
+  .fl-swap-section .fl-swap__cap .fl-body { font-size: 1rem; max-width: 30ch; margin: 10px auto 0 !important; }
+}
