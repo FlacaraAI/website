@@ -66,16 +66,20 @@
 
 <!-- ============ hero: the brand, and no hardware ============ -->
 <section class="fl-hero-aper">
-  <!-- two soft, drifting blobs — blue and red, nothing standalone between
-       them; any lavender you see is just the blur letting them overlap. -->
-  <div class="fl-blob fl-blob--1" aria-hidden="true"></div>
-  <div class="fl-blob fl-blob--2" aria-hidden="true"></div>
-  <div class="fl-blob fl-blob--3" aria-hidden="true"></div>
+  <!-- every decorative layer in one masked box, so the colour sweep, the
+       blobs and the rings all fade out together into the section below -->
+  <div class="fl-hero-aper__bg" aria-hidden="true">
+    <!-- two soft, drifting blobs — blue and red, nothing standalone between
+         them; any lavender you see is just the blur letting them overlap. -->
+    <div class="fl-blob fl-blob--1"></div>
+    <div class="fl-blob fl-blob--2"></div>
+    <div class="fl-blob fl-blob--3"></div>
 
-  <!-- three apertures off the mark's own ramp (§2.6, place 1) -->
-  <div class="fl-aper" style="--k:.72;--o:.85;--d:0ms" aria-hidden="true"></div>
-  <div class="fl-aper" style="--k:1;--o:.42;--d:160ms" aria-hidden="true"></div>
-  <div class="fl-aper" style="--k:1.34;--o:.20;--d:320ms" aria-hidden="true"></div>
+    <!-- three apertures off the mark's own ramp (§2.6, place 1) -->
+    <div class="fl-aper" style="--k:.72;--o:.85;--d:0ms"></div>
+    <div class="fl-aper" style="--k:1;--o:.42;--d:160ms"></div>
+    <div class="fl-aper" style="--k:1.34;--o:.20;--d:320ms"></div>
+  </div>
 
   <div class="fl-hero-aper__in">
     <span class="fl-badge fl-rise" style="--d:120ms">FDA Registered</span>

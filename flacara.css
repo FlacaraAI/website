@@ -696,15 +696,36 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
      content, so the extra below lifts the copy clear of the fade-out. */
   padding: 136px 24px 196px;
   color: var(--fl-on-mat);
-  /* Same depth the two domain heroes run at, but carrying both hues rather
-     than one: blue banked into the top-left, red into the top-right, over a
-     dark base that dissolves to nothing at the bottom so the lit ground
-     below takes over without a seam. Devices is red's hero and software is
-     blue's; home is the page that owes you both. */
+  background: none;
+}
+/* Every decorative layer — colour sweep, blobs, rings — sits in one box
+   that carries the fade, so they all lift off together. Masking only the
+   colour left the blobs and rings hard-clipped by overflow at the hero's
+   bottom edge, which read as a seam. The box is its own stacking context,
+   so the sweep (-3), blobs (-2) and rings (-1) keep their order inside it.
+   The tail is long and eased rather than a straight ramp, so scrolling into
+   the product section below reads as the colour lifting off the page, not
+   a band ending. */
+.fl-hero-aper__bg {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0%, #000 58%, rgba(0,0,0,.92) 65%, rgba(0,0,0,.76) 72%, rgba(0,0,0,.54) 79%,
+    rgba(0,0,0,.32) 86%, rgba(0,0,0,.14) 93%, rgba(0,0,0,.04) 97%, transparent 100%);
+          mask-image: linear-gradient(to bottom,
+    #000 0%, #000 58%, rgba(0,0,0,.92) 65%, rgba(0,0,0,.76) 72%, rgba(0,0,0,.54) 79%,
+    rgba(0,0,0,.32) 86%, rgba(0,0,0,.14) 93%, rgba(0,0,0,.04) 97%, transparent 100%);
+}
+/* Software's blue and devices' rust, exactly — the same two hexes and the
+   same light glows those heroes use, set side by side: home is the page
+   that owes you both. No neutral base under them, and blended in OKLCH so
+   the middle stays a live plum rather than greying out the way two dark
+   colours do when mixed in sRGB. */
+.fl-hero-aper__bg::before {
+  content: ""; position: absolute; inset: 0; z-index: -3;
   background:
-    radial-gradient(85% 68% at 2% 0%, #122a52 0%, rgba(18, 42, 82, .72) 34%, rgba(18, 42, 82, 0) 76%),
-    radial-gradient(85% 68% at 98% 2%, #4a2018 0%, rgba(74, 32, 24, .66) 34%, rgba(74, 32, 24, 0) 76%),
-    linear-gradient(to bottom, #171a28 0%, #171a28 68%, rgba(23, 26, 40, .58) 84%, rgba(23, 26, 40, 0) 100%);
+    radial-gradient(55% 60% at 14% 6%, rgba(201, 218, 248, .32), transparent 65%),
+    radial-gradient(55% 60% at 86% 8%, rgba(219, 157, 145, .30), transparent 65%),
+    linear-gradient(in oklch 100deg, #122a52 0%, #122a52 18%, #4a2018 82%, #4a2018 100%);
 }
 /* three blue/red blobs behind the apertures, each drifting and fading on
    its own cycle. Kept deliberately light on the GPU: no blend mode, a
@@ -884,17 +905,48 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    the wordmark itself uses (background-clip: text on the brand ramp),
    just one hue deep instead of the full blue-to-red sweep, so it reads as
    this page's colour rather than the logo. */
+/* a light band sweeps slowly through the accent so the highlight reads as
+   lit, not printed; a soft glow lifts it off the dark field. */
 .fl-hero-accent {
-  background: linear-gradient(135deg, var(--fl-blue) 0%, var(--fl-blue-deep) 100%);
+  background: linear-gradient(110deg, var(--fl-blue-deep) 0%, var(--fl-blue) 35%, #ffffff 50%, var(--fl-blue) 65%, var(--fl-blue-deep) 100%);
+  background-size: 250% 100%; background-position: 100% 0;
   -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px rgba(157,187,234,.45));
+  animation: fl-accent-sheen 5.5s ease-in-out 1.2s infinite;
 }
 .fl-hero-mat--red .fl-hero-accent {
-  background: linear-gradient(135deg, var(--fl-red) 0%, var(--fl-red-deep) 100%);
-  -webkit-background-clip: text; background-clip: text;
+  background-image: linear-gradient(110deg, var(--fl-red-deep) 0%, var(--fl-red) 35%, #ffffff 50%, var(--fl-red) 65%, var(--fl-red-deep) 100%);
+  filter: drop-shadow(0 0 22px rgba(219,157,145,.45));
 }
-/* the text sinks slightly as the page scrolls past it, instead of sitting
-   dead still until it's shoved off — motion.js drives this via --parallax. */
+@keyframes fl-accent-sheen {
+  0% { background-position: 100% 0; }
+  45%, 100% { background-position: 0% 0; }
+}
+/* the key word gets a ramp underline that draws itself in once */
+.fl-hero-accent--underline { position: relative; display: inline-block; }
+.fl-hero-accent--underline::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -.04em; height: .09em;
+  border-radius: 999px; background: var(--fl-ramp);
+  transform: scaleX(0); transform-origin: left center;
+  animation: fl-underline-in 1s var(--fl-ease-out) .7s forwards;
+}
+@keyframes fl-underline-in { to { transform: scaleX(1); } }
+
+/* the software hero's headline: bigger and shorter, so the point lands at a glance */
+.fl-hero-mat .fl-hero-title--xl { font-size: clamp(3.75rem, 7.4vw, 7rem); line-height: .98; max-width: none; }
+.fl-hero-kicker {
+  margin-top: 28px; max-width: 30ch;
+  font-family: var(--fl-text); font-weight: 500; font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.45;
+  color: var(--fl-on-mat);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-hero-accent { animation: none; background-position: 50% 0; }
+  .fl-hero-accent--underline::after { animation: none; transform: scaleX(1); }
+}
+
+/* hero layers rise at their own speeds as the page scrolls — motion.js
+   drives --fl-parallax. Kept on its own element, never on a [data-reveal]. */
 [data-parallax] { transform: translateY(calc(var(--fl-parallax, 0) * 1px)); will-change: transform; }
 @media (prefers-reduced-motion: reduce) { [data-parallax] { transform: none; } }
 .fl-hero-mat__grid { display: grid; grid-template-columns: .95fr 1.15fr; gap: 56px; align-items: center; }
@@ -1303,7 +1355,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    camera, so the edges are a real 3D surface instead of an approximation
    that falls apart up close. This is just its canvas's box. */
 .fl-phone3d-stage {
-  width: 100%; max-width: 360px; aspect-ratio: 9 / 15.5; margin: 0 auto;
+  width: 118%; max-width: 560px; aspect-ratio: 4 / 5; margin: 0 -9%;
   filter: drop-shadow(20px 36px 46px rgba(8,16,32,.45));
 }
 .fl-phone3d-stage canvas { display: block; width: 100%; height: 100%; }

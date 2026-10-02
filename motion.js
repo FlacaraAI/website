@@ -26,13 +26,21 @@
     navState();
   }
 
-  /* ---------- hero text: sinks slightly as you scroll past it, rather
-     than sitting frozen until the page shoves it off ---------- */
+  /* ---------- hero parallax: text and device rise as the page scrolls,
+     at their own speeds (data-parallax="0.4"), so the hero lifts away in
+     layers instead of moving as one flat slab. Must sit on a different
+     element from [data-reveal] — the reveal's transform would win. ---------- */
   var parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
   if (parallaxEls.length && !reduceMotion) {
+    var speeds = parallaxEls.map(function (el) { return parseFloat(el.getAttribute('data-parallax')) || 0.3; });
+    var pRaf = null;
     var onParallax = function () {
-      var shift = Math.min(70, window.scrollY * 0.18);
-      parallaxEls.forEach(function (el) { el.style.setProperty('--fl-parallax', (-shift).toFixed(1)); });
+      if (pRaf) return;
+      pRaf = requestAnimationFrame(function () {
+        pRaf = null;
+        var y = Math.min(window.scrollY, window.innerHeight);
+        parallaxEls.forEach(function (el, i) { el.style.setProperty('--fl-parallax', (-y * speeds[i]).toFixed(1)); });
+      });
     };
     document.addEventListener('scroll', onParallax, { passive: true });
     onParallax();
@@ -306,6 +314,27 @@
       if (float) float.classList.toggle('is-landscape', landscape);
     }
     activate(0);
+
+    /* each caption rises with the scroll while its step is on screen:
+       it comes in low, drifts up through its slot, and leaves high — the
+       text moves with your scrolling instead of sitting parked. */
+    if (!reduceMotion) {
+      var capRaf = null;
+      var drift = function () {
+        capRaf = null;
+        var mid = window.innerHeight / 2;
+        steps.forEach(function (s, i) {
+          var r = s.getBoundingClientRect();
+          var p = Math.max(0, Math.min(1, (mid - r.top) / r.height));
+          var shift = (0.5 - p) * 90;
+          captions.forEach(function (c) {
+            if (c.getAttribute('data-swap-caption') === String(i)) c.style.setProperty('--cap-shift', shift.toFixed(1) + 'px');
+          });
+        });
+      };
+      window.addEventListener('scroll', function () { if (!capRaf) capRaf = requestAnimationFrame(drift); }, { passive: true });
+      drift();
+    }
 
     if (!('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (entries) {
