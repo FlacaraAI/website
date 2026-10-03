@@ -752,10 +752,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0;
   bottom: calc(-1 * var(--fl-hero-tail)); z-index: -2; pointer-events: none;
+  /* the flow field from FeralUI's Gradient Builder, in the brand pair; a
+     light veil keeps the white copy readable over its pale seam, and the
+     old OKLAB sweep stays underneath while the image loads */
   background:
-    radial-gradient(55% 45% at 14% 4%, rgba(201, 218, 248, .42), transparent 65%),
-    radial-gradient(55% 45% at 86% 6%, rgba(219, 157, 145, .40), transparent 65%),
+    linear-gradient(rgba(24, 32, 56, .16), rgba(24, 32, 56, .16)),
+    url(images/hero-flow.webp) center / cover no-repeat,
     linear-gradient(in oklab 100deg, #3a5a95 0%, var(--fl-blue-ink) 26%, var(--fl-red-ink) 74%, #8f4c39 100%);
+  animation: fl-flow-drift 28s ease-in-out infinite alternate;
   -webkit-mask-image: linear-gradient(to bottom,
     #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
     rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
@@ -764,6 +768,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
 }
 .fl-hero-aper + section { position: relative; z-index: 1; }
+/* a slow drift so the still field breathes; only background-position
+   moves, one layer, nothing for the GPU to composite */
+@keyframes fl-flow-drift {
+  from { background-position: 0 0, 20% 50%, 0 0; }
+  to   { background-position: 0 0, 80% 50%, 0 0; }
+}
+@media (max-width: 640px) {
+  .fl-hero-aper::before { background-image:
+    linear-gradient(rgba(24, 32, 56, .16), rgba(24, 32, 56, .16)),
+    url(images/hero-flow-1200.webp),
+    linear-gradient(in oklab 100deg, #3a5a95 0%, #4F72AE 26%, #A85F4A 74%, #8f4c39 100%);
+    background-size: auto, cover, auto; }
+}
+@media (prefers-reduced-motion: reduce) { .fl-hero-aper::before { animation: none; } }
 /* three blue/red blobs behind the apertures, each drifting and fading on
    its own cycle. Kept deliberately light on the GPU: no blend mode, a
    moderate blur radius, and only three animating layers — five plus a
