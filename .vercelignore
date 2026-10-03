@@ -1,3 +1,7 @@
+flacara.blend
+*.md
+.claude/
 node_modules/
-tools/gradient/node_modules/
-.DS_Store
+tools/gradient/
+.env*
+.vercel
