@@ -768,6 +768,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
 }
 .fl-hero-aper + section { position: relative; z-index: 1; }
+/* over the flow field the two red blobs only need to hint; at full
+   strength they tipped the hero pink */
+.fl-hero-aper .fl-blob--2 { background: radial-gradient(circle, rgba(219, 157, 145, .4) 0%, transparent 68%); }
+.fl-hero-aper .fl-blob--3 { background: radial-gradient(circle, rgba(219, 157, 145, .3) 0%, transparent 70%); }
 /* the live flow field (feral-gradient.js): same box and fade as ::before,
    painted over it, invisible until it has drawn its first frame */
 .fl-hero-aper__flow {
