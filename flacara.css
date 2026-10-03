@@ -752,13 +752,13 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0;
   bottom: calc(-1 * var(--fl-hero-tail)); z-index: -2; pointer-events: none;
-  /* the flow field from FeralUI's Gradient Builder, in the brand pair; a
-     light veil keeps the white copy readable over its pale seam, and the
-     old OKLAB sweep stays underneath while the image loads */
+  /* a still of the FeralUI flow field, shown until the live one
+     (.fl-hero-aper__flow) has loaded and faded in over it; a plain sweep in
+     the same four colours sits under that while the image loads */
   background:
-    linear-gradient(rgba(24, 32, 56, .16), rgba(24, 32, 56, .16)),
+    linear-gradient(transparent, transparent),
     url(images/hero-flow.webp) center / cover no-repeat,
-    linear-gradient(in oklab 100deg, #3a5a95 0%, var(--fl-blue-ink) 26%, var(--fl-red-ink) 74%, #8f4c39 100%);
+    linear-gradient(in oklab 120deg, #9DBBEA 0%, #C9DAF8 33%, #DB9D91 67%, #C98676 100%);
   animation: fl-flow-drift 28s ease-in-out infinite alternate;
   -webkit-mask-image: linear-gradient(to bottom,
     #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
@@ -768,6 +768,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
     rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
 }
 .fl-hero-aper + section { position: relative; z-index: 1; }
+/* the live flow field (feral-gradient.js): same box and fade as ::before,
+   painted over it, invisible until it has drawn its first frame */
+.fl-hero-aper__flow {
+  position: absolute; left: 0; right: 0; top: 0;
+  bottom: calc(-1 * var(--fl-hero-tail)); z-index: -2; pointer-events: none;
+  opacity: 0; transition: opacity 1.4s var(--fl-ease-out);
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
+    rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
+          mask-image: linear-gradient(to bottom,
+    #000 0%, #000 44%, rgba(0,0,0,.9) 52%, rgba(0,0,0,.74) 60%, rgba(0,0,0,.55) 68%,
+    rgba(0,0,0,.36) 76%, rgba(0,0,0,.2) 84%, rgba(0,0,0,.08) 92%, transparent 100%);
+}
+.fl-hero-aper__flow.is-live { opacity: 1; }
 /* a slow drift so the still field breathes; only background-position
    moves, one layer, nothing for the GPU to composite */
 @keyframes fl-flow-drift {
@@ -776,9 +790,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 @media (max-width: 640px) {
   .fl-hero-aper::before { background-image:
-    linear-gradient(rgba(24, 32, 56, .16), rgba(24, 32, 56, .16)),
+    linear-gradient(transparent, transparent),
     url(images/hero-flow-1200.webp),
-    linear-gradient(in oklab 100deg, #3a5a95 0%, #4F72AE 26%, #A85F4A 74%, #8f4c39 100%);
+    linear-gradient(in oklab 120deg, #9DBBEA 0%, #C9DAF8 33%, #DB9D91 67%, #C98676 100%);
     background-size: auto, cover, auto; }
 }
 @media (prefers-reduced-motion: reduce) { .fl-hero-aper::before { animation: none; } }
@@ -847,6 +861,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-hero-aper__in { position: relative; display: grid; justify-items: center; text-align: center; max-width: 720px; margin: 0 auto; }
 .fl-hero-aper .fl-lock { font-size: clamp(3.5rem, 13vw, 8rem); }
+/* on phones the wordmark has to outrank the stat row beneath it: as wide
+   as the screen allows, still one line at 320px */
+@media (max-width: 640px) { .fl-hero-aper .fl-lock { font-size: clamp(3.5rem, 17.5vw, 5.5rem); } }
 .fl-hero-aper .fl-lock--sm { font-size: 1.75rem; margin-bottom: 20px; }
 .fl-hero-aper .fl-tagline { margin-left: 0; margin-top: 28px; }
 .fl-hero-aper .fl-pill { margin: 0 0 28px; }
@@ -854,14 +871,18 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-hero-aper .fl-body--l { margin-top: 18px; }
 .fl-hero-aper__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 32px; }
 .fl-hero-aper__stats { justify-content: center; margin-top: 44px; }
-/* On the mid-tone sweep the on-mat greys and the pastel ramp wordmark both
-   wash out, so the copy goes white — the same white the other heroes' own
-   headlines use — and the lockup drops its light-ground shadows. The disc
-   keeps the brand ramp; only the word goes solid. */
-.fl-hero-aper .fl-tagline { color: rgba(255, 255, 255, .82); }
-.fl-hero-aper__stats .fl-label { color: rgba(255, 255, 255, .72); }
+/* On the flow field the pastel ramp wordmark washes out, so the copy goes
+   white and the lockup drops its light-ground shadows. The disc keeps the
+   brand ramp; only the word goes solid. */
+.fl-hero-aper .fl-tagline { color: rgba(255, 255, 255, .9); }
+.fl-hero-aper__stats .fl-label { color: rgba(255, 255, 255, .82); }
 .fl-hero-aper__stats .fl-stat-row__value { color: #fff; }
-.fl-hero-aper__stats > div { border-left-color: rgba(255, 255, 255, .3); }
+.fl-hero-aper__stats > div { border-left-color: rgba(255, 255, 255, .45); }
+/* a soft blue-grey halo keeps white legible on the pastel field
+   without dimming the field itself */
+.fl-hero-aper .fl-lock .logo,
+.fl-hero-aper .fl-tagline,
+.fl-hero-aper__stats { text-shadow: 0 1px 2px rgba(40, 56, 92, .34), 0 2px 18px rgba(40, 56, 92, .34); }
 /* on phones the third stat wraps to its own line; it shouldn't drag its divider along */
 @media (max-width: 480px) { .fl-hero-aper__stats > div:nth-child(3) { border-left: 0; padding-left: 0; } }
 .fl-hero-aper .fl-lock .ico,

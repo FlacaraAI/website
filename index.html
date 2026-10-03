@@ -74,6 +74,9 @@
 
 <!-- ============ hero: the brand, and no hardware ============ -->
 <section class="fl-hero-aper">
+  <!-- live flow field from FeralUI's Gradient Builder; fades in over the
+       still in ::before once feral-gradient.js (loaded after page load) paints -->
+  <div class="fl-hero-aper__flow" data-feral-gradient aria-hidden="true"></div>
   <!-- every decorative layer in one masked box, so the colour sweep, the
        blobs and the rings all fade out together into the section below -->
   <div class="fl-hero-aper__bg" aria-hidden="true">
@@ -175,6 +178,14 @@
 </footer>
 
 <script src="motion.js" defer></script>
+<script>
+  /* the gradient bundle is ~137 KB, so it waits until everything else has loaded */
+  addEventListener('load', function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var s = document.createElement('script'); s.src = '/feral-gradient.js'; s.async = true;
+    document.body.appendChild(s);
+  });
+</script>
 
 </body>
 </html>

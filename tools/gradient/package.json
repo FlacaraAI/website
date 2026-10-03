@@ -1,0 +1,11 @@
+{
+  "name": "flacara-gradient-build",
+  "private": true,
+  "scripts": {
+    "build": "esbuild entry.jsx --bundle --minify --format=iife --target=es2019 --jsx=automatic --jsx-import-source=preact --alias:react=preact/compat --alias:react-dom=preact/compat --alias:react/jsx-runtime=preact/jsx-runtime --outfile=../../feral-gradient.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "preact": "^11.0.0"
+  }
+}
