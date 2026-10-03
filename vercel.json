@@ -3,6 +3,17 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
-    { "source": "/devices", "destination": "/clinicians.html" }
+    {
+      "source": "/devices",
+      "destination": "/clinicians"
+    }
+  ],
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/clinicians",
+      "destination": "/devices",
+      "permanent": true
+    }
   ]
 }
