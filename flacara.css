@@ -1981,11 +1981,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: var(--fl-red-ink);
 }
 .fl-tech__grid dd { margin: 10px 0 0; font-size: 1rem; line-height: 1.55; color: var(--fl-ink); max-width: 36ch; }
-.fl-tech__limits {
-  margin-top: 40px; padding: 26px 28px; border-radius: 8px; max-width: 760px;
-  background: #fff; box-shadow: inset 0 0 0 1px var(--fl-rule), inset 3px 0 0 var(--fl-red-ink);
-}
-.fl-tech__limits .fl-body { margin-top: 10px; color: var(--fl-ink); }
 .fl-tech__fine { margin-top: 28px; max-width: 72ch; }
 @media (max-width: 900px) { .fl-tech__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .fl-tech__grid { grid-template-columns: 1fr; } }
@@ -2002,14 +1997,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-solo .fl-slider__tag { background: rgba(255,255,255,.92); color: var(--fl-ink); border-radius: 4px; }
 .fl-solo .fl-slider__tag--left { background: var(--fl-blue-ink); color: #fff; }
 .fl-solo__fine { margin: 20px auto 0; max-width: 60ch; text-align: center; }
-
-/* ---------- patients: the reassurance panel ---------- */
-.fl-calm {
-  max-width: 760px; margin-inline: auto; padding: 36px 40px; border-radius: 16px; text-align: center;
-  background: linear-gradient(160deg, #fff 0%, var(--fl-blue-quiet) 100%);
-  box-shadow: inset 0 0 0 1px rgba(79,114,174,.2);
-}
-.fl-calm .fl-body--l { margin: 14px auto 0; max-width: 52ch; color: var(--fl-ink); }
 
 /* ---------- home: the fork into the two audience pages ---------- */
 .fl-audience { margin-top: 52px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
