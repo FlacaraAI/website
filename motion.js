@@ -342,6 +342,7 @@
        DOM, so their document order does not line up with the step index. */
     function activate(idx) {
       var key = String(idx), activeScreen = null;
+      swap.setAttribute('data-step', key); /* lets CSS stage a step that isn't a phone screen */
       screens.forEach(function (s) {
         var on = s.getAttribute('data-swap-screen') === key;
         s.classList.toggle('is-active', on);

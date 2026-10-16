@@ -1931,25 +1931,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-section-head--center .fl-display-m, .fl-section-head--center .fl-body--l { margin-inline: auto; }
 .fl-page--patients .fl-section-head .fl-kicker { color: var(--fl-blue-ink); }
 
-/* ---------- doctors: the problem, as before/after pairs ---------- */
-.fl-problem__list { list-style: none; margin: 48px 0 0; padding: 0; display: grid; gap: 14px; }
-.fl-problem__list li {
-  display: grid; grid-template-columns: 1fr 1fr; border-radius: 8px; overflow: hidden;
-  box-shadow: inset 0 0 0 1px var(--fl-rule);
-}
-.fl-problem__was, .fl-problem__now { padding: 22px 26px; }
-.fl-problem__was { background: rgba(255,255,255,.55); }
-.fl-problem__was p { color: var(--fl-muted); }
-.fl-problem__now { background: #fff; box-shadow: inset 3px 0 0 var(--fl-red-ink); }
-.fl-problem__now p { color: var(--fl-ink); font-weight: 500; }
-.fl-problem__list .fl-label { display: block; margin-bottom: 8px; }
-.fl-problem__now .fl-label { color: var(--fl-red-ink); }
-.fl-problem__list p { margin: 0; font-size: 1.0625rem; line-height: 1.5; }
-@media (max-width: 760px) {
-  .fl-problem__list li { grid-template-columns: 1fr; }
-  .fl-problem__now { box-shadow: inset 0 3px 0 var(--fl-red-ink); }
-}
-
 /* ---------- the app section's heading sits above the pinned phone ---------- */
 .fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 8px; }
 
@@ -2025,3 +2006,90 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* the glow behind the pinned phone is wider than a phone screen; clip it
    sideways (clip, not hidden, so the sticky phone inside still pins) */
 .fl-swap-section { overflow-x: clip; }
+
+/* ---------- run-through captions: the old way, struck out, then the fix ----------
+   The "Today" line sits above each step's heading in muted ink; once the step
+   is active a red line draws through it, so every swap reads as a before and
+   an after without a second block of copy. */
+.fl-swap__was {
+  margin: 14px 0 0; font-size: 1rem; line-height: 1.45; color: var(--fl-muted); max-width: 30ch;
+  text-decoration: line-through; text-decoration-thickness: 2px;
+  text-decoration-color: transparent; transition: text-decoration-color .5s var(--fl-ease-out) .35s;
+}
+.fl-swap__was span {
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
+  margin-right: 6px; display: inline-block; text-decoration: none;
+}
+.fl-swap__cap.is-active .fl-swap__was { text-decoration-color: var(--fl-red-ink); }
+.fl-swap__caption--below .fl-swap__was { margin-inline: auto; }
+.fl-swap-section .fl-swap__cap .fl-swap__was + .fl-title { margin-top: 10px; }
+
+/* ---------- the flip: step one is the back of the phone, with the h1 on it ----------
+   On the opening step the render stands in for the phone; scrolling on turns
+   it over (the render swings away, the phone swings in), so you see the
+   device on the phone first and then what it captured. The separate
+   rotate property is used on purpose: motion.js drives .fl-phone's inline
+   transform for the landscape turn, and the two compose instead of fighting. */
+.fl-swap-section--flip .fl-swap__stage { perspective: 1400px; }
+.fl-swap__back {
+  position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
+  width: calc(var(--ph-w, 340px) * 1.088); max-width: none; height: auto;
+  translate: -58% -49.3%; opacity: 0; rotate: y 90deg;
+  filter: drop-shadow(0 40px 50px rgba(74,32,24,.25));
+  transition: rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
+}
+.fl-swap[data-step="0"] .fl-swap__back {
+  opacity: 1; rotate: y 0deg;
+  transition: rotate .6s var(--fl-ease-out) .4s, opacity .3s linear .4s;
+}
+.fl-swap-section--flip .fl-phone {
+  transition: transform .12s linear, rotate .6s var(--fl-ease-out) .4s, opacity .3s linear .4s;
+}
+.fl-swap-section--flip .fl-swap[data-step="0"] .fl-phone {
+  opacity: 0; rotate: y -90deg;
+  transition: transform .12s linear, rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-swap__was, .fl-swap__back, .fl-swap-section--flip .fl-phone { transition: none !important; }
+}
+
+/* ---------- doctors: one in every room ---------- */
+.fl-perroom__grid {
+  margin: 48px auto 0; max-width: 1040px; display: grid; grid-template-columns: .8fr 2fr; gap: 20px; align-items: stretch;
+}
+.fl-perroom__was, .fl-perroom__now { border-radius: 16px; padding: 28px; }
+.fl-perroom__was {
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  background: rgba(255,255,255,.5); box-shadow: inset 0 0 0 1px var(--fl-rule); color: var(--fl-muted);
+}
+.fl-perroom__was strong {
+  font-family: var(--fl-display); font-weight: 600; font-size: clamp(2.5rem, 4vw, 3.5rem); line-height: 1; color: var(--fl-muted);
+  text-decoration: line-through; text-decoration-color: var(--fl-red-ink); text-decoration-thickness: 3px;
+}
+.fl-perroom__now {
+  background: linear-gradient(160deg, #fff 0%, var(--fl-red-quiet) 100%);
+  box-shadow: inset 0 0 0 1px rgba(168,95,74,.25), var(--lift-card);
+  display: grid; gap: 18px;
+}
+.fl-perroom__units { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.fl-perroom__units figure { margin: 0; text-align: center; }
+.fl-perroom__units img { width: 100%; height: auto; display: block; filter: drop-shadow(0 18px 22px rgba(74,32,24,.22)); }
+.fl-perroom__units figcaption {
+  margin-top: 8px; font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fl-red-ink);
+}
+[data-reveal] .fl-perroom__units figure { opacity: 0; transform: translateY(16px) scale(.94); transition: opacity .5s var(--fl-ease-out), transform .7s var(--fl-ease-out); }
+[data-reveal].is-visible .fl-perroom__units figure { opacity: 1; transform: none; }
+[data-reveal].is-visible .fl-perroom__units figure:nth-child(2) { transition-delay: .12s; }
+[data-reveal].is-visible .fl-perroom__units figure:nth-child(3) { transition-delay: .24s; }
+[data-reveal].is-visible .fl-perroom__units figure:nth-child(4) { transition-delay: .36s; }
+.fl-perroom__sum { display: flex; align-items: baseline; justify-content: center; gap: 12px; }
+.fl-perroom__sum strong { font-family: var(--fl-display); font-weight: 600; font-size: clamp(2.5rem, 4vw, 3.5rem); line-height: 1; color: var(--fl-red-ink); }
+.fl-perroom__sum span { color: var(--fl-muted); }
+@media (max-width: 760px) {
+  .fl-perroom__grid { grid-template-columns: 1fr; }
+  .fl-perroom__units { gap: 6px; }
+  .fl-perroom__now { padding: 22px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] .fl-perroom__units figure { opacity: 1; transform: none; transition: none; }
+}

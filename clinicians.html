@@ -79,8 +79,7 @@
       <div data-reveal="left">
         <span class="fl-badge">FDA Registered · Class I</span>
         <h1 class="fl-display-xl">The dermatoscope <span class="fl-hero-accent">is the camera.</span></h1>
-        <p class="fl-hero-kicker">flacara h1, clinical edition. Every exam ends with a record: captured,
-          located on the body, and next to the last visit, on one phone.</p>
+        <p class="fl-hero-kicker">flacara h1, clinical edition. Capture, locate and compare, on one phone.</p>
         <div class="fl-rail">
           <div><span class="k">Lighting</span><span class="v">Polarized / unpolarized</span></div>
           <div><span class="k">Detail</span><span class="v">~16 µm</span></div>
@@ -134,57 +133,12 @@
   </div>
 </section>
 
-<!-- ============ 01 the problem, and what changes ============ -->
-<section class="fl-section fl-problem" aria-labelledby="problem-h">
+<!-- ============ 01 exam to record: each step is the old way, struck out, then the fix ============ -->
+<section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--flip" aria-labelledby="workflow-h">
   <div class="fl-wrap">
     <div class="fl-section-head" data-reveal>
-      <span class="fl-label fl-kicker">The problem</span>
-      <h2 class="fl-display-m" id="problem-h">The exam is good. The record isn't.</h2>
-      <p class="fl-body fl-body--l">When a lesion isn't clearly benign or malignant, what survives the
-        visit is usually a sentence of description. Getting a photograph into the chart takes enough
-        steps that it often doesn't happen.</p>
-    </div>
-
-    <ol class="fl-problem__list">
-      <li data-reveal>
-        <div class="fl-problem__was"><span class="fl-label">Today</span>
-          <p>Clip the dermatoscope to a phone with an adapter plate, take the shot, then move the file
-            through two or three apps before it reaches the chart.</p></div>
-        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
-          <p>The device that shows you the lesion is the one that photographs it. The capture lands in
-            the app, filed under the patient.</p></div>
-      </li>
-      <li data-reveal style="--fl-reveal-delay:60ms">
-        <div class="fl-problem__was"><span class="fl-label">Today</span>
-          <p>Where the lesion is gets written down in words, and the next person has to parse the
-            sentence to find it.</p></div>
-        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
-          <p>Each lesion is pinned to a map of the patient's body, a patented technique, so finding it
-            again means looking, not reading.</p></div>
-      </li>
-      <li data-reveal style="--fl-reveal-delay:120ms">
-        <div class="fl-problem__was"><span class="fl-label">Today</span>
-          <p>Comparing a lesion across visits takes enough effort that it often gets skipped.</p></div>
-        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
-          <p>Last visit and today sit side by side on the phone, with the new frame registered to the
-            old one for rotation and offset.</p></div>
-      </li>
-      <li data-reveal style="--fl-reveal-delay:180ms">
-        <div class="fl-problem__was"><span class="fl-label">Today</span>
-          <p>One $1,695 dermatoscope, carried between exam rooms.</p></div>
-        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
-          <p>At $249, one in every room.</p></div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============ 02 the fix: the app, scroll-driven (shared with the patients page) ============ -->
-<section class="fl-section fl-swap-section fl-swap-section--red" aria-labelledby="fix-h">
-  <div class="fl-wrap">
-    <div class="fl-section-head" data-reveal>
-      <span class="fl-label fl-kicker">The fix</span>
-      <h2 class="fl-display-m" id="fix-h">One device, one app, one place.</h2>
+      <span class="fl-label fl-kicker">The workflow</span>
+      <h2 class="fl-display-m" id="workflow-h">Exam to record.</h2>
     </div>
 
     <div class="fl-swap" data-fl-swap>
@@ -194,18 +148,21 @@
           <div class="fl-swap__caption fl-swap__caption--left">
             <div class="fl-swap__cap is-active" data-swap-caption="0">
               <span class="fl-label fl-swap__num">01</span>
-              <h3 class="fl-title">Every patient, <mark>one list.</mark></h3>
-              <p class="fl-body" style="margin-top:12px">Every capture, <strong>filed under the person</strong> it belongs to.</p>
+              <p class="fl-swap__was"><span>Today</span> A scope clipped to a phone, then three apps.</p>
+              <h3 class="fl-title">One device. <mark>One tap.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">It seats over the phone's camera, and the shot <strong>lands in the app</strong>.</p>
             </div>
             <div class="fl-swap__cap" data-swap-caption="2">
               <span class="fl-label fl-swap__num">03</span>
-              <h3 class="fl-title">A second opinion, <mark>attached.</mark></h3>
-              <p class="fl-body" style="margin-top:12px">Clinician notes on the photo, with <strong>AI-drafted write-ups</strong>.</p>
+              <p class="fl-swap__was"><span>Today</span> &ldquo;Left shoulder, 2 cm below the scapula.&rdquo;</p>
+              <h3 class="fl-title">Found, <mark>not described.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Pinned to <strong>a map of the body</strong>. Found again in AR, free in beta.</p>
             </div>
           </div>
 
           <div class="fl-phone-float">
           <div class="fl-swap__stage" data-tilt data-reveal="scale">
+          <img class="fl-swap__back" src="images/h1-seated.webp" width="381" height="719" alt="flacara h1 seated over the camera of an iPhone">
           <div class="fl-phone">
             <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
             <span class="fl-phone__btn fl-phone__btn--vol-up" aria-hidden="true"></span>
@@ -215,19 +172,19 @@
               <div class="fl-phone__island" aria-hidden="true"></div>
               <div class="fl-phone__home" aria-hidden="true"></div>
 
-              <div class="fl-phone__view is-active" data-swap-screen="0">
+              <div class="fl-phone__view" data-swap-screen="1">
                 <img src="images/app-home.png" alt="The flacara app's patient list screen" width="620" height="1348">
               </div>
 
-              <div class="fl-phone__view" data-swap-screen="1">
+              <div class="fl-phone__view" data-swap-screen="2">
                 <img src="images/app-mesh.png" alt="The flacara app's tracking screen: a body scan with tracked points marked on the torso" width="620" height="1348">
               </div>
 
-              <div class="fl-phone__view" data-swap-screen="2">
+              <div class="fl-phone__view" data-swap-screen="3">
                 <img src="images/app-notes.png" alt="The flacara app's clinician notes screen, with a capture and a comment field">
               </div>
 
-              <div class="fl-phone__view fl-phone__view--landscape" data-swap-screen="3">
+              <div class="fl-phone__view fl-phone__view--landscape" data-swap-screen="4">
                 <img src="images/app-compare-rot.png" alt="The flacara app's lesion comparison screen, two captures of the same spot side by side">
               </div>
 
@@ -239,15 +196,23 @@
           <div class="fl-swap__caption fl-swap__caption--right">
             <div class="fl-swap__cap" data-swap-caption="1">
               <span class="fl-label fl-swap__num">02</span>
-              <h3 class="fl-title">Find it <mark>again.</mark></h3>
-              <p class="fl-body" style="margin-top:12px">Pinned to the body, <strong>found again in AR</strong>. Free beta for early customers.</p>
+              <p class="fl-swap__was"><span>Today</span> Files named by date, scattered across apps.</p>
+              <h3 class="fl-title">Every patient, <mark>one list.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Every capture, <strong>filed under the person</strong> it belongs to.</p>
+            </div>
+            <div class="fl-swap__cap" data-swap-caption="3">
+              <span class="fl-label fl-swap__num">04</span>
+              <p class="fl-swap__was"><span>Today</span> The photo in one system, the notes in another.</p>
+              <h3 class="fl-title">Notes on <mark>the photo.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Clinician comments and <strong>AI-drafted write-ups</strong>, attached.</p>
             </div>
           </div>
         </div>
 
         <div class="fl-swap__caption fl-swap__caption--below">
-          <div class="fl-swap__cap" data-swap-caption="3">
-            <span class="fl-label fl-swap__num">04</span>
+          <div class="fl-swap__cap" data-swap-caption="4">
+            <span class="fl-label fl-swap__num">05</span>
+            <p class="fl-swap__was"><span>Today</span> Comparing visits? Usually skipped.</p>
             <h3 class="fl-title">Today, next to <mark>before.</mark></h3>
             <p class="fl-body" style="margin-top:12px">Two visits of the same spot, <strong>side by side</strong>.</p>
           </div>
@@ -260,19 +225,47 @@
         <div data-swap-step="1"></div>
         <div data-swap-step="2"></div>
         <div data-swap-step="3"></div>
+        <div data-swap-step="4"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 03 proof: next to the instrument it replaces ============ -->
+<!-- ============ 02 one in every room: the price as a picture ============ -->
+<section class="fl-section fl-perroom" aria-labelledby="rooms-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head fl-section-head--center" data-reveal>
+      <span class="fl-label fl-kicker">Per room</span>
+      <h2 class="fl-display-m" id="rooms-h">Four rooms for less than one.</h2>
+    </div>
+
+    <div class="fl-perroom__grid" data-reveal>
+      <div class="fl-perroom__was">
+        <span class="fl-label">Today</span>
+        <strong>$1,695</strong>
+        <span>One dermatoscope, carried room to room.</span>
+      </div>
+      <div class="fl-perroom__now">
+        <div class="fl-perroom__units">
+          <figure><img src="images/h1-seated.webp" width="381" height="719" alt=""><figcaption>Room 1</figcaption></figure>
+          <figure><img src="images/h1-seated.webp" width="381" height="719" alt=""><figcaption>Room 2</figcaption></figure>
+          <figure><img src="images/h1-seated.webp" width="381" height="719" alt=""><figcaption>Room 3</figcaption></figure>
+          <figure><img src="images/h1-seated.webp" width="381" height="719" alt=""><figcaption>Room 4</figcaption></figure>
+        </div>
+        <div class="fl-perroom__sum"><strong>$249</strong><span>each · $996 for four rooms</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 proof ============ -->
 <section class="fl-section fl-proof-head" aria-labelledby="proof-h">
   <div class="fl-wrap">
     <div class="fl-section-head fl-section-head--center" data-reveal>
       <span class="fl-label fl-kicker">Proof</span>
-      <h2 class="fl-display-m" id="proof-h">Next to the instrument it replaces.</h2>
-      <p class="fl-body fl-body--l">The same printed target and the same mole, photographed in one
-        session with flacara and with a DermLite DL4. Drag the divider and judge for yourself.</p>
+      <h2 class="fl-display-m" id="proof-h">Side by side.</h2>
+      <p class="fl-body fl-body--l">Same target, same mole, one session: flacara against a DermLite DL4.
+        Drag to compare.</p>
     </div>
   </div>
 </section>
@@ -465,7 +458,7 @@
   <div class="fl-wrap">
     <div class="fl-section-head" data-reveal>
       <span class="fl-label fl-kicker">Technical details</span>
-      <h2 class="fl-display-m" id="tech-h">What's been measured, and how.</h2>
+      <h2 class="fl-display-m" id="tech-h">The numbers.</h2>
     </div>
 
     <dl class="fl-stat-row fl-tech__stats" data-reveal>
