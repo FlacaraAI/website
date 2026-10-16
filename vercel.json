@@ -4,7 +4,7 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/devices",
+      "source": "/doctors",
       "destination": "/clinicians"
     }
   ],
@@ -12,8 +12,18 @@
   "redirects": [
     {
       "source": "/clinicians",
-      "destination": "/devices",
+      "destination": "/doctors",
       "permanent": true
+    },
+    {
+      "source": "/devices",
+      "destination": "/doctors",
+      "permanent": false
+    },
+    {
+      "source": "/software",
+      "destination": "/doctors",
+      "permanent": false
     }
   ]
 }

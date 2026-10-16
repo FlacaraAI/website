@@ -63,10 +63,10 @@
     </a>
     <ul class="fl-nav__links">
       <li><a href="/" aria-current="page">Home</a></li>
-      <li><a href="/devices">Devices</a></li>
-      <li><a href="/software">Software</a></li>
+      <li><a href="/patients">For patients</a></li>
+      <li><a href="/doctors">For doctors</a></li>
     </ul>
-    <a class="fl-btn fl-btn--primary" href="/devices#pre-order">Pre-order</a>
+    <a class="fl-btn fl-btn--primary" href="#choose">Pre-order</a>
   </div>
 </nav>
 
@@ -93,7 +93,7 @@
   </div>
 
   <div class="fl-hero-aper__in">
-    <span class="fl-badge fl-rise" style="--d:120ms">FDA Registered</span>
+    <span class="fl-badge fl-rise" style="--d:120ms">FDA Registered · Class I</span>
     <div class="fl-lock fl-rise" style="--d:240ms">
       <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
       <h1 class="logo">flacara</h1>
@@ -110,7 +110,7 @@
       </div>
       <div>
         <dt class="fl-label">Status</dt>
-        <dd class="fl-stat-row__value fl-stat-row__value--text">FDA registered</dd>
+        <dd class="fl-stat-row__value fl-stat-row__value--text">FDA Class I</dd>
       </div>
     </dl>
   </div>
@@ -128,12 +128,12 @@
         camera and supplies the light, polarized or not, at a fixed distance.</p>
     </div>
 
-    <a class="fl-intro__stage" href="/devices" data-reveal="scale" style="--fl-reveal-delay:160ms">
+    <a class="fl-intro__stage" href="#choose" data-reveal="scale" style="--fl-reveal-delay:160ms">
       <span class="fl-intro__rings fl-intro__rings--front" aria-hidden="true"></span>
       <span class="fl-intro__rings fl-intro__rings--side" aria-hidden="true"></span>
       <img class="fl-intro__shot fl-intro__shot--front" src="flacara_full.png" alt="The flacara h1 housing, front view" width="1920" height="1080">
       <img class="fl-intro__shot fl-intro__shot--side" src="flacara_full_side.png" alt="The flacara h1 housing, three-quarter view" width="1920" height="1080">
-      <span class="fl-intro__cue">See the device</span>
+      <span class="fl-intro__cue">Choose your edition</span>
     </a>
 
     <dl class="fl-intro__specs" data-reveal style="--fl-reveal-delay:120ms">
@@ -143,16 +143,29 @@
       <div><dt>Works with</dt><dd>iPhone</dd></div>
     </dl>
 
-    <div class="fl-intro__buy" data-reveal style="--fl-reveal-delay:160ms">
-      <div class="fl-buy__price">
-        <span class="amt">From $199</span>
-        <span class="qual">USD · aluminium edition $249 · directional, may change before launch</span>
-      </div>
-      <div class="fl-intro__ctas">
-        <a class="fl-btn fl-btn--primary" href="/devices#pre-order">Pre-order</a>
-        <a class="fl-btn fl-btn--secondary" href="/devices">See the device</a>
-      </div>
+    <div class="fl-audience" id="choose">
+      <a class="fl-audience__card" href="/patients" data-reveal style="--fl-reveal-delay:100ms">
+        <span class="fl-label">For patients · home edition</span>
+        <h3>Watch a spot over time.</h3>
+        <p>The same spot, photographed the same way every time, so you can see whether it has
+          changed. And photos your dermatologist can actually use.</p>
+        <div class="fl-audience__foot">
+          <span class="fl-audience__price">$199</span>
+          <span class="fl-audience__go">For patients →</span>
+        </div>
+      </a>
+      <a class="fl-audience__card fl-audience__card--doctors" href="/doctors" data-reveal style="--fl-reveal-delay:180ms">
+        <span class="fl-label">For doctors · clinical edition</span>
+        <h3>The dermatoscope is the camera.</h3>
+        <p>Capture, locate and compare lesions on one phone, with both lighting modes. One in every
+          exam room.</p>
+        <div class="fl-audience__foot">
+          <span class="fl-audience__price">$249</span>
+          <span class="fl-audience__go">For doctors →</span>
+        </div>
+      </a>
     </div>
+    <p class="fl-caption" style="margin-top:18px;text-align:center">Prices in USD, directional, may change before launch.</p>
   </div>
 </section>
 
@@ -168,11 +181,11 @@
     <div class="fl-footer__right fl-small">
       <ul class="fl-footer__links">
         <li><a href="/">Home</a></li>
-        <li><a href="/devices">Devices</a></li>
-        <li><a href="/software">Software</a></li>
-        <li><a href="/devices#pre-order">Pre-order</a></li>
+        <li><a href="/patients">For patients</a></li>
+        <li><a href="/doctors">For doctors</a></li>
+        <li><a href="#choose">Pre-order</a></li>
       </ul>
-      <p>Flacara, a division of Lumo Imaging, is an FDA registered medical device.</p>
+      <p>flacara, a subsidiary of Lumo Imaging. flacara h1 is an FDA registered Class I medical device.</p>
     </div>
   </div>
 </footer>

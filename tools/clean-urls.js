@@ -1,12 +1,12 @@
-// live-server middleware: mirrors vercel.json locally, so /software,
-// /devices and /patients work on localhost the way they do on flacara.ai.
+// live-server middleware: mirrors vercel.json locally, so /doctors,
+// /patients and the old URLs work on localhost the way they do on flacara.ai.
 //   npx live-server --port=3002 --middleware="$PWD/tools/clean-urls.js" .
 const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const rewrites = { '/devices': '/clinicians.html' };
-const redirects = { '/clinicians': '/devices' };
+const rewrites = { '/doctors': '/clinicians.html' };
+const redirects = { '/clinicians': '/doctors', '/devices': '/doctors', '/software': '/doctors' };
 
 module.exports = function (req, res, next) {
   const [pathname, query = ''] = req.url.split('?');

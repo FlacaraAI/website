@@ -3,15 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flacara</title>
+<title>flacara h1 for patients — the home edition</title>
+<meta name="description" content="flacara h1, home edition: the same spot, photographed the same way every time, so you can see whether it has changed, and photos your dermatologist can use. FDA registered, Class I.">
 
 <!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:wght@600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="flacara.css">
+<!-- No page-local stylesheet. Every component here lives in flacara.css. -->
+<link rel="preload" as="image" href="images/phone-hero.webp" fetchpriority="high">
+<!-- only used by the deferred 3D upgrade (phone3d.js); costs nothing until imported -->
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
 </head>
-<body class="fl-lit">
+<body class="fl-lit fl-page--patients">
 
 <div class="fl-progress" aria-hidden="true"><div class="fl-progress__bar"></div></div>
 
@@ -23,7 +33,6 @@
       <stop offset="0.35" stop-color="#CECBDF"/>
       <stop offset="1" stop-color="#DB9D91"/>
     </linearGradient>
-    <!-- 0→20% of the same ramp: the disc's share when a wordmark follows it -->
     <linearGradient id="ramp-head" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#C9DAF8"/>
       <stop offset="1" stop-color="#CCD1EA"/>
@@ -40,7 +49,6 @@
       <feDropShadow dx="10.5" dy="10.5" stdDeviation="14.8" flood-color="#000" flood-opacity="0.30"/>
     </filter>
   </defs>
-
   <symbol id="fl-icon" viewBox="120 0 720 720">
     <path style="fill:var(--disc,url(#ramp-full))" d="m120.01899 360.0058c0 -198.82452 161.17914 -360.00366 360.00366 -360.00366c95.47894 0 187.04724 37.92885 254.56104 105.442635c67.513794 67.51379 105.44263 159.08212 105.44263 254.56104c0 198.82452 -161.17914 360.00366 -360.00366 360.00366c-198.82452 0 -360.00366 -161.17914 -360.00366 -360.00366z" fill-rule="evenodd"/>
     <g style="fill:var(--flame,#F4F4F4)" filter="url(#flame-lift)">
@@ -49,19 +57,18 @@
       <path d="m673.3801 395.08917c-2.7479248 0.5964966 -5.974243 13.492371 -10.393494 20.421417c-4.4193115 6.929016 -10.029724 14.3437195 -16.122192 21.15271c-6.092407 6.8089905 -13.503479 13.669678 -20.432495 19.701172c-6.929016 6.031494 -14.631836 11.409241 -21.141602 16.487823c-6.5098267 5.078583 -10.98822 7.712036 -17.917236 13.983612c-6.929016 6.271576 -16.727905 14.149841 -23.656921 23.645844c-6.929016 9.496033 -13.677063 22.698486 -17.917236 33.3302c-4.2401123 10.631775 -6.2697144 18.932922 -7.5236206 30.460388c-1.2539673 11.527466 -1.911438 33.507507 0 38.704285c1.911377 5.1967773 4.83844 -3.045288 11.468323 -7.5236816c6.629822 -4.4783936 20.365967 -14.031616 28.31073 -19.346619c7.944763 -5.3149414 12.249512 -7.704651 19.357666 -12.543152c7.1081543 -4.838501 16.543213 -10.932739 23.29126 -16.487793c6.748047 -5.5550537 12.179382 -11.525574 17.197021 -16.842407c5.017578 -5.3168335 8.188477 -8.367615 12.908813 -15.058411c4.720276 -6.690796 10.932739 -15.828552 15.412964 -25.086334c4.4802246 -9.257782 8.960449 -19.889557 11.468384 -30.460358c2.5078735 -10.570831 3.2816772 -23.34851 3.5789795 -32.96457c0.29736328 -9.616058 -0.48016357 -17.802704 -1.795044 -24.73172c-1.3148804 -6.9290466 -3.3463135 -17.438904 -6.0942993 -16.842407z" fill-rule="evenodd"/>
     </g>
   </symbol>
-
 </svg>
 
+<!-- partials/nav.html -->
 <nav class="fl-nav" aria-label="Primary">
   <div class="fl-wrap">
-    <a class="fl-nav__mark" href="/" aria-label="Flacara home">
+    <a class="fl-nav__mark" href="/" aria-label="flacara home">
       <svg class="ico solo" aria-hidden="true"><use href="#fl-icon"/></svg>
     </a>
     <ul class="fl-nav__links">
       <li><a href="/">Home</a></li>
-      <li><a href="/devices">Clinicians</a></li>
-      <li><a href="/software">Software</a></li>
-      <li><a href="/patients" aria-current="page">Patients</a></li>
+      <li><a href="/patients" aria-current="page">For patients</a></li>
+      <li><a href="/doctors">For doctors</a></li>
     </ul>
     <a class="fl-btn fl-btn--primary" href="#pre-order">Pre-order</a>
   </div>
@@ -69,135 +76,295 @@
 
 <main>
 
-<!-- headline drafts (≤16 characters):
-     1. A clear picture.   (16)
-     2. See it clearly.    (15)
-     3. The same spot.     (14)
-     using 1 -->
-<section class="fl-section--tall">
+<!-- ============ hero: the same spot, over time ============ -->
+<section class="fl-hero-mat fl-hero-mat--blue">
   <div class="fl-wrap">
-    <div class="fl-pill" aria-hidden="true"></div>
-    <div class="fl-prose" data-reveal>
-      <h1 class="fl-display-xl">A clear picture.</h1>
-      <p class="fl-body fl-body--l">Flacara gives you a clear picture of a spot on your skin. Take another later and see whether it has changed.</p>
+    <div class="fl-hero-mat__grid">
+      <div data-parallax="0.42">
+        <div data-reveal="left">
+          <span class="fl-badge">FDA Registered · Class I</span>
+          <h1 class="fl-display-xl">Watch a spot <span class="fl-hero-accent fl-hero-accent--underline">over time.</span></h1>
+          <p class="fl-hero-kicker">flacara h1, home edition. The same light, the same distance and the
+            same framing every time, so this month's photo can sit next to last month's and you can
+            see whether anything has changed.</p>
+        </div>
+      </div>
+      <div data-parallax="0.22">
+        <div data-reveal="scale" style="--fl-reveal-delay:140ms">
+          <div class="fl-phone3d-stage" data-phone-float data-screen="images/app-mesh.png">
+            <div class="fl-phone-hero">
+              <img src="images/phone-hero.webp" width="960" height="1200" fetchpriority="high" alt="The flacara app's body map, shown on an iPhone">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fl-scroll-hint" aria-hidden="true">
+    <span class="fl-label">Scroll</span>
+    <svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<!-- ============ 01 longitudinal: the app, scroll-driven (same component as the doctors page) ============ -->
+<section class="fl-section fl-swap-section" aria-labelledby="over-time-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head" data-reveal>
+      <span class="fl-label fl-kicker">Over time</span>
+      <h2 class="fl-display-m" id="over-time-h">A record, not a single photo.</h2>
+    </div>
+
+    <div class="fl-swap" data-fl-swap>
+      <div class="fl-swap__pinned">
+
+        <div class="fl-swap__row">
+          <div class="fl-swap__caption fl-swap__caption--left">
+            <div class="fl-swap__cap is-active" data-swap-caption="0">
+              <span class="fl-label fl-swap__num">01</span>
+              <h3 class="fl-title">Find the same spot <mark>again.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Each spot is pinned to <strong>a map of your body</strong>, so next time you start from where it is.</p>
+            </div>
+          </div>
+
+          <div class="fl-phone-float">
+          <div class="fl-swap__stage" data-tilt data-reveal="scale">
+          <div class="fl-phone">
+            <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--vol-up" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--vol-down" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--power" aria-hidden="true"></span>
+            <div class="fl-phone__screen">
+              <div class="fl-phone__island" aria-hidden="true"></div>
+              <div class="fl-phone__home" aria-hidden="true"></div>
+
+              <div class="fl-phone__view is-active" data-swap-screen="0">
+                <img src="images/app-mesh.png" alt="The flacara app's body map, with tracked spots marked on the torso" width="620" height="1348">
+              </div>
+
+              <div class="fl-phone__view fl-phone__view--landscape" data-swap-screen="1">
+                <img src="images/app-compare-rot.png" alt="The flacara app's comparison screen, two photos of the same spot side by side">
+              </div>
+
+            </div>
+          </div>
+          </div>
+          </div>
+
+          <div class="fl-swap__caption fl-swap__caption--right" aria-hidden="true"></div>
+        </div>
+
+        <div class="fl-swap__caption fl-swap__caption--below">
+          <div class="fl-swap__cap" data-swap-caption="1">
+            <span class="fl-label fl-swap__num">02</span>
+            <h3 class="fl-title">Today, next to <mark>last time.</mark></h3>
+            <p class="fl-body" style="margin-top:12px">Two photos of the same spot, <strong>framed the same way</strong>, side by side.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fl-swap__triggers" aria-hidden="true">
+        <div data-swap-step="0"></div>
+        <div data-swap-step="1"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="fl-section">
+<!-- ============ 02 photos a dermatologist can use ============ -->
+<section class="fl-section" aria-labelledby="quality-h">
   <div class="fl-wrap">
-    <div class="fl-pill" data-reveal aria-hidden="true"></div>
-    <figure class="fl-prose" data-reveal="scale" style="--fl-reveal-delay:80ms">
+    <div class="fl-section-head fl-section-head--center" data-reveal>
+      <span class="fl-label fl-kicker">Photo quality</span>
+      <h2 class="fl-display-m" id="quality-h">Photos your dermatologist can use.</h2>
+      <p class="fl-body fl-body--l">The light and the distance are set by the device, not by how steady
+        your hand is. Here is the same mole photographed with flacara and with a dermatologist's own
+        instrument, a DermLite DL4. Drag the divider.</p>
+    </div>
+
+    <figure class="fl-solo" data-reveal="scale" style="--fl-reveal-delay:100ms">
       <div class="fl-plate">
-        <img src="images/sample-01.JPG" alt="Close photograph of skin taken with the Flacara consumer device" width="1200" height="1200">
+        <div class="fl-slider" data-fl-slider style="--pos:50%">
+          <img class="fl-slider__img fl-slider__img--base" src="images/lesion-01-dl4-aligned.jpg" alt="A mole photographed with a DermLite DL4" width="1068" height="1068">
+          <img class="fl-slider__img fl-slider__img--reveal" src="images/lesion-01-flacara.JPG" alt="The same mole photographed with flacara" width="1068" height="1068">
+          <div class="fl-slider__divider" aria-hidden="true"><span class="fl-slider__grip">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M5 3L2 7L5 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 3L12 7L9 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span></div>
+          <span class="fl-slider__tag fl-slider__tag--left" aria-hidden="true">flacara</span>
+          <span class="fl-slider__tag fl-slider__tag--right" aria-hidden="true">DermLite DL4</span>
+          <input class="fl-slider__input" type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare the flacara photo against the DermLite DL4 photo of the same mole">
+        </div>
       </div>
-      <figcaption class="fl-caption">Skin, Flacara</figcaption>
-      <p class="fl-small">A mole on a forearm, photographed with the consumer device.</p>
     </figure>
+    <p class="fl-small fl-note fl-solo__fine">One photograph pair from a single session, shown as captured.
+      DermLite is a trademark of its owner and there is no affiliation.</p>
   </div>
 </section>
 
-<section class="fl-section">
+<!-- ============ 03 what it doesn't do ============ -->
+<section class="fl-section" aria-labelledby="calm-h">
   <div class="fl-wrap">
-    <div class="fl-panel" data-reveal>
-      <div class="fl-pill" aria-hidden="true"></div>
-      <div class="fl-prose">
-        <!-- ≤16ch: "Not a diagnosis." (16) -->
-        <h2 class="fl-display-m">Not a diagnosis.</h2>
-        <p class="fl-body">It does not score a spot. It does not tell you whether a spot is a problem. It gives you a clear picture you can show a dermatologist.</p>
-      </div>
+    <div class="fl-calm" data-reveal="scale">
+      <h2 class="fl-display-m" id="calm-h">A clear picture, not a verdict.</h2>
+      <p class="fl-body fl-body--l">flacara doesn't score a spot or tell you whether it's a problem. It
+        gives you a clear, comparable record and something worth showing a dermatologist. If anything
+        on your skin worries you, talk to one.</p>
     </div>
   </div>
 </section>
 
-<section class="fl-section">
+<!-- ============ 04 pre-order ============ -->
+<section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
   <div class="fl-wrap">
     <div class="fl-pill" data-reveal aria-hidden="true"></div>
-    <div class="fl-prose">
-      <h2 class="fl-display-m" data-reveal>The device</h2>
-      <div class="fl-card" data-reveal="scale" style="margin-top:32px;--fl-reveal-delay:80ms">
+    <h2 class="fl-display-m" id="pre-order-h" data-reveal>Reserve one.</h2>
+
+    <div class="fl-buy" style="margin-top:48px" data-reveal="scale">
+      <div class="fl-buy__banner" data-tilt>
+        <img src="flacara_full.png" alt="The flacara housing seated over a phone camera array" width="960" height="720">
+        <img src="flacara_full_side.png" alt="The flacara housing from the side" width="960" height="720">
+      </div>
+
+      <div class="fl-buy__cols">
+      <div class="fl-buy__body">
+        <div>
+          <span class="fl-device__for">flacara h1 · home edition</span>
+          <h3 class="fl-title" style="margin-top:12px">For your own skin</h3>
+        </div>
+
+        <div class="fl-buy__price">
+          <span class="amt">$<span data-count="199">0</span></span>
+          <span class="qual">USD · directional, may change before launch</span>
+        </div>
+
+        <p class="fl-body" style="font-size:.9375rem">Polarized light, a fixed working distance, and
+          the app: your spots pinned to a map of your body, and each new photo next to the last one.
+          It seats over your phone's camera with no added lens.</p>
+
+        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
+      </div>
+
+      <div class="fl-buy__aside">
         <div class="fl-table-wrap">
           <table class="fl-table">
             <tbody>
-              <tr><th scope="row" class="fl-small">Light</th><td class="fl-data">Polarized</td></tr>
-              <tr><th scope="row" class="fl-small">Charging</th><td class="fl-data">USB-C</td></tr>
-              <tr><th scope="row" class="fl-small">Works with</th><td class="fl-data">iPhone</td></tr>
-              <tr><th scope="row" class="fl-small">Price (USD)</th><td class="fl-data num"><span data-count="199">0</span></td></tr>
+              <tr><th scope="row">Lighting</th><td>Polarized</td></tr>
+              <tr><th scope="row">Detail</th><td class="num">~16 µm</td></tr>
+              <tr><th scope="row">Optics</th><td>Phone sensor and software</td></tr>
+              <tr><th scope="row">Charging</th><td>USB-C</td></tr>
+              <tr><th scope="row">Phone</th><td>iPhone</td></tr>
+              <tr><th scope="row">Regulatory</th><td>FDA registered · Class I</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="fl-caption">Directional; may change before launch.</p>
+
+        <p class="fl-note">flacara h1 is an FDA registered Class I medical device. It does not diagnose,
+          screen for, or assess any condition — talk to a professional about anything on your skin
+          that concerns you.</p>
+
+        <details class="fl-faq-outer" style="margin-top:8px">
+          <summary>Frequently asked questions</summary>
+          <div class="fl-faq">
+            <details>
+              <summary>When does it ship?</summary>
+              <p>Units are between prototype and pilot. Reserving puts you in the first batch and
+                tells us how many to build; we will email a date before anything is charged.</p>
+            </details>
+            <details>
+              <summary>Am I being charged now?</summary>
+              <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
+            </details>
+            <details>
+              <summary>How is the home edition different from the clinical one?</summary>
+              <p>The clinical edition adds a second lighting mode and the features a practice uses,
+                like clinician notes and patient lists. The home edition has what you need to keep a
+                clear record of your own skin.</p>
+            </details>
+            <details>
+              <summary>Does it work with my phone?</summary>
+              <p>iPhone at launch. The housing seats over the camera array rather than clipping to a
+                single lens, so support is per phone body and we will publish the list.</p>
+            </details>
+            <details>
+              <summary>Where do my photographs go?</summary>
+              <p>They stay on your phone unless you export them. We will publish the full data terms
+                before the first unit ships.</p>
+            </details>
+          </div>
+        </details>
+      </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="fl-section--tall" id="pre-order">
-  <div class="fl-wrap">
-    <div class="fl-prose" data-reveal>
-      <div class="fl-pill" aria-hidden="true"></div>
-      <h2 class="fl-display-m">Pre-order</h2>
-      <form class="fl-form" id="pre-order-form" action="#" method="post">
-        <div class="fl-form__field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required aria-describedby="email-error">
-          <p class="fl-form__error" id="email-error"></p>
-        </div>
-        <div><button class="fl-btn fl-btn--primary" type="submit">Pre-order</button></div>
-        <p class="fl-small" id="pre-order-status">No payment is taken now. We will email you when units ship.</p>
-      </form>
-    </div>
-  </div>
-</section>
-
-<script>
-  document.getElementById('pre-order-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.email.value;
-    const status = document.getElementById('pre-order-status');
-    const button = form.querySelector('button[type="submit"]');
-    button.disabled = true;
-    try {
-      const r = await fetch('/api/reserve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'patients.html' }),
-      });
-      if (!r.ok) throw new Error('request failed');
-      status.textContent = 'Thanks — we will email you when units ship.';
-      form.reset();
-    } catch {
-      status.textContent = 'Something went wrong. Please try again.';
-    } finally {
-      button.disabled = false;
-    }
-  });
-</script>
-
 </main>
 
-<!-- partials/footer.html — identical on every page -->
 <footer class="fl-footer">
   <div class="fl-wrap">
-    <a class="fl-lock" href="/" aria-label="Flacara home">
+    <a class="fl-lock" href="/" aria-label="flacara home">
       <svg class="ico" aria-hidden="true"><use href="#fl-icon"/></svg>
       <span class="logo">flacara</span>
     </a>
     <div class="fl-footer__right fl-small">
       <ul class="fl-footer__links">
         <li><a href="/">Home</a></li>
-        <li><a href="/devices">Clinicians</a></li>
-        <li><a href="/software">Software</a></li>
-        <li><a href="/patients">Patients</a></li>
+        <li><a href="/patients">For patients</a></li>
+        <li><a href="/doctors">For doctors</a></li>
+        <li><a href="#pre-order">Pre-order</a></li>
       </ul>
-      <p>Flacara, a division of Lumo Imaging, is an FDA registered medical device.</p>
+      <p>flacara, a subsidiary of Lumo Imaging. flacara h1 is an FDA registered Class I medical device.</p>
+      <p class="fl-caption">iPhone model: <a href="https://sketchfab.com/3d-models/apple-iphone-15-pro-max-black-df17520841214c1792fb8a44c6783ee7">“Apple iPhone 15 Pro Max Black”</a>
+        by polyman, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. iPhone is a trademark of Apple Inc.</p>
     </div>
   </div>
 </footer>
 
+<!-- the email step: asked for only once someone has said yes -->
+<dialog class="fl-modal" id="reserve">
+  <div class="fl-modal__in">
+    <h3>Pre-order a flacara h1</h3>
+    <p class="fl-small" style="color:var(--fl-muted)">One email address. No card, no deposit, and we
+      will write before anything is charged.</p>
+    <form class="fl-form" method="dialog">
+      <div class="fl-form__field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email">
+      </div>
+      <p class="fl-form__error" aria-live="polite"></p>
+      <div class="fl-modal__row">
+        <button class="fl-btn fl-btn--primary" type="submit" value="confirm">Pre-order</button>
+        <button class="fl-btn fl-btn--tertiary" type="submit" value="cancel" formnovalidate>Not yet</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  /* open the native dialog. Closing, focus trapping and Esc are the platform's job, not ours. */
+  document.getElementById('reserve-open')
+    .addEventListener('click', () => document.getElementById('reserve').showModal());
+
+  /* on confirm, send the reservation; the dialog still closes immediately via method="dialog" */
+  document.querySelector('#reserve form').addEventListener('submit', (e) => {
+    if (e.submitter?.value !== 'confirm') return;
+    const form = e.target;
+    const email = form.email.value;
+    if (!email) return;
+    fetch('/api/reserve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'patients' }),
+    }).catch(() => {});
+  });
+</script>
+
+<script src="compare.js" defer></script>
 <script src="motion.js" defer></script>
+<script src="phone-frames.js" defer></script>
 
 </body>
 </html>
-<!-- future section: How you use it (three steps). -->

@@ -1915,3 +1915,126 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-swap-section .fl-swap__cap .fl-title::after { margin: 10px auto 0; transform-origin: center; }
   .fl-swap-section .fl-swap__cap .fl-body { font-size: 1rem; max-width: 30ch; margin: 10px auto 0 !important; }
 }
+
+/* ======================================================================
+   Audience pages — patients (blue) and doctors (red). The same app
+   animation and comparison components serve both; only the framing and
+   the accent colour change.
+   ====================================================================== */
+
+/* section heading block: kicker, display heading, optional lede */
+.fl-section-head { max-width: 62ch; }
+.fl-section-head .fl-kicker { display: block; color: var(--fl-red-ink); }
+.fl-section-head .fl-display-m { margin-top: 10px; }
+.fl-section-head .fl-body--l { margin-top: 18px; color: var(--fl-muted); max-width: 56ch; }
+.fl-section-head--center { margin-inline: auto; text-align: center; }
+.fl-section-head--center .fl-display-m, .fl-section-head--center .fl-body--l { margin-inline: auto; }
+.fl-page--patients .fl-section-head .fl-kicker { color: var(--fl-blue-ink); }
+
+/* ---------- doctors: the problem, as before/after pairs ---------- */
+.fl-problem__list { list-style: none; margin: 48px 0 0; padding: 0; display: grid; gap: 14px; }
+.fl-problem__list li {
+  display: grid; grid-template-columns: 1fr 1fr; border-radius: 8px; overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--fl-rule);
+}
+.fl-problem__was, .fl-problem__now { padding: 22px 26px; }
+.fl-problem__was { background: rgba(255,255,255,.55); }
+.fl-problem__was p { color: var(--fl-muted); }
+.fl-problem__now { background: #fff; box-shadow: inset 3px 0 0 var(--fl-red-ink); }
+.fl-problem__now p { color: var(--fl-ink); font-weight: 500; }
+.fl-problem__list .fl-label { display: block; margin-bottom: 8px; }
+.fl-problem__now .fl-label { color: var(--fl-red-ink); }
+.fl-problem__list p { margin: 0; font-size: 1.0625rem; line-height: 1.5; }
+@media (max-width: 760px) {
+  .fl-problem__list li { grid-template-columns: 1fr; }
+  .fl-problem__now { box-shadow: inset 0 3px 0 var(--fl-red-ink); }
+}
+
+/* ---------- the app section's heading sits above the pinned phone ---------- */
+.fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 8px; }
+
+/* ---------- doctors: the app section's accents in red instead of blue ---------- */
+.fl-swap-section--red .fl-kicker { color: var(--fl-red-ink); }
+.fl-swap-section--red .fl-swap__num {
+  background: var(--fl-red-quiet); color: var(--fl-red-ink);
+  box-shadow: inset 0 0 0 1px rgba(168,95,74,.25);
+}
+.fl-swap-section--red .fl-swap__cap mark { background-image: linear-gradient(135deg, var(--fl-red-ink) 0%, #c47a64 100%); }
+.fl-swap-section--red .fl-swap__cap .fl-body strong { color: var(--fl-red-ink); }
+.fl-swap-section--red .fl-swap__stage::before {
+  background: radial-gradient(closest-side, rgba(219,157,145,.55) 0%, rgba(245,231,228,.7) 50%, transparent 100%);
+}
+.fl-swap-section--red .fl-swap__stage::after { background: radial-gradient(closest-side, rgba(168,95,74,.26), transparent 72%); }
+
+/* ---------- doctors: proof heading, then the gallery right under it ---------- */
+.fl-proof-head { padding-bottom: 0; }
+
+/* ---------- doctors: technical details ---------- */
+.fl-tech__stats { margin-top: 40px; }
+.fl-tech__grid {
+  margin: 40px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0;
+  border-top: 1px solid var(--fl-rule);
+}
+.fl-tech__grid > div { padding: 22px 24px 26px 0; border-bottom: 1px solid var(--fl-rule); }
+.fl-tech__grid dt {
+  font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fl-red-ink);
+}
+.fl-tech__grid dd { margin: 10px 0 0; font-size: 1rem; line-height: 1.55; color: var(--fl-ink); max-width: 36ch; }
+.fl-tech__limits {
+  margin-top: 40px; padding: 26px 28px; border-radius: 8px; max-width: 760px;
+  background: #fff; box-shadow: inset 0 0 0 1px var(--fl-rule), inset 3px 0 0 var(--fl-red-ink);
+}
+.fl-tech__limits .fl-body { margin-top: 10px; color: var(--fl-ink); }
+.fl-tech__fine { margin-top: 28px; max-width: 72ch; }
+@media (max-width: 900px) { .fl-tech__grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .fl-tech__grid { grid-template-columns: 1fr; } }
+
+/* ---------- patients: one comparison slider on a white mount ---------- */
+.fl-solo { margin: 44px auto 0; max-width: 560px; }
+.fl-solo .fl-plate {
+  padding: 14px; background: #fff; border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(79,114,174,.35);
+}
+.fl-solo .fl-slider { max-width: none; aspect-ratio: 1 / 1; }
+.fl-solo .fl-slider__divider { width: 2px; background: #fff; }
+.fl-solo .fl-slider__grip { width: 40px; height: 40px; background: var(--fl-blue-ink); color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.9); }
+.fl-solo .fl-slider__tag { background: rgba(255,255,255,.92); color: var(--fl-ink); border-radius: 4px; }
+.fl-solo .fl-slider__tag--left { background: var(--fl-blue-ink); color: #fff; }
+.fl-solo__fine { margin: 20px auto 0; max-width: 60ch; text-align: center; }
+
+/* ---------- patients: the reassurance panel ---------- */
+.fl-calm {
+  max-width: 760px; margin-inline: auto; padding: 36px 40px; border-radius: 16px; text-align: center;
+  background: linear-gradient(160deg, #fff 0%, var(--fl-blue-quiet) 100%);
+  box-shadow: inset 0 0 0 1px rgba(79,114,174,.2);
+}
+.fl-calm .fl-body--l { margin: 14px auto 0; max-width: 52ch; color: var(--fl-ink); }
+
+/* ---------- home: the fork into the two audience pages ---------- */
+.fl-audience { margin-top: 52px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.fl-audience__card {
+  position: relative; display: flex; flex-direction: column; gap: 12px;
+  padding: 30px 30px 28px; border-radius: 16px; text-decoration: none; color: var(--fl-ink);
+  background: #fff; box-shadow: inset 0 0 0 1px var(--fl-rule), var(--lift-card);
+  transition: transform .25s var(--fl-ease-out), box-shadow .25s var(--fl-ease-out);
+}
+.fl-audience__card::before {
+  content: ""; position: absolute; top: 0; left: 24px; right: 24px; height: 3px; border-radius: 0 0 3px 3px;
+  background: var(--fl-blue-ink);
+}
+.fl-audience__card--doctors::before { background: var(--fl-red-ink); }
+.fl-audience__card:hover { transform: translateY(-3px); text-decoration: none; }
+.fl-audience__card .fl-label { color: var(--fl-blue-ink); }
+.fl-audience__card--doctors .fl-label { color: var(--fl-red-ink); }
+.fl-audience__card h3 { font-family: var(--fl-display); font-weight: 600; font-size: clamp(1.5rem, 2.2vw, 1.875rem); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+.fl-audience__card p { margin: 0; color: var(--fl-muted); line-height: 1.5; }
+.fl-audience__foot { margin-top: auto; padding-top: 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.fl-audience__price { font-family: var(--fl-mono); font-size: .875rem; color: var(--fl-ink); }
+.fl-audience__go { font-weight: 600; color: var(--fl-blue-ink); }
+.fl-audience__card--doctors .fl-audience__go { color: var(--fl-red-ink); }
+@media (max-width: 760px) { .fl-audience { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .fl-audience__card { transition: none; } }
+/* the glow behind the pinned phone is wider than a phone screen; clip it
+   sideways (clip, not hidden, so the sticky phone inside still pins) */
+.fl-swap-section { overflow-x: clip; }

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>flacara h1 — the device</title>
-<meta name="description" content="The flacara h1: two lighting modes, a fixed working distance, and the same framing every time. FDA registered.">
+<title>flacara h1 for doctors — the clinical edition</title>
+<meta name="description" content="flacara h1, clinical edition: the dermatoscope is the camera. Capture, compare and locate lesions on one phone, with both lighting modes. FDA registered, Class I.">
 
 <!-- Prototype only. Production must self-host these (DESIGN_SYSTEM.md §3.7). -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,8 +62,8 @@
     </a>
     <ul class="fl-nav__links">
       <li><a href="/">Home</a></li>
-      <li><a href="/devices" aria-current="page">Devices</a></li>
-      <li><a href="/software">Software</a></li>
+      <li><a href="/patients">For patients</a></li>
+      <li><a href="/doctors" aria-current="page">For doctors</a></li>
     </ul>
     <a class="fl-btn fl-btn--primary" href="#pre-order">Pre-order</a>
   </div>
@@ -77,8 +77,10 @@
     <div class="fl-hero-mat__grid">
       <div data-parallax="0.42">
       <div data-reveal="left">
-        <span class="fl-badge">FDA Registered</span>
-        <h1 class="fl-display-xl">Introducing <span class="fl-hero-accent">flacara h1</span></h1>
+        <span class="fl-badge">FDA Registered · Class I</span>
+        <h1 class="fl-display-xl">The dermatoscope <span class="fl-hero-accent">is the camera.</span></h1>
+        <p class="fl-hero-kicker">flacara h1, clinical edition. Every exam ends with a record: captured,
+          located on the body, and next to the last visit, on one phone.</p>
         <div class="fl-rail">
           <div><span class="k">Lighting</span><span class="v">Polarized / unpolarized</span></div>
           <div><span class="k">Detail</span><span class="v">~16 µm</span></div>
@@ -132,7 +134,150 @@
   </div>
 </section>
 
-<!-- ============ 01 proof: resolution, a real lesion, alignment — one pinned frame, scroll to swap ============ -->
+<!-- ============ 01 the problem, and what changes ============ -->
+<section class="fl-section fl-problem" aria-labelledby="problem-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head" data-reveal>
+      <span class="fl-label fl-kicker">The problem</span>
+      <h2 class="fl-display-m" id="problem-h">The exam is good. The record isn't.</h2>
+      <p class="fl-body fl-body--l">When a lesion isn't clearly benign or malignant, what survives the
+        visit is usually a sentence of description. Getting a photograph into the chart takes enough
+        steps that it often doesn't happen.</p>
+    </div>
+
+    <ol class="fl-problem__list">
+      <li data-reveal>
+        <div class="fl-problem__was"><span class="fl-label">Today</span>
+          <p>Clip the dermatoscope to a phone with an adapter plate, take the shot, then move the file
+            through two or three apps before it reaches the chart.</p></div>
+        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
+          <p>The device that shows you the lesion is the one that photographs it. The capture lands in
+            the app, filed under the patient.</p></div>
+      </li>
+      <li data-reveal style="--fl-reveal-delay:60ms">
+        <div class="fl-problem__was"><span class="fl-label">Today</span>
+          <p>Where the lesion is gets written down in words, and the next person has to parse the
+            sentence to find it.</p></div>
+        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
+          <p>Each lesion is pinned to a map of the patient's body, a patented technique, so finding it
+            again means looking, not reading.</p></div>
+      </li>
+      <li data-reveal style="--fl-reveal-delay:120ms">
+        <div class="fl-problem__was"><span class="fl-label">Today</span>
+          <p>Comparing a lesion across visits takes enough effort that it often gets skipped.</p></div>
+        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
+          <p>Last visit and today sit side by side on the phone, with the new frame registered to the
+            old one for rotation and offset.</p></div>
+      </li>
+      <li data-reveal style="--fl-reveal-delay:180ms">
+        <div class="fl-problem__was"><span class="fl-label">Today</span>
+          <p>One $1,695 dermatoscope, carried between exam rooms.</p></div>
+        <div class="fl-problem__now"><span class="fl-label">With flacara</span>
+          <p>At $249, one in every room.</p></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 02 the fix: the app, scroll-driven (shared with the patients page) ============ -->
+<section class="fl-section fl-swap-section fl-swap-section--red" aria-labelledby="fix-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head" data-reveal>
+      <span class="fl-label fl-kicker">The fix</span>
+      <h2 class="fl-display-m" id="fix-h">One device, one app, one place.</h2>
+    </div>
+
+    <div class="fl-swap" data-fl-swap>
+      <div class="fl-swap__pinned">
+
+        <div class="fl-swap__row">
+          <div class="fl-swap__caption fl-swap__caption--left">
+            <div class="fl-swap__cap is-active" data-swap-caption="0">
+              <span class="fl-label fl-swap__num">01</span>
+              <h3 class="fl-title">Every patient, <mark>one list.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Every capture, <strong>filed under the person</strong> it belongs to.</p>
+            </div>
+            <div class="fl-swap__cap" data-swap-caption="2">
+              <span class="fl-label fl-swap__num">03</span>
+              <h3 class="fl-title">A second opinion, <mark>attached.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Clinician notes on the photo, with <strong>AI-drafted write-ups</strong>.</p>
+            </div>
+          </div>
+
+          <div class="fl-phone-float">
+          <div class="fl-swap__stage" data-tilt data-reveal="scale">
+          <div class="fl-phone">
+            <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--vol-up" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--vol-down" aria-hidden="true"></span>
+            <span class="fl-phone__btn fl-phone__btn--power" aria-hidden="true"></span>
+            <div class="fl-phone__screen">
+              <div class="fl-phone__island" aria-hidden="true"></div>
+              <div class="fl-phone__home" aria-hidden="true"></div>
+
+              <div class="fl-phone__view is-active" data-swap-screen="0">
+                <img src="images/app-home.png" alt="The flacara app's patient list screen" width="620" height="1348">
+              </div>
+
+              <div class="fl-phone__view" data-swap-screen="1">
+                <img src="images/app-mesh.png" alt="The flacara app's tracking screen: a body scan with tracked points marked on the torso" width="620" height="1348">
+              </div>
+
+              <div class="fl-phone__view" data-swap-screen="2">
+                <img src="images/app-notes.png" alt="The flacara app's clinician notes screen, with a capture and a comment field">
+              </div>
+
+              <div class="fl-phone__view fl-phone__view--landscape" data-swap-screen="3">
+                <img src="images/app-compare-rot.png" alt="The flacara app's lesion comparison screen, two captures of the same spot side by side">
+              </div>
+
+            </div>
+          </div>
+          </div>
+          </div>
+
+          <div class="fl-swap__caption fl-swap__caption--right">
+            <div class="fl-swap__cap" data-swap-caption="1">
+              <span class="fl-label fl-swap__num">02</span>
+              <h3 class="fl-title">Find it <mark>again.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">Pinned to the body, <strong>found again in AR</strong>. Free beta for early customers.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fl-swap__caption fl-swap__caption--below">
+          <div class="fl-swap__cap" data-swap-caption="3">
+            <span class="fl-label fl-swap__num">04</span>
+            <h3 class="fl-title">Today, next to <mark>before.</mark></h3>
+            <p class="fl-body" style="margin-top:12px">Two visits of the same spot, <strong>side by side</strong>.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fl-swap__triggers" aria-hidden="true">
+        <div data-swap-step="0"></div>
+        <div data-swap-step="1"></div>
+        <div data-swap-step="2"></div>
+        <div data-swap-step="3"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 proof: next to the instrument it replaces ============ -->
+<section class="fl-section fl-proof-head" aria-labelledby="proof-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head fl-section-head--center" data-reveal>
+      <span class="fl-label fl-kicker">Proof</span>
+      <h2 class="fl-display-m" id="proof-h">Next to the instrument it replaces.</h2>
+      <p class="fl-body fl-body--l">The same printed target and the same mole, photographed in one
+        session with flacara and with a DermLite DL4. Drag the divider and judge for yourself.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03b proof gallery: resolution, a real lesion, alignment — one pinned frame, scroll to swap ============ -->
 <section class="fl-section fl-section--scrub" aria-label="flacara compared against a DermLite DL4, and frame alignment">
   <div class="fl-wrap">
     <div class="fl-scrub" data-fl-scrub style="--n:3">
@@ -224,7 +369,18 @@
       </div>
     </div>
 
-    <dl class="fl-stat-row" style="margin-top:40px;max-width:760px;margin-left:auto;margin-right:auto">
+  </div>
+</section>
+
+<!-- ============ 04 technical details ============ -->
+<section class="fl-section fl-tech" aria-labelledby="tech-h">
+  <div class="fl-wrap">
+    <div class="fl-section-head" data-reveal>
+      <span class="fl-label fl-kicker">Technical details</span>
+      <h2 class="fl-display-m" id="tech-h">What's been measured, and how.</h2>
+    </div>
+
+    <dl class="fl-stat-row fl-tech__stats" data-reveal>
       <div>
         <dt class="fl-label">flacara resolves</dt>
         <dd class="fl-stat-row__value">≈16 µm</dd>
@@ -238,16 +394,43 @@
         <dd class="fl-stat-row__value fl-stat-row__value--text">Clinically indistinguishable<sup>1</sup></dd>
       </div>
     </dl>
-    <p class="fl-small fl-note" style="margin-top:20px;max-width:64ch;margin-left:auto;margin-right:auto;text-align:center"><sup>1</sup> Dermatologists
-      rating the same lesions across five image resolutions found 768×512-pixel images equivalent to
-      substantially higher resolutions for recognizing clinically relevant detail — Bittorf et al.,
-      <em>J Am Acad Dermatol</em> 1997;37(2):195–8. A single lesion photograph pair is one session,
-      not a study, and not a diagnostic comparison; neither lesion image is an assessment of that
-      lesion. DermLite is a trademark of its owner and there is no affiliation.</p>
+
+    <dl class="fl-tech__grid">
+      <div data-reveal><dt>Resolution</dt><dd>≈16 µm line pairs resolved on a printed resolution
+        target, in the same session and at the same working distance as the DermLite DL4
+        capture.</dd></div>
+      <div data-reveal style="--fl-reveal-delay:60ms"><dt>Lighting</dt><dd>Polarized and
+        unpolarized, one tap apart. The light sits in the housing at a fixed distance from the skin,
+        so it is the same on every capture.</dd></div>
+      <div data-reveal style="--fl-reveal-delay:120ms"><dt>Optics</dt><dd>No added lens. The phone's
+        own sensor and the processing behind it do the imaging; the housing fixes distance, framing
+        and light.</dd></div>
+      <div data-reveal><dt>Registration</dt><dd>Each new capture is aligned to the previous one for
+        rotation and offset before the shutter fires.</dd></div>
+      <div data-reveal style="--fl-reveal-delay:60ms"><dt>Location</dt><dd>Lesions are pinned to a
+        scan of the patient's body, a patented technique, so the next visit starts from where the
+        lesion is.</dd></div>
+      <div data-reveal style="--fl-reveal-delay:120ms"><dt>Regulatory</dt><dd>FDA registered,
+        Class I.</dd></div>
+    </dl>
+
+    <div class="fl-tech__limits" data-reveal>
+      <h3 class="fl-title">The honest limits</h3>
+      <p class="fl-body">Side by side with a DermLite DL4, image quality has been comparable. That
+        hasn't yet been quantified in a study. Prototypes are with partner clinicians, and units are
+        between prototype and pilot. Every comparison on this page is a single session, shown as
+        captured.</p>
+    </div>
+
+    <p class="fl-small fl-note fl-tech__fine"><sup>1</sup> Dermatologists rating the same lesions
+      across five image resolutions found 768×512-pixel images equivalent to substantially higher
+      resolutions for recognizing clinically relevant detail — Bittorf et al., <em>J Am Acad
+      Dermatol</em> 1997;37(2):195–8. Neither lesion image is an assessment of that lesion. DermLite
+      is a trademark of its owner and there is no affiliation.</p>
   </div>
 </section>
 
-<!-- ============ 06 pre-order ============ -->
+<!-- ============ 05 pre-order ============ -->
 <section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
   <div class="fl-wrap">
     <div class="fl-pill" data-reveal aria-hidden="true"></div>
@@ -262,18 +445,20 @@
       <div class="fl-buy__cols">
       <div class="fl-buy__body">
         <div>
-          <span class="fl-device__for">flacara h1 · aluminium edition</span>
-          <h3 class="fl-title" style="margin-top:12px">The specialist configuration</h3>
+          <span class="fl-device__for">flacara h1 · clinical edition</span>
+          <h3 class="fl-title" style="margin-top:12px">One for every exam room</h3>
         </div>
 
         <div class="fl-buy__price">
           <span class="amt">$<span data-count="249">0</span></span>
-          <span class="qual">USD · directional, may change before launch</span>
+          <span class="qual">USD per device · directional, may change before launch</span>
         </div>
 
-        <p class="fl-body" style="font-size:.9375rem">The h1 with a machined aluminium top plate,
-          both lighting modes, and the alignment and tracking features above. It seats over the
-          phone camera array; there is no added lens, which is why it costs what it does.</p>
+        <p class="fl-body" style="font-size:.9375rem">Both lighting modes, a machined aluminium top
+          plate, and the clinician side of the app: notes on the capture, drafted write-ups, body
+          mapping and visit-to-visit comparison. It seats over the phone camera array with no added
+          lens, which is why a practice can put one in every room instead of sharing a single
+          $1,695 instrument.</p>
 
         <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
       </div>
@@ -288,13 +473,14 @@
               <tr><th scope="row">Top plate</th><td>Machined aluminium</td></tr>
               <tr><th scope="row">Charging</th><td>USB-C</td></tr>
               <tr><th scope="row">Phone</th><td>iPhone</td></tr>
+              <tr><th scope="row">Regulatory</th><td>FDA registered · Class I</td></tr>
             </tbody>
           </table>
         </div>
 
-        <p class="fl-note">flacara is an FDA registered medical device. It does not diagnose,
-          screen for, or assess any condition on its own — talk to a professional about anything on
-          your skin that concerns you.</p>
+        <p class="fl-note">flacara h1 is an FDA registered Class I medical device. It captures and
+          organises images for a clinician to review; it does not diagnose or assess any condition on
+          its own.</p>
 
         <details class="fl-faq-outer" style="margin-top:8px">
           <summary>Frequently asked questions</summary>
@@ -309,9 +495,10 @@
               <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
             </details>
             <details>
-              <summary>How is the aluminium edition different?</summary>
-              <p>It is the same device with a machined aluminium top plate instead of the standard
-                one. Same lighting, same detail, same software.</p>
+              <summary>How is the clinical edition different from the home edition?</summary>
+              <p>The clinical edition has both lighting modes (the home edition is polarized only), a
+                machined aluminium top plate, and the clinician features in the app: notes, drafted
+                write-ups and patient lists. Same sensor path, same detail.</p>
             </details>
             <details>
               <summary>Does it work with my phone?</summary>
@@ -342,11 +529,11 @@
     <div class="fl-footer__right fl-small">
       <ul class="fl-footer__links">
         <li><a href="/">Home</a></li>
-        <li><a href="/devices">Devices</a></li>
-        <li><a href="/software">Software</a></li>
+        <li><a href="/patients">For patients</a></li>
+        <li><a href="/doctors">For doctors</a></li>
         <li><a href="#pre-order">Pre-order</a></li>
       </ul>
-      <p>flacara, a division of Lumo Imaging, is an FDA registered medical device.</p>
+      <p>flacara, a subsidiary of Lumo Imaging. flacara h1 is an FDA registered Class I medical device.</p>
     </div>
   </div>
 </footer>
@@ -390,137 +577,12 @@
     fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, org, source: 'clinicians.html' }),
+      body: JSON.stringify({ email, org, source: 'doctors' }),
     }).catch(() => {});
   });
 </script>
 
-<script>
-(function () {
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* each slider gets a one-time sweep (6% → 94% → 50%) so it's obvious it can be dragged */
-  Array.prototype.forEach.call(document.querySelectorAll('[data-fl-slider]'), function (wrap) {
-    var input = wrap.querySelector('.fl-slider__input');
-    if (!input) return;
-    function set(v) { wrap.style.setProperty('--pos', v + '%'); }
-    input.addEventListener('input', function () { set(input.value); });
-
-    /* drag anywhere on the image, not just the thumb — a native range on
-       iOS only moves if the finger lands right on its thumb. touch-action:
-       pan-y leaves vertical swipes to the page and sends sideways ones here. */
-    var dragging = false;
-    function follow(e) {
-      var r = wrap.getBoundingClientRect();
-      var v = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100));
-      input.value = v; set(v);
-    }
-    wrap.addEventListener('pointerdown', function (e) {
-      if (e.button !== 0) return;
-      dragging = true; played = true;
-      wrap.classList.add('is-touched');
-      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
-      if (e.pointerType === 'mouse') { follow(e); e.preventDefault(); }
-    });
-    wrap.addEventListener('pointermove', function (e) { if (dragging) follow(e); });
-    ['pointerup', 'pointercancel'].forEach(function (t) {
-      wrap.addEventListener(t, function () { dragging = false; });
-    });
-
-    var played = false;
-    wrap.flSweep = function () {
-      if (played || reduceMotion) return;
-      played = true;
-      var start = null, duration = 1100, from = 6, mid = 94, to = 50;
-      function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-      function frame(now) {
-        if (start === null) start = now;
-        var t = Math.min(1, (now - start) / duration);
-        var e = ease(t);
-        var v = e < .5 ? from + (mid - from) * (e / .5) : mid + (to - mid) * ((e - .5) / .5);
-        set(v);
-        input.value = v;
-        if (t < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    };
-
-    /* sliders inside the scrub sweep when their frame comes up, not on page entry */
-    if (wrap.closest('[data-fl-scrub]')) return;
-    var io = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { wrap.flSweep(); io.disconnect(); }
-    }, { threshold: 0.5 });
-    io.observe(wrap);
-  });
-
-  /* scrub: a gallery strip pinned for (n) screen-heights of scroll. Which shot
-     is centred is read straight off scroll position rather than from observer
-     bands, so fast trackpad flicks can't skip a step or leave it stale; the
-     strip then slides sideways to it. */
-  Array.prototype.forEach.call(document.querySelectorAll('[data-fl-scrub]'), function (scrub) {
-    var shots = scrub.querySelectorAll('[data-scrub-shot]');
-    var caps = scrub.querySelectorAll('[data-scrub-cap]');
-    var tabs = scrub.querySelectorAll('[data-scrub-go]');
-    var prev = scrub.querySelector('[data-scrub-step="-1"]');
-    var next = scrub.querySelector('[data-scrub-step="1"]');
-    var n = shots.length, current = -1, ticking = false;
-
-    function show(idx, quiet) {
-      if (idx === current) return;
-      current = idx;
-      scrub.style.setProperty('--idx', idx);
-      for (var i = 0; i < n; i++) {
-        var state = i < idx ? 'is-past' : i === idx ? 'is-active' : 'is-next';
-        shots[i].className = 'fl-scrub__shot ' + state;
-        caps[i].className = 'fl-scrub__cap ' + state;
-        tabs[i].classList.toggle('is-active', i === idx);
-        if (i === idx) tabs[i].setAttribute('aria-current', 'step');
-        else tabs[i].removeAttribute('aria-current');
-        shots[i].firstElementChild.toggleAttribute('inert', i !== idx);
-      }
-      prev.disabled = idx === 0;
-      next.disabled = idx === n - 1;
-      var slider = shots[idx].querySelector('[data-fl-slider]');
-      if (!quiet && slider && slider.flSweep) setTimeout(slider.flSweep, 450);
-    }
-
-    function go(i) {
-      i = Math.max(0, Math.min(n - 1, i));
-      var run = scrub.offsetHeight - window.innerHeight;
-      var top = scrub.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: top + run * (i + 0.5) / n, behavior: reduceMotion ? 'auto' : 'smooth' });
-    }
-
-    function update() {
-      ticking = false;
-      var r = scrub.getBoundingClientRect();
-      var run = r.height - window.innerHeight;
-      var p = run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
-      scrub.style.setProperty('--p', p.toFixed(4));
-      if (r.top > window.innerHeight * 0.4) return;
-      show(Math.min(n - 1, Math.floor(p * n)));
-    }
-
-    function onScroll() {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }
-
-    Array.prototype.forEach.call(tabs, function (tab) {
-      tab.addEventListener('click', function () { go(+tab.getAttribute('data-scrub-go')); });
-    });
-    Array.prototype.forEach.call(shots, function (shot, i) {
-      shot.addEventListener('click', function () { if (i !== current) go(i); });
-    });
-    prev.addEventListener('click', function () { go(Math.max(current, 0) - 1); });
-    next.addEventListener('click', function () { go(Math.max(current, 0) + 1); });
-
-    show(0, true);
-    current = -1;
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-  });
-})();</script>
+<script src="compare.js" defer></script>
 
 <script src="motion.js" defer></script>
 
