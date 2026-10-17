@@ -1,0 +1,54 @@
+<!doctype html>
+<!-- Offline: seats the flacara v5 CAD (models/flacara-v5.glb) over the iPhone
+     model's camera plateau and renders stills of the pair. Not linked from the
+     site; driven by tools/render-device.mjs. phone3d.js uses the same fit. -->
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}</style>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { seatDevice } from '../device-fit.js';
+
+const W = 800, H = 1100;
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
+const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(24, W / H, 0.01, 100);
+const key = new THREE.DirectionalLight(0xffffff, 1.2); key.position.set(-3, 4, 5); scene.add(key);
+
+const [ph, dv] = await Promise.all([loader.loadAsync('../models/iphone-15-pro.glb'), loader.loadAsync('../models/flacara-v5.glb')]);
+const phone = ph.scene;
+seatDevice(phone, dv.scene);
+const box = new THREE.Box3().setFromObject(phone);
+const pivot = new THREE.Group(); phone.position.sub(box.getCenter(new THREE.Vector3())); pivot.add(phone); scene.add(pivot);
+const size = box.getSize(new THREE.Vector3());
+
+// views: back straight on (the flip and the four rooms), and a three-quarter
+window.renderView = (name) => {
+  if (name === 'back') { pivot.rotation.set(0, 0, 0); camera.position.set(0, 0, size.y * 2.5); }
+  if (name === 'three-quarter') { pivot.rotation.set(0.12, -0.55, 0.05); camera.position.set(0, 0, size.y * 3.0); }
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script>

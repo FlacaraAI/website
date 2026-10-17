@@ -16,6 +16,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { seatDevice } from '../device-fit.js';
 
 const W = 960, H = 1200;           // 4:5, the stage's aspect, at ~2x display size
 const SCREEN = '../images/app-mesh.png';
@@ -36,9 +37,10 @@ const scene = new THREE.Scene();
 scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
 const camera = new THREE.PerspectiveCamera(24, W / H, 0.01, 100);
 
-const [gltf, tex] = await Promise.all([
+const [gltf, tex, device] = await Promise.all([
   loader.loadAsync('../models/iphone-15-pro.glb'),
   new THREE.TextureLoader().loadAsync(SCREEN),
+  loader.loadAsync('../models/flacara-v5.glb'),
 ]);
 tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
 const phone = gltf.scene;
@@ -47,6 +49,7 @@ if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped
 
 const box = new THREE.Box3().setFromObject(phone);
 const size = box.getSize(new THREE.Vector3());
+seatDevice(phone, device.scene);   // after measuring, same as phone3d.js
 phone.position.sub(box.getCenter(new THREE.Vector3()));
 const facing = new THREE.Group(); facing.add(phone); facing.rotation.y = Math.PI;
 const pivot = new THREE.Group(); pivot.add(facing); scene.add(pivot);

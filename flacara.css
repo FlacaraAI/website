@@ -2035,8 +2035,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap-section--flip .fl-swap__stage { perspective: 1400px; transform-style: flat; }
 .fl-swap__back {
   position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
-  width: calc(var(--ph-w, 340px) * 1.088); max-width: none; height: auto;
-  translate: -58% -49.3%; opacity: 0; rotate: y 90deg;
+  width: var(--ph-w, 340px); max-width: 76vw; height: auto;
+  translate: -50% -50%; opacity: 0; rotate: y 90deg;
   filter: drop-shadow(0 40px 50px rgba(74,32,24,.25));
   transition: rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
 }
@@ -2075,7 +2075,12 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-perroom__units { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .fl-perroom__units figure { margin: 0; text-align: center; }
-.fl-perroom__units img { width: 100%; height: auto; display: block; filter: drop-shadow(0 18px 22px rgba(74,32,24,.22)); }
+/* the top of each phone, where the device sits, rather than the whole phone */
+.fl-perroom__units img {
+  width: 100%; height: auto; aspect-ratio: 1 / 1.05; object-fit: cover; object-position: 50% 0; display: block;
+  border-radius: 14% 14% 0 0 / 12% 12% 0 0;
+  -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent);
+}
 .fl-perroom__units figcaption {
   margin-top: 8px; font-family: var(--fl-mono); font-size: .625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fl-red-ink);
 }

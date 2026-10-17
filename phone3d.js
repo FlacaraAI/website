@@ -13,10 +13,12 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { seatDevice } from './device-fit.js';
 
 // must match tools/render-phone-frames.html, so the canvas lands exactly
 // on top of the snapshot it replaces
 const MODEL_URL = 'models/iphone-15-pro.glb';
+const DEVICE_URL = 'models/flacara-v5.glb';
 const SCREEN_NODE = 'xXDHkMplTIDAXLN';
 const BASE = { x: -0.22, y: -0.38, z: -0.26 };
 
@@ -36,9 +38,11 @@ export async function mount(wrap, screenUrl, img) {
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
   const camera = new THREE.PerspectiveCamera(24, 4 / 5, 0.01, 100);
 
-  const [gltf, tex] = await Promise.all([
+  const [gltf, tex, device] = await Promise.all([
     loader.loadAsync(MODEL_URL),
     new THREE.TextureLoader().loadAsync(screenUrl),
+    // the flacara on the back is a nice-to-have: if it fails, the phone still renders
+    loader.loadAsync(DEVICE_URL).catch(() => null),
   ]);
   tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
 
@@ -46,8 +50,11 @@ export async function mount(wrap, screenUrl, img) {
   const screen = phone.getObjectByName(SCREEN_NODE);
   if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
 
+  // framing is measured on the bare phone, before the device goes on, so it
+  // matches the snapshot pose exactly
   const box = new THREE.Box3().setFromObject(phone);
   const size = box.getSize(new THREE.Vector3());
+  if (device) seatDevice(phone, device.scene);
   phone.position.sub(box.getCenter(new THREE.Vector3()));
   const facing = new THREE.Group(); facing.add(phone); facing.rotation.y = Math.PI;
   const pivot = new THREE.Group(); pivot.add(facing); scene.add(pivot);
