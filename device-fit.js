@@ -25,7 +25,7 @@ function finish(mat) {
 }
 
 export function seatDevice(phone, device) {
-  device.traverse((o) => { if (o.isMesh) o.material = finish(o.material); });
+  device.traverse((o) => { if (o.isMesh) { o.userData.sourceMaterial = o.material.name; o.material = finish(o.material); } });
   const plateW = PLATE.max.x - PLATE.min.x, plateauW = PLATEAU.max.x - PLATEAU.min.x;
   const s = plateauW / plateW;
   const holder = new THREE.Group();

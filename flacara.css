@@ -2103,3 +2103,14 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] .fl-perroom__units figure { opacity: 1; transform: none; transition: none; }
 }
+
+/* ---------- doctors hero: the device on the phone, live ----------
+   A 4:5 stage; the still fills it and the canvas lands exactly on it. */
+.fl-device3d { position: relative; width: 112%; margin: 0 -6%; aspect-ratio: 4 / 5; }
+.fl-device3d img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.fl-device3d__canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity .9s var(--fl-ease-out);
+}
+.fl-device3d.is-3d .fl-device3d__canvas { opacity: 1; }
+@media (max-width: 860px) { .fl-device3d { width: 100%; max-width: 420px; margin: 0 auto; } }

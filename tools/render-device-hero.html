@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- Offline renderer for the doctors hero's still (images/h1-hero.webp): the
+     device3d.js scene at its opening pose, ring dark. Not linked from the
+     site; driven by tools/render-device-hero.mjs. -->
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}</style>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createScene, ASPECT } from '../device3d.js';
+const H = 1200, W = Math.round(H * ASPECT);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+const { scene, camera, setRing } = await createScene(renderer, '../');
+setRing(0);
+window.renderStill = () => { renderer.render(scene, camera); return renderer.domElement.toDataURL('image/png'); };
+window.ready = true;
+</script>
