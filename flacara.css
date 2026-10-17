@@ -2035,8 +2035,11 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap-section--flip .fl-swap__stage { perspective: 1400px; transform-style: flat; }
 .fl-swap__back {
   position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
-  width: var(--ph-w, 340px); max-width: 76vw; height: auto;
-  translate: -50% -50%; opacity: 0; rotate: y 90deg;
+  /* the render is wider than the phone (the housing overhangs its corner):
+     sized so the phone body matches .fl-phone, and shifted so the phone's
+     centre, not the picture's, sits on the stage's centre */
+  width: calc(var(--ph-w, 340px) * 1.1602); max-width: calc(76vw * 1.1602); height: auto;
+  translate: -56.06% -53.74%; opacity: 0; rotate: y 90deg;
   filter: drop-shadow(0 40px 50px rgba(74,32,24,.25));
   transition: rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
 }
