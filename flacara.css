@@ -2030,7 +2030,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    device on the phone first and then what it captured. The separate
    rotate property is used on purpose: motion.js drives .fl-phone's inline
    transform for the landscape turn, and the two compose instead of fighting. */
-.fl-swap-section--flip .fl-swap__stage { perspective: 1400px; }
+/* flat, not the preserve-3d [data-tilt] gives it: in a shared 3D space the
+   turning render cut through the edge-on phone and showed as a seam */
+.fl-swap-section--flip .fl-swap__stage { perspective: 1400px; transform-style: flat; }
 .fl-swap__back {
   position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
   width: calc(var(--ph-w, 340px) * 1.088); max-width: none; height: auto;
