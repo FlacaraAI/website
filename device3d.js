@@ -84,7 +84,7 @@ export async function createScene(renderer, base = '') {
     });
     glow.material.opacity = THREE.MathUtils.smoothstep(t, 0.3, 1) * 0.5;
   }
-  return { scene, camera, pivot, setRing };
+  return { scene, camera, pivot, holder, phone, setRing };
 }
 
 export async function mount(stage) {

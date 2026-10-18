@@ -33,6 +33,7 @@ images/target-dl4.jpg
 *.mov
 # ...except the HEVC-with-alpha copy Safari plays (it can't composite the WebM's alpha)
 !images/device-reveal.mov
+!images/wire-h1.mov
 
 # gradient build tooling (tools/gradient, npm run build)
 node_modules/

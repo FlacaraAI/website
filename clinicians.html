@@ -111,6 +111,28 @@
   </div>
 </section>
 
+<!-- ============ 00 lift it on: scroll (or drag) seats the device ============ -->
+<section class="fl-attach" data-fl-attach data-sheet="images/attach-sheet.webp" data-cols="8" data-frames="40" data-w="400" data-h="500" aria-labelledby="attach-h">
+  <div class="fl-attach__sticky">
+    <div class="fl-wrap fl-attach__grid">
+      <div class="fl-attach__copy">
+        <span class="fl-label fl-kicker">Setup</span>
+        <h2 class="fl-display-m" id="attach-h">Lift it on.</h2>
+        <p class="fl-body fl-body--l">The housing seats over the camera plateau and the ring lights. No
+          adapter plate, no app to pair, nothing to focus.</p>
+        <p class="fl-attach__seated" data-attach-seated><span class="fl-label">Seated</span> Fixed distance. Fixed light.</p>
+      </div>
+      <figure class="fl-attach__stage">
+        <canvas class="fl-attach__canvas" width="800" height="1000" aria-hidden="true"></canvas>
+        <label class="fl-attach__slider">
+          <span class="fl-label">Slide to attach</span>
+          <input type="range" min="0" max="1000" value="0" step="1" aria-label="Move the flacara h1 onto the phone">
+        </label>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ============ 01 exam to record: each step is the old way, struck out, then the fix ============ -->
 <section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--flip" aria-labelledby="workflow-h">
   <div class="fl-wrap">
@@ -549,6 +571,7 @@
 
 <script src="motion.js" defer></script>
 <script src="device-boot.js" defer></script>
+<script src="attach.js" defer></script>
 
 </body>
 </html>

@@ -86,6 +86,17 @@
     <div class="fl-blob fl-blob--2"></div>
     <div class="fl-blob fl-blob--3"></div>
 
+    <!-- the h1 on a phone, as line art: draws itself in and turns once, then
+         holds. VP9 alpha for most browsers, HEVC alpha for Safari; a still
+         of the drawn state stands in for reduced motion. -->
+    <div class="fl-hero-aper__wire">
+      <video class="fl-hero-aper__wire-vid" autoplay muted playsinline preload="auto" poster="">
+        <source src="images/wire-h1.mov" type='video/mp4; codecs="hvc1"'>
+        <source src="images/wire-h1.webm" type="video/webm">
+      </video>
+      <img class="fl-hero-aper__wire-still" src="images/wire-h1-last.webp" width="600" height="600" alt="">
+    </div>
+
     <!-- three apertures off the mark's own ramp (§2.6, place 1) -->
     <div class="fl-aper" style="--k:.72;--o:.85;--d:0ms"></div>
     <div class="fl-aper" style="--k:1;--o:.42;--d:160ms"></div>

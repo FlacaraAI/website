@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- Offline: renders the "lift it on" frame sequence for the doctors page —
+     the h1 descending onto the phone's camera and the ring lighting up —
+     from the device3d.js scene. Driven by tools/render-attach.mjs, which
+     packs the frames into images/attach-sheet.webp. -->
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}</style>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createScene } from '../device3d.js';
+const W = 720, H = 900;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+document.body.appendChild(renderer.domElement);
+const { scene, camera, pivot, holder, setRing } = await createScene(renderer, '../');
+// a flatter, more frontal pose than the hero, so the drop reads as straight down onto the plateau
+pivot.rotation.set(0.16, 0.30, -0.03);
+// the lifted device needs headroom: the pair sits low in the frame
+pivot.position.y = -0.028;
+camera.position.z *= 1.12; camera.updateProjectionMatrix();
+const seated = holder.position.clone();
+const ease = (t) => 1 - Math.pow(1 - t, 3);
+window.renderFrame = (i, n) => {
+  const p = i / (n - 1);
+  const d = ease(Math.min(1, p / 0.8));            // descends over the first 80%
+  holder.position.copy(seated).add(new THREE.Vector3(-0.012, 0.028, 0.11).multiplyScalar(1 - d));
+  holder.rotation.set(-0.55 * (1 - d), 0.40 * (1 - d), 0.1 * (1 - d));
+  setRing(Math.max(0, (p - 0.8) / 0.2));         // ring lights over the last 20%
+  renderer.render(scene, camera);
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script>
