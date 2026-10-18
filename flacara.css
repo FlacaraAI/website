@@ -2134,22 +2134,21 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 
 
-/* ---------- the original outline behind the order card ----------
-   The first hero's hand-traced h1, large and faint in the page's own ink
-   behind the Reserve card, tracing itself in as the card scrolls into view.
-   Clipped to the section so it never widens the page. */
-.fl-section--tall:has(> .fl-wrap > .fl-buy-wrap) { overflow: hidden; }
-.fl-buy-wrap { position: relative; }
-.fl-buy-wrap > .fl-buy { position: relative; z-index: 1; }
-.fl-buy__draw {
-  position: absolute; left: 50%; top: 50%; width: min(130%, 1180px); aspect-ratio: 1; z-index: 0;
-  transform: translate(-50%, -50%); color: var(--fl-red-ink); opacity: .16; pointer-events: none;
+/* ---------- the original outline as a drawing in the pre-order section ----------
+   The first hero's hand-traced h1, in the page's ink, standing in the empty
+   corner beside "Reserve one." rather than ghosted behind the card; it
+   traces itself in as the section comes into view. Off on phones. */
+.fl-preorder { position: relative; overflow: hidden; }
+.fl-preorder > .fl-wrap { position: relative; z-index: 1; }
+.fl-preorder__draw {
+  position: absolute; right: max(16px, calc((100vw - 1200px) / 2 - 40px)); top: 48px; width: min(34vw, 440px); aspect-ratio: 1; z-index: 0;
+  color: var(--fl-red-ink); opacity: .5; pointer-events: none;
 }
-.fl-page--patients .fl-buy__draw { color: var(--fl-blue-ink); }
-.fl-buy__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
-.fl-buy__draw path { animation-play-state: paused; animation-duration: 1.8s; }
-[data-reveal].is-visible .fl-buy__draw path { animation-play-state: running; }
-@media (max-width: 860px) { .fl-buy__draw { width: 150vw; opacity: .12; } }
+.fl-page--patients .fl-preorder__draw { color: var(--fl-blue-ink); }
+.fl-preorder__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
+.fl-preorder__draw path { animation-play-state: paused; animation-duration: 1.6s; }
+.fl-preorder.is-visible .fl-preorder__draw path, .fl-preorder:has(.is-visible) .fl-preorder__draw path { animation-play-state: running; }
+@media (max-width: 1100px) { .fl-preorder__draw { display: none; } }
 
 /* ---------- phones: the pill fits any width, the scroll hint goes ---------- */
 @media (max-width: 430px) {
@@ -2161,3 +2160,39 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-nav .fl-btn--primary { padding: 7px 10px; font-size: .75rem; white-space: nowrap; }
 }
 @media (max-width: 860px) { .fl-scroll-hint { display: none; } }
+
+/* ---------- phones: shorter nav labels ---------- */
+@media (max-width: 430px) { .fl-nav__for { display: none; } }
+
+/* ---------- phones: the pinned run-through tells you where you are ----------
+   The section title rides along at the top of the pinned block (the big
+   heading above it scrolls away under the pill), and a rail on the right
+   fills with the scroll and marks the steps, so a held screen still reads
+   as moving. Both are desktop-hidden. */
+.fl-swap__title, .fl-swap__rail { display: none; }
+@media (max-width: 860px) {
+  .fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 0; }
+  .fl-swap-section > .fl-wrap > .fl-section-head .fl-display-m { font-size: clamp(1.75rem, 8vw, 2.25rem); }
+  .fl-swap__pinned { padding-top: 6px; }
+  .fl-swap__title {
+    display: block; order: -1; margin: 0 0 6px; text-align: center;
+    font-family: var(--fl-display); font-weight: 600; font-size: 1rem; letter-spacing: -.01em; color: var(--fl-muted);
+  }
+  .fl-swap__rail {
+    display: flex; flex-direction: column; justify-content: space-between; list-style: none; margin: 0; padding: 0;
+    position: absolute; right: 2px; top: 22%; height: 46%; width: 3px; border-radius: 3px;
+    background: linear-gradient(to bottom, var(--fl-red-ink) 0%, var(--fl-red-ink) calc(var(--swap-p, 0) * 100%), var(--fl-rule) calc(var(--swap-p, 0) * 100%), var(--fl-rule) 100%);
+  }
+  .fl-page--patients .fl-swap__rail { background: linear-gradient(to bottom, var(--fl-blue-ink) 0%, var(--fl-blue-ink) calc(var(--swap-p, 0) * 100%), var(--fl-rule) calc(var(--swap-p, 0) * 100%), var(--fl-rule) 100%); }
+  .fl-swap__rail li {
+    width: 9px; height: 9px; margin-left: -3px; border-radius: 999px; background: #fff;
+    box-shadow: inset 0 0 0 2px var(--fl-rule); transition: box-shadow .3s var(--fl-ease-out), transform .3s var(--fl-ease-out);
+  }
+  .fl-swap[data-step="0"] .fl-swap__rail li:nth-child(1), .fl-swap[data-step="1"] .fl-swap__rail li:nth-child(-n+2),
+  .fl-swap[data-step="2"] .fl-swap__rail li:nth-child(-n+3), .fl-swap[data-step="3"] .fl-swap__rail li:nth-child(-n+4),
+  .fl-swap[data-step="4"] .fl-swap__rail li:nth-child(-n+5) { box-shadow: inset 0 0 0 3px var(--fl-red-ink); }
+  .fl-page--patients .fl-swap[data-step="0"] .fl-swap__rail li:nth-child(1), .fl-page--patients .fl-swap[data-step="1"] .fl-swap__rail li:nth-child(-n+2) { box-shadow: inset 0 0 0 3px var(--fl-blue-ink); }
+  .fl-swap[data-step="0"] .fl-swap__rail li:nth-child(1), .fl-swap[data-step="1"] .fl-swap__rail li:nth-child(2),
+  .fl-swap[data-step="2"] .fl-swap__rail li:nth-child(3), .fl-swap[data-step="3"] .fl-swap__rail li:nth-child(4),
+  .fl-swap[data-step="4"] .fl-swap__rail li:nth-child(5) { transform: scale(1.45); }
+}

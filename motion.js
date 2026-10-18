@@ -343,7 +343,7 @@
        DOM, so their document order does not line up with the step index. */
     function activate(idx) {
       var key = String(idx), activeScreen = null;
-      swap.setAttribute('data-step', key); /* lets CSS stage a step that isn't a phone screen */
+      swap.setAttribute('data-step', key); /* lets CSS stage a step, and the rail, by index */
       screens.forEach(function (s) {
         var on = s.getAttribute('data-swap-screen') === key;
         s.classList.toggle('is-active', on);
@@ -397,6 +397,10 @@
         var under = -1;
         steps.forEach(function (s, i) { var r = s.getBoundingClientRect(); if (r.top <= mid) under = i; });
         setStep(Math.max(0, under));
+        // overall progress through the steps, 0..1, for the phones' rail
+        var first = steps[0].getBoundingClientRect(), last = steps[steps.length - 1].getBoundingClientRect();
+        var span = last.bottom - first.top;
+        swap.style.setProperty('--swap-p', Math.max(0, Math.min(1, (mid - first.top) / span)).toFixed(4));
         steps.forEach(function (s, i) {
           var r = s.getBoundingClientRect();
           var p = Math.max(0, Math.min(1, (mid - r.top) / r.height));
