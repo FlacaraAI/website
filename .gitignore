@@ -38,3 +38,6 @@ images/target-dl4.jpg
 
 # gradient build tooling (tools/gradient, npm run build)
 node_modules/
+
+# rendered promo videos — large binaries, rebuild with: node promo/render.mjs <patients|doctors>
+promo/out/

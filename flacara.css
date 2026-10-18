@@ -612,12 +612,17 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-form { display: grid; gap: 16px; max-width: 480px; }
 .fl-form__field { display: grid; gap: 8px; }
 .fl-form label { font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; }
-.fl-form input[type="text"], .fl-form input[type="email"] {
+.fl-form input[type="text"], .fl-form input[type="email"], .fl-form input[type="number"],
+.fl-form select, .fl-form textarea {
   font-family: var(--fl-text); font-size: 1rem; line-height: 1.5; color: var(--fl-ink);
   background: var(--fl-surface); border: 1px solid var(--fl-rule); border-radius: 4px; padding: 10px 12px;
   width: 100%; box-shadow: none;
 }
-.fl-form input:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+.fl-form input:focus-visible, .fl-form select:focus-visible, .fl-form textarea:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+.fl-form textarea { min-height: 9rem; resize: vertical; }
+.fl-form[hidden], .fl-form [hidden], .fl-form__ok[hidden] { display: none; }
+.fl-form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.fl-form__ok { font-family: var(--fl-text); font-size: 1rem; line-height: 1.55; }
 .fl-form fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
 .fl-form legend { font-family: var(--fl-text); font-weight: 500; font-size: 0.875rem; line-height: 1.55; padding: 0; margin-bottom: 8px; }
 .fl-form input[type="radio"] { margin: 0 8px 0 0; accent-color: var(--fl-ink); }
@@ -1242,6 +1247,11 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-buy__price .amt { font-family: var(--fl-display); font-weight: 600; font-size: 2.25rem;
   letter-spacing: -.024em; line-height: 1; }
 .fl-buy__price .qual { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-muted); }
+/* founder pricing: the regular price, struck through, beside the founder one */
+.fl-was { color: var(--fl-muted); text-decoration-thickness: 1.5px; font-weight: 400; }
+.fl-buy__price .fl-was { font-family: var(--fl-display); font-size: 1.375rem; }
+.fl-perroom__sum .fl-was { font-family: var(--fl-display); font-size: clamp(1.25rem, 2vw, 1.75rem); }
+.fl-founder { font-family: var(--fl-mono); font-size: .75rem; color: var(--fl-ink); margin-top: -4px; }
 .fl-buy .fl-btn--primary { justify-self: start; font-size: 1.0625rem; padding: 16px 33px; border-radius: 8px; }
 .fl-buy .fl-table th, .fl-buy .fl-table td { padding: 7px 16px; }
 .fl-buy .fl-table th:first-child, .fl-buy .fl-table td:first-child { padding-left: 0; }

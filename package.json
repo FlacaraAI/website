@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "dependencies": {
+    "stripe": "^23.0.0"
+  },
+  "type": "module"
+}

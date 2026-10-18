@@ -5,3 +5,7 @@ node_modules/
 tools/gradient/
 .env*
 .vercel
+
+# rendered promo videos (built from promo/promo.html via promo/render.mjs)
+promo/out/
+.agents/
