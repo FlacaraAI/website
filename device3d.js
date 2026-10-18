@@ -95,7 +95,9 @@ export async function createScene(renderer, base = '') {
   // studio: one soft key from upper left that casts the housing's shadow,
   // a cool fill from the right, and a warm rim from behind for the edges
   const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(-0.25, 0.4, 0.5); scene.add(key);
-  key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 6; key.shadow.bias = -0.0003;
+  // phones get a lighter shadow map; they also cap the pixel ratio below
+  const small = window.innerWidth < 900;
+  key.castShadow = true; key.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048); key.shadow.radius = 6; key.shadow.bias = -0.0003;
   const d = 0.12; Object.assign(key.shadow.camera, { left: -d, right: d, top: d, bottom: -d, near: 0.05, far: 2 });
   const fill = new THREE.DirectionalLight(0xdce6ff, 0.45); fill.position.set(3, 1, 4); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffe4d6, 0.8); rim.position.set(4, -2, -3); scene.add(rim);
@@ -114,11 +116,12 @@ export async function createScene(renderer, base = '') {
   return { scene, camera, pivot, holder, phone, size, setRing, screen: phone.getObjectByName('xXDHkMplTIDAXLN') };
 }
 
+const PIXEL_CAP = () => Math.min(window.devicePixelRatio || 1, window.innerWidth < 900 ? 1.75 : 2);
 export async function mount(stage) {
   const still = stage.querySelector('img');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(PIXEL_CAP());
   const { scene, camera, pivot, setRing } = await createScene(renderer);
 
   const canvas = renderer.domElement;
@@ -197,7 +200,7 @@ const TURN_FULL = { w: 1200, h: 1600 };                      // the sheet render
 const TURN_VIEW = { x: 104.33, y: 0, w: 1075.05, h: 1459 }; // the part of it a cell shows
 export async function mountRun(container, screenUrls) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(PIXEL_CAP());
   const { scene, camera, pivot, holder, setRing, screen } = await createScene(renderer);
   camera.aspect = TURN_FULL.w / TURN_FULL.h; camera.position.z *= 1.22;
   camera.setViewOffset(TURN_FULL.w, TURN_FULL.h, TURN_VIEW.x, TURN_VIEW.y, TURN_VIEW.w, TURN_VIEW.h);

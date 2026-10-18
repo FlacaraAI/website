@@ -44,7 +44,7 @@
   var turnBox = document.querySelector('.fl-swap__turn');
   var turnSheet = turnBox && turnBox.querySelector('canvas[data-fl-sheet]');
   var releaseSheet = function () { if (turnSheet && turnSheet.flSheetEnable) turnSheet.flSheetEnable(); };
-  if (reduceMotion || conn.saveData || window.innerWidth < 900 || !window.WebGLRenderingContext) { releaseSheet(); return; }
+  if (reduceMotion || conn.saveData || !window.WebGLRenderingContext) { releaseSheet(); return; }
   var start = function () {
     import('./device3d.js')
       .then(function (m) {

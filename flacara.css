@@ -2132,20 +2132,32 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 
 
 
-/* ---------- doctors: the original outline as a technical drawing ----------
-   Big, faint, in the page's red, off to the right behind the numbers. Its
-   strokes trace in (the same fl-trace the first hero used) once the section
-   scrolls into view, and stay. */
-.fl-tech { position: relative; overflow: hidden; }
-.fl-tech > .fl-wrap { position: relative; z-index: 1; }
-.fl-tech__drawing {
-  position: absolute; z-index: 0; pointer-events: none;
-  right: -8vw; top: 50%; width: min(92vh, 980px); aspect-ratio: 1; transform: translateY(-50%);
-  color: var(--fl-red-ink); opacity: .22;
-}
-.fl-tech__drawing.is-visible { opacity: .22; transform: translateY(-50%); }
-.fl-tech__draw { display: block; width: 100%; height: 100%; overflow: visible; }
-.fl-tech__draw path { animation-play-state: paused; animation-duration: 1.6s; }
-.fl-tech__drawing.is-visible .fl-tech__draw path { animation-play-state: running; }
-@media (max-width: 860px) { .fl-tech__drawing { width: 120vw; right: -40vw; top: 40%; opacity: .14; } }
 
+
+/* ---------- the original outline behind the order card ----------
+   The first hero's hand-traced h1, large and faint in the page's own ink
+   behind the Reserve card, tracing itself in as the card scrolls into view.
+   Clipped to the section so it never widens the page. */
+.fl-section--tall:has(> .fl-wrap > .fl-buy-wrap) { overflow: hidden; }
+.fl-buy-wrap { position: relative; }
+.fl-buy-wrap > .fl-buy { position: relative; z-index: 1; }
+.fl-buy__draw {
+  position: absolute; left: 50%; top: 50%; width: min(130%, 1180px); aspect-ratio: 1; z-index: 0;
+  transform: translate(-50%, -50%); color: var(--fl-red-ink); opacity: .16; pointer-events: none;
+}
+.fl-page--patients .fl-buy__draw { color: var(--fl-blue-ink); }
+.fl-buy__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
+.fl-buy__draw path { animation-play-state: paused; animation-duration: 1.8s; }
+[data-reveal].is-visible .fl-buy__draw path { animation-play-state: running; }
+@media (max-width: 860px) { .fl-buy__draw { width: 150vw; opacity: .12; } }
+
+/* ---------- phones: the pill fits any width, the scroll hint goes ---------- */
+@media (max-width: 430px) {
+  .fl-nav { padding: 0 8px; }
+  .fl-nav .fl-wrap { max-width: calc(100vw - 16px); height: 48px; gap: 6px; padding: 0 4px 0 6px; overflow: hidden; }
+  .fl-nav .ico.solo { width: 26px; height: 26px; }
+  .fl-nav__links { gap: 0; padding: 2px; }
+  .fl-nav__links a:not(.fl-btn) { padding: 6px 8px; font-size: .75rem; letter-spacing: -.01em; white-space: nowrap; }
+  .fl-nav .fl-btn--primary { padding: 7px 10px; font-size: .75rem; white-space: nowrap; }
+}
+@media (max-width: 860px) { .fl-scroll-hint { display: none; } }

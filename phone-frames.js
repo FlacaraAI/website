@@ -18,7 +18,7 @@
 
     // ---------- the 3D upgrade, off the critical path ----------
     var conn = navigator.connection || {};
-    var want3d = !reduceMotion && !conn.saveData && window.innerWidth >= 900 &&
+    var want3d = !reduceMotion && !conn.saveData &&
                  !!window.WebGLRenderingContext && stage.getAttribute('data-screen');
     if (want3d) {
       var start = function () {
