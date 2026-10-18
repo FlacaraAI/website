@@ -21,10 +21,19 @@ export const BASE = { x: -0.22, y: 0.38, z: 0.26 };
 const LED_MATERIALS = ['Opaque(228,227,207)', 'Opaque(210,209,199)'];
 const LED_COLOR = new THREE.Color(0xfff2dc);
 
+// the two models are fetched once per page, however many scenes use them
+const assets = {};
+function loadAssets(base) {
+  if (!assets[base]) {
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
+    const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+    assets[base] = Promise.all([loader.loadAsync(base + PHONE_URL), loader.loadAsync(base + DEVICE_URL)]);
+  }
+  return assets[base];
+}
+
 export async function createScene(renderer, base = '') {
-  const draco = new DRACOLoader();
-  draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
-  const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -36,7 +45,8 @@ export async function createScene(renderer, base = '') {
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
   const camera = new THREE.PerspectiveCamera(24, ASPECT, 0.01, 100);
 
-  const [ph, dv] = await Promise.all([loader.loadAsync(base + PHONE_URL), loader.loadAsync(base + DEVICE_URL)]);
+  const [phG, dvG] = await loadAssets(base);
+  const ph = { scene: phG.scene.clone(true) }, dv = { scene: dvG.scene.clone(true) };
   const phone = ph.scene;
   // centred on the phone body (measured before the device goes on), so a
   // turn about the vertical axis keeps the phone in place and the housing
@@ -174,36 +184,59 @@ export async function mount(stage) {
   });
 }
 
-/* ---------- the run-through's first step, live ----------
-   The same sequence the sprite sheet holds (tools/render-turn.html), but
-   rendered on the spot at the screen's own pixel density, so it is as crisp
-   as the CSS phone it hands off to. Framed through a view offset so it lands
-   on exactly the same box as the sheet's cells. Scrubbed by motion.js via
-   container.flTurnSet(progress). The models are already in the cache from
-   the hero. */
+/* ---------- the doctors run-through, live ----------
+   The whole pinned phone of the run-through, rendered on the spot at the
+   screen's own pixel density: step 01 is the device coming down onto the
+   phone and the turn to the front (scrubbed by scroll); the later steps swap
+   the screen with a crossfade on the same phone, and the comparison step
+   turns it sideways — so there is never a handoff to a different drawing.
+   Framed through a view offset so it sits on exactly the box the sprite
+   sheet's cells use (the fallback where WebGL isn't there). motion.js
+   drives it: container.flTurnSet(p), flRunStep(i), flRunLandscape(e). */
 const TURN_FULL = { w: 1200, h: 1600 };                      // the sheet renderer's frame
 const TURN_VIEW = { x: 104.33, y: 0, w: 1075.05, h: 1459 }; // the part of it a cell shows
-export async function mountTurn(container, screenUrl) {
+export async function mountRun(container, screenUrls) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   const { scene, camera, pivot, holder, setRing, screen } = await createScene(renderer);
   camera.aspect = TURN_FULL.w / TURN_FULL.h; camera.position.z *= 1.22;
   camera.setViewOffset(TURN_FULL.w, TURN_FULL.h, TURN_VIEW.x, TURN_VIEW.y, TURN_VIEW.w, TURN_VIEW.h);
   camera.updateProjectionMatrix();
-  const tex = await new THREE.TextureLoader().loadAsync(screenUrl);
-  tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
-  if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+
+  // the screen is a canvas texture, so one screenshot can crossfade to the next
+  const imgs = await Promise.all(screenUrls.map((u) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = u; })));
+  const sc = document.createElement('canvas'); sc.width = 620; sc.height = 1348;
+  const sctx = sc.getContext('2d');
+  const stex = new THREE.CanvasTexture(sc);
+  stex.colorSpace = THREE.SRGBColorSpace; stex.flipY = true; stex.anisotropy = 8;
+  if (screen) screen.material = new THREE.MeshBasicMaterial({ map: stex, toneMapped: false });
+  const cover = (im) => { // like object-fit: cover
+    const s = Math.max(sc.width / im.width, sc.height / im.height), w = im.width * s, h = im.height * s;
+    sctx.drawImage(im, (sc.width - w) / 2, (sc.height - h) / 2, w, h);
+  };
+  let fromS = 0, toS = 0, fade = 1;
+  function drawScreen() {
+    sctx.globalAlpha = 1; sctx.clearRect(0, 0, sc.width, sc.height); cover(imgs[fromS]);
+    if (fade < 1) { sctx.globalAlpha = fade; cover(imgs[toS]); }
+    stex.needsUpdate = true;
+  }
+  drawScreen();
+
   const seated = holder.position.clone();
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const easeInOut = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const lerp = (a, b, t) => a + (b - a) * t;
-  function pose(p) {
+  let shown = 0, target = 0, land = 0, landTarget = 0, landScale = 0.88;
+  function pose() {
+    const p = shown;
     const a = easeOut(Math.min(1, p / 0.58));
     holder.position.copy(seated).add(new THREE.Vector3(0.03, 0.03, 0.12).multiplyScalar(1 - a));
     holder.rotation.set(-0.7 * (1 - a), 0.55 * (1 - a), 0.25 * (1 - a));
     setRing(Math.max(0, Math.min(1, (p - 0.5) / 0.14)));
     const t = easeInOut(Math.max(0, Math.min(1, (p - 0.6) / 0.4)));
-    pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t));
+    // the comparison step turns the phone on its side, as the CSS phone does
+    pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t) - Math.PI / 2 * land);
+    pivot.scale.setScalar(1 - (1 - landScale) * land);
   }
   const canvas = renderer.domElement;
   canvas.className = 'fl-swap__turn-live'; canvas.setAttribute('aria-hidden', 'true');
@@ -211,22 +244,32 @@ export async function mountTurn(container, screenUrl) {
     const r = container.getBoundingClientRect();
     if (!r.width || !r.height) return;
     renderer.setSize(r.width, r.height, false);
+    landScale = parseFloat(getComputedStyle(container).getPropertyValue('--land-scale')) || 0.88;
+    dirty = true; if (!raf) raf = requestAnimationFrame(tick);
   };
-  let shown = 0, target = 0, raf = null, drawn = -1;
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let raf = null, dirty = true;
   const tick = () => {
     raf = null;
-    const d = target - shown;
-    shown += reduceMotion ? d : d * 0.34;
-    if (Math.abs(target - shown) < 0.0015) shown = target;
-    if (shown !== drawn) { drawn = shown; pose(shown); renderer.render(scene, camera); }
-    if (shown !== target) raf = requestAnimationFrame(tick);
+    let moving = false;
+    const d = target - shown; shown += reduceMotion ? d : d * 0.34;
+    if (Math.abs(target - shown) < 0.0015) shown = target; else moving = true;
+    const dl = landTarget - land; land += reduceMotion ? dl : dl * 0.3;
+    if (Math.abs(landTarget - land) < 0.002) land = landTarget; else moving = true;
+    if (fade < 1) { fade = Math.min(1, fade + (reduceMotion ? 1 : 0.07)); drawScreen(); if (fade >= 1) { fromS = toS; drawScreen(); } else moving = true; }
+    if (moving || dirty) { dirty = false; pose(); renderer.render(scene, camera); }
+    if (moving) raf = requestAnimationFrame(tick);
   };
-  container.flTurnSet = (p) => { target = Math.min(1, Math.max(0, p)); if (!raf) raf = requestAnimationFrame(tick); };
+  const wake = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  container.flTurnSet = (p) => { target = Math.min(1, Math.max(0, p)); wake(); };
   container.flTurnShown = () => shown;
+  // steps 1..n map to screenUrls[1..]; step 0 shows the first screen through the turn
+  container.flRunStep = (i) => { const n = Math.max(0, Math.min(imgs.length - 1, i)); if (n === toS) return; fromS = (fade < 1) ? toS : fromS; toS = n; fade = 0; wake(); };
+  container.flRunLandscape = (e) => { landTarget = Math.min(1, Math.max(0, e)); wake(); };
   resize(); new ResizeObserver(resize).observe(container);
-  pose(0); renderer.render(scene, camera);
+  pose(); renderer.render(scene, camera);
   container.appendChild(canvas);
   container.classList.add('is-live');
+  container.closest('.fl-swap__stage').classList.add('is-live');
   return container;
 }

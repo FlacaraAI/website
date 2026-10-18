@@ -29,14 +29,14 @@
     var started = false;
     wire.addEventListener('playing', function () {
       started = true;
-      // the drawing takes 2.6 s; hand off a beat before it ends (wall clock,
+      // the drawing takes 1.4 s; hand off a beat before it ends (wall clock,
       // so a stuttering decode can't hold the page on the line art)
-      setTimeout(finishDrawing, 2400);
+      setTimeout(finishDrawing, 1300);
     }, { once: true });
     wire.addEventListener('error', finishDrawing, { once: true });
     wire.play().catch(function () {});
     setTimeout(function () { if (!started) finishDrawing(); }, 1000);
-    setTimeout(finishDrawing, 4500);
+    setTimeout(finishDrawing, 3000);
   });
 
   var stage = document.querySelector('[data-device3d]');
@@ -50,8 +50,9 @@
       .then(function (m) {
         // the run-through's first step, rendered live: same models, crisp at
         // any pixel density — the sprite sheet is only fetched if this fails
-        if (turnBox) m.mountTurn(turnBox, 'images/app-home.webp').catch(function (err) { console.warn('device3d: turn stays on the sheet', err); releaseSheet(); });
-        return m.mount(stage);
+        var run = turnBox ? m.mountRun(turnBox, ['images/app-home.webp', 'images/app-home.webp', 'images/app-mesh.webp', 'images/app-notes.webp', 'images/app-compare-rot.webp'])
+          .catch(function (err) { console.warn('device3d: run-through stays on the sheet', err); releaseSheet(); }) : Promise.resolve();
+        return run.then(function () { return m.mount(stage); });
       })
       .catch(function (err) { console.warn('device3d: staying on the still', err); releaseSheet(); });
   };

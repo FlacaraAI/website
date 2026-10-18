@@ -334,6 +334,7 @@
     var screens = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-screen]'));
     var captions = Array.prototype.slice.call(swap.querySelectorAll('[data-swap-caption]'));
     var phone = swap.querySelector('.fl-phone');
+    var turn = swap.querySelector('.fl-swap__turn');
     var float = swap.querySelector('.fl-phone-float');
     if (!steps.length || !screens.length) return;
 
@@ -352,6 +353,7 @@
       var landscape = !!activeScreen && activeScreen.classList.contains('fl-phone__view--landscape');
       if (phone) phone.classList.toggle('fl-phone--rotated', landscape);
       if (float) float.classList.toggle('is-landscape', landscape);
+      if (turn && turn.flRunStep) turn.flRunStep(idx);
     }
     var current = -1;
     function setStep(idx) { if (idx !== current) { current = idx; activate(idx); } }
@@ -364,15 +366,24 @@
     /* the opening turn: a frame sequence of the device swinging from the
        phone's back to its front, scrubbed across the first step; the CSS
        phone takes over on the last frame */
-    var turn = swap.querySelector('.fl-swap__turn');
     var turnStep = turn ? steps[0] : null;
     function scrubTurn() {
       if (!turn || !turnStep || !turn.flTurnSet) return;
       var r = turnStep.getBoundingClientRect(), mid = window.innerHeight / 2;
       var p = Math.max(0, Math.min(1, (mid - r.top) / (r.height * 0.96)));
       turn.flTurnSet(p);
-      // the CSS phone only takes over once the frame actually on screen is the last one
-      swap.classList.toggle('is-turned', (turn.flTurnShown ? turn.flTurnShown() : p) >= 0.985);
+      turnTarget = p;
+      checkTurned();
+    }
+    // the CSS phone only takes over once the frame actually on screen is the
+    // last one — the frames ease toward the target, so keep checking until
+    // they get there
+    var turnTarget = 0, turnCheck = null;
+    function checkTurned() {
+      var shown = turn.flTurnShown ? turn.flTurnShown() : turnTarget;
+      var on = shown >= 0.985;
+      swap.classList.toggle('is-turned', on);
+      if (!on && turnTarget >= 0.985 && !turnCheck) turnCheck = requestAnimationFrame(function () { turnCheck = null; checkTurned(); });
     }
     var landscapeScreen = screens.filter(function (sc) { return sc.classList.contains('fl-phone__view--landscape'); })[0];
     var landscapeStep = landscapeScreen ? steps[parseInt(landscapeScreen.getAttribute('data-swap-screen'), 10)] : null;
@@ -408,6 +419,7 @@
           // screen can turn it smaller than the desktop's .88
           var land = parseFloat(getComputedStyle(phone).getPropertyValue('--land-scale')) || 0.88;
           phone.style.transform = 'rotate(' + (90 * e).toFixed(2) + 'deg) scale(' + (1 - (1 - land) * e).toFixed(3) + ')';
+          if (turn && turn.flRunLandscape) turn.flRunLandscape(e);
         }
       };
       window.addEventListener('scroll', function () { if (!capRaf) capRaf = requestAnimationFrame(drift); }, { passive: true });
