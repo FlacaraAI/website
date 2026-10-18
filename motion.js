@@ -401,6 +401,10 @@
         var first = steps[0].getBoundingClientRect(), last = steps[steps.length - 1].getBoundingClientRect();
         var span = last.bottom - first.top;
         swap.style.setProperty('--swap-p', Math.max(0, Math.min(1, (mid - first.top) / span)).toFixed(4));
+        // once the pinned block starts scrolling out at the end, the riding
+        // heading steps aside so the captions never slide under it
+        var pinned = swap.querySelector('.fl-swap__pinned');
+        if (pinned) { var pt = pinned.getBoundingClientRect().top; swap.classList.toggle('is-leaving', pt < -6); }
         steps.forEach(function (s, i) {
           var r = s.getBoundingClientRect();
           var p = Math.max(0, Math.min(1, (mid - r.top) / r.height));
