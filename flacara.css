@@ -1890,7 +1890,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    crossfading in place exactly as they do beside it on desktop. */
 @media (max-width: 900px) {
   .fl-swap-section { --ph-w: clamp(160px, calc((100svh - 330px) * .486), 270px); }
-  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 34px); }
+  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 20px); }
   .fl-swap__row { display: contents; }
   .fl-phone-float { grid-area: stage; height: calc(var(--ph-w) * 18.5 / 9 + 16px); }
   .fl-phone { width: var(--ph-w); max-width: none; border-radius: 34px; padding: 8px; }
