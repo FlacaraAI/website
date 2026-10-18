@@ -101,7 +101,7 @@ export async function createScene(renderer, base = '') {
     ringLight.intensity = lit * 0.075;
     ledLights.forEach((l, i) => { l.intensity = lit * 0.014 * (0.8 + 0.2 * Math.sin(i * 2.1)); });
   }
-  return { scene, camera, pivot, holder, phone, setRing, screen: phone.getObjectByName('xXDHkMplTIDAXLN') };
+  return { scene, camera, pivot, holder, phone, size, setRing, screen: phone.getObjectByName('xXDHkMplTIDAXLN') };
 }
 
 export async function mount(stage) {
@@ -172,4 +172,61 @@ export async function mount(stage) {
     canvas.addEventListener('transitionend', () => { if (still) still.style.visibility = 'hidden'; }, { once: true });
     if (!raf) raf = requestAnimationFrame(frame);
   });
+}
+
+/* ---------- the run-through's first step, live ----------
+   The same sequence the sprite sheet holds (tools/render-turn.html), but
+   rendered on the spot at the screen's own pixel density, so it is as crisp
+   as the CSS phone it hands off to. Framed through a view offset so it lands
+   on exactly the same box as the sheet's cells. Scrubbed by motion.js via
+   container.flTurnSet(progress). The models are already in the cache from
+   the hero. */
+const TURN_FULL = { w: 1200, h: 1600 };                      // the sheet renderer's frame
+const TURN_VIEW = { x: 104.33, y: 0, w: 1075.05, h: 1459 }; // the part of it a cell shows
+export async function mountTurn(container, screenUrl) {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const { scene, camera, pivot, holder, setRing, screen } = await createScene(renderer);
+  camera.aspect = TURN_FULL.w / TURN_FULL.h; camera.position.z *= 1.22;
+  camera.setViewOffset(TURN_FULL.w, TURN_FULL.h, TURN_VIEW.x, TURN_VIEW.y, TURN_VIEW.w, TURN_VIEW.h);
+  camera.updateProjectionMatrix();
+  const tex = await new THREE.TextureLoader().loadAsync(screenUrl);
+  tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
+  if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+  const seated = holder.position.clone();
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  const easeInOut = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function pose(p) {
+    const a = easeOut(Math.min(1, p / 0.58));
+    holder.position.copy(seated).add(new THREE.Vector3(0.03, 0.03, 0.12).multiplyScalar(1 - a));
+    holder.rotation.set(-0.7 * (1 - a), 0.55 * (1 - a), 0.25 * (1 - a));
+    setRing(Math.max(0, Math.min(1, (p - 0.5) / 0.14)));
+    const t = easeInOut(Math.max(0, Math.min(1, (p - 0.6) / 0.4)));
+    pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t));
+  }
+  const canvas = renderer.domElement;
+  canvas.className = 'fl-swap__turn-live'; canvas.setAttribute('aria-hidden', 'true');
+  const resize = () => {
+    const r = container.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    renderer.setSize(r.width, r.height, false);
+  };
+  let shown = 0, target = 0, raf = null, drawn = -1;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = () => {
+    raf = null;
+    const d = target - shown;
+    shown += reduceMotion ? d : d * 0.34;
+    if (Math.abs(target - shown) < 0.0015) shown = target;
+    if (shown !== drawn) { drawn = shown; pose(shown); renderer.render(scene, camera); }
+    if (shown !== target) raf = requestAnimationFrame(tick);
+  };
+  container.flTurnSet = (p) => { target = Math.min(1, Math.max(0, p)); if (!raf) raf = requestAnimationFrame(tick); };
+  container.flTurnShown = () => shown;
+  resize(); new ResizeObserver(resize).observe(container);
+  pose(0); renderer.render(scene, camera);
+  container.appendChild(canvas);
+  container.classList.add('is-live');
+  return container;
 }

@@ -1,63 +1,62 @@
-/* device-boot.js — the doctors hero's device, in three stages that never
-   block the page:
-   1. The wireframe draw-in: a short alpha clip already in the HTML plays as
-      soon as it can; the still underneath stays hidden while it draws.
-      If the clip isn't ready quickly (slow link, no alpha support), we skip
-      straight to the still.
+/* device-boot.js — the heroes' draw-ins and 3D, in stages that never block
+   the page:
+   1. Each [data-draw-in] stage holds a short alpha clip of the device as
+      line art and the still underneath. The clip plays as soon as it can
+      while the still stays hidden; if it isn't playing within a second the
+      page goes straight to the still.
    2. The still crossfades in as the drawing finishes.
-   3. Once the page has loaded and the browser is idle, device3d.js is
-      imported and the live scene fades in over the still at the same pose.
-      Skipped for reduced motion, data saver, small screens and no WebGL. */
+   3. The 3D (device3d.js on the doctors page; phone3d.js, via
+      phone-frames.js, on the patients page) starts loading at page load,
+      during the drawing, and fades in over the still once the drawing has
+      handed off. Skipped for reduced motion, data saver, small screens and
+      no WebGL. */
 (function () {
   'use strict';
-  var stage = document.querySelector('[data-device3d]');
-  if (!stage) return;
-  var wire = stage.querySelector('video');
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
 
-  var drawn = false;
-  function finishDrawing() {
-    if (drawn) return;
-    drawn = true;
-    stage.classList.remove('is-drawing');
-    stage.classList.add('is-drawn');
-    if (wire) setTimeout(function () { wire.pause(); wire.removeAttribute('src'); }, 1200);
-  }
-
-  if (!wire || reduceMotion || conn.saveData) {
-    finishDrawing();
-  } else {
+  document.querySelectorAll('[data-draw-in]').forEach(function (stage) {
+    var wire = stage.querySelector('video');
+    var drawn = false;
+    function finishDrawing() {
+      if (drawn) return;
+      drawn = true;
+      stage.classList.remove('is-drawing');
+      stage.classList.add('is-drawn');
+      if (wire) setTimeout(function () { wire.pause(); wire.removeAttribute('src'); }, 1200);
+    }
+    if (!wire || reduceMotion || conn.saveData) { finishDrawing(); return; }
     var started = false;
-    var onPlaying = function () {
+    wire.addEventListener('playing', function () {
       started = true;
-      // the drawing takes 2.6 s; hand off a beat before it ends so the still
-      // is in by the last frame (wall clock, so a stuttering decode can't
-      // hold the page on the line art)
+      // the drawing takes 2.6 s; hand off a beat before it ends (wall clock,
+      // so a stuttering decode can't hold the page on the line art)
       setTimeout(finishDrawing, 2400);
-    };
-    wire.addEventListener('playing', onPlaying, { once: true });
+    }, { once: true });
     wire.addEventListener('error', finishDrawing, { once: true });
     wire.play().catch(function () {});
-    // not drawing within a second of script start: don't make anyone wait
     setTimeout(function () { if (!started) finishDrawing(); }, 1000);
-    // and never longer than the clip itself, whatever happens
     setTimeout(finishDrawing, 4500);
-  }
+  });
 
-  if (reduceMotion || conn.saveData || window.innerWidth < 900 || !window.WebGLRenderingContext) return;
+  var stage = document.querySelector('[data-device3d]');
+  if (!stage) return;
+  var turnBox = document.querySelector('.fl-swap__turn');
+  var turnSheet = turnBox && turnBox.querySelector('canvas[data-fl-sheet]');
+  var releaseSheet = function () { if (turnSheet && turnSheet.flSheetEnable) turnSheet.flSheetEnable(); };
+  if (reduceMotion || conn.saveData || window.innerWidth < 900 || !window.WebGLRenderingContext) { releaseSheet(); return; }
   var start = function () {
     import('./device3d.js')
-      .then(function (m) { return m.mount(stage); })
-      .catch(function (err) { console.warn('device3d: staying on the still', err); });
+      .then(function (m) {
+        // the run-through's first step, rendered live: same models, crisp at
+        // any pixel density — the sprite sheet is only fetched if this fails
+        if (turnBox) m.mountTurn(turnBox, 'images/app-home.webp').catch(function (err) { console.warn('device3d: turn stays on the sheet', err); releaseSheet(); });
+        return m.mount(stage);
+      })
+      .catch(function (err) { console.warn('device3d: staying on the still', err); releaseSheet(); });
   };
-  // the 3D models (~1 MB) only start downloading once the drawing has handed
-  // off and the page is idle, so they never compete with what's on screen
-  var idle = function () { (window.requestIdleCallback || setTimeout)(start, { timeout: 3000 }); };
-  var afterDrawn = function () {
-    if (drawn) return idle();
-    var mo = new MutationObserver(function () { if (drawn) { mo.disconnect(); idle(); } });
-    mo.observe(stage, { attributes: true, attributeFilter: ['class'] });
-  };
-  if (document.readyState === 'complete') afterDrawn(); else window.addEventListener('load', afterDrawn);
+  // the models download while the line art is still drawing; mount() itself
+  // waits for the handoff before fading in
+  var idle = function () { (window.requestIdleCallback || setTimeout)(start, { timeout: 1500 }); };
+  if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
 })();

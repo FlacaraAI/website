@@ -356,7 +356,7 @@
     var current = -1;
     function setStep(idx) { if (idx !== current) { current = idx; activate(idx); } }
     setStep(0);
-    if (reduceMotion && swap.querySelector('canvas[data-fl-sheet]')) swap.classList.add('is-turned');
+    if (reduceMotion && swap.querySelector('.fl-swap__turn')) swap.classList.add('is-turned');
 
     /* each caption rises with the scroll while its step is on screen:
        it comes in low, drifts up through its slot, and leaves high — the
@@ -364,15 +364,15 @@
     /* the opening turn: a frame sequence of the device swinging from the
        phone's back to its front, scrubbed across the first step; the CSS
        phone takes over on the last frame */
-    var turn = swap.querySelector('canvas[data-fl-sheet]');
+    var turn = swap.querySelector('.fl-swap__turn');
     var turnStep = turn ? steps[0] : null;
     function scrubTurn() {
-      if (!turn || !turnStep || !turn.flSheetSet) return;
+      if (!turn || !turnStep || !turn.flTurnSet) return;
       var r = turnStep.getBoundingClientRect(), mid = window.innerHeight / 2;
       var p = Math.max(0, Math.min(1, (mid - r.top) / (r.height * 0.96)));
-      turn.flSheetSet(p);
+      turn.flTurnSet(p);
       // the CSS phone only takes over once the frame actually on screen is the last one
-      swap.classList.toggle('is-turned', (turn.flSheetShown ? turn.flSheetShown() : p) >= 0.985);
+      swap.classList.toggle('is-turned', (turn.flTurnShown ? turn.flTurnShown() : p) >= 0.985);
     }
     var landscapeScreen = screens.filter(function (sc) { return sc.classList.contains('fl-phone__view--landscape'); })[0];
     var landscapeStep = landscapeScreen ? steps[parseInt(landscapeScreen.getAttribute('data-swap-screen'), 10)] : null;

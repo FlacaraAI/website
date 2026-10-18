@@ -91,7 +91,15 @@
       <div data-parallax="0.22">
         <div data-reveal="scale" style="--fl-reveal-delay:140ms">
           <div class="fl-phone3d-stage" data-phone-float data-screen="images/app-mesh.webp">
-            <div class="fl-phone-hero">
+            <div class="fl-phone-hero fl-draw is-drawing" data-draw-in>
+              <!-- the phone draws itself in as line art (a short alpha clip at
+                   the same pose), then the still crossfades in; device-boot.js
+                   runs the handoff and skips straight to the still if the clip
+                   isn't ready -->
+              <video class="fl-draw__wire" muted playsinline autoplay preload="auto" aria-hidden="true">
+                <source src="images/wire-phone.mov" type='video/mp4; codecs="hvc1"'>
+                <source src="images/wire-phone.webm" type="video/webm">
+              </video>
               <img src="images/phone-hero.webp" width="960" height="1200" fetchpriority="high" alt="The flacara app's body map, shown on an iPhone">
             </div>
           </div>
@@ -347,6 +355,7 @@
 
 <script src="compare.js" defer></script>
 <script src="motion.js" defer></script>
+<script src="device-boot.js" defer></script>
 <script src="phone-frames.js" defer></script>
 
 </body>

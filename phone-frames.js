@@ -26,7 +26,7 @@
           .then(function (m) { return m.mount(wrap, stage.getAttribute('data-screen'), img); })
           .catch(function (err) { console.warn('phone3d: staying on the snapshot', err); });
       };
-      var idle = function () { (window.requestIdleCallback || setTimeout)(start, { timeout: 2500 }); };
+      var idle = function () { (window.requestIdleCallback || setTimeout)(start, { timeout: 1500 }); };
       if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
     }
 

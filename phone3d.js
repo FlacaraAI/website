@@ -103,8 +103,16 @@ export async function mount(wrap, screenUrl, img) {
     if (visible && !raf) raf = requestAnimationFrame(frame);
   }).observe(wrap);
 
-  // first frame on screen, then fade the canvas in over the snapshot
+  // first frame on screen, then fade the canvas in over the snapshot — but
+  // never over the line-art draw-in, if the stage has one running
   renderer.render(scene, camera);
+  if (wrap.hasAttribute('data-draw-in') && !wrap.classList.contains('is-drawn')) {
+    await new Promise((resolve) => {
+      const mo = new MutationObserver(() => { if (wrap.classList.contains('is-drawn')) { mo.disconnect(); resolve(); } });
+      mo.observe(wrap, { attributes: true, attributeFilter: ['class'] });
+    });
+    await new Promise((r) => setTimeout(r, 900));
+  }
   requestAnimationFrame(() => {
     wrap.classList.add('is-3d');
     canvas.addEventListener('transitionend', () => { if (img) img.style.visibility = 'hidden'; }, { once: true });

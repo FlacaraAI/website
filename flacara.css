@@ -1993,10 +1993,16 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-audience__card--doctors::before { background: var(--fl-red-ink); }
 .fl-audience__card:hover { transform: translateY(-3px); text-decoration: none; }
-.fl-audience__card .fl-label { color: var(--fl-blue-ink); }
+.fl-audience__card .fl-label { color: var(--fl-blue-ink); letter-spacing: .14em; }
 .fl-audience__card--doctors .fl-label { color: var(--fl-red-ink); }
-.fl-audience__card h3 { font-family: var(--fl-display); font-weight: 600; font-size: clamp(1.5rem, 2.2vw, 1.875rem); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+.fl-audience__card h3 { font-family: var(--fl-display); font-weight: 600; font-size: clamp(2.25rem, 3.6vw, 3.25rem); line-height: 1; letter-spacing: -.025em; margin: 2px 0 6px; color: var(--fl-ink); }
+.fl-audience__card h3 mark {
+  background: linear-gradient(135deg, var(--fl-blue-ink) 0%, #6f8fca 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.fl-audience__card--doctors h3 mark { background-image: linear-gradient(135deg, var(--fl-red-ink) 0%, #c47a64 100%); }
 .fl-audience__card p { margin: 0; color: var(--fl-muted); line-height: 1.5; }
+.fl-audience__pitch { font-size: 1.0625rem; }
 .fl-audience__foot { margin-top: auto; padding-top: 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .fl-audience__price { font-family: var(--fl-mono); font-size: .875rem; color: var(--fl-ink); }
 .fl-audience__go { font-weight: 600; color: var(--fl-blue-ink); }
@@ -2038,6 +2044,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 .fl-swap__turn > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; }
 .fl-swap__turn img[hidden] { display: none; }
+/* once the live renderer is in, the sheet canvas and the first frame go */
+.fl-swap__turn.is-live > canvas[data-fl-sheet], .fl-swap__turn.is-live > img { display: none; }
 .fl-swap-section--turn .fl-phone { opacity: 0; transition: opacity .35s var(--fl-ease-out); }
 .fl-swap.is-turned .fl-swap__turn { opacity: 0; }
 /* while the frames play, the CSS phone underneath already holds the first
@@ -2097,16 +2105,19 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 /* ---------- doctors hero: the device on the phone, live ----------
    A 4:5 stage; the still fills it and the canvas lands exactly on it. */
 .fl-device3d { position: relative; width: 112%; margin: 0 -6%; aspect-ratio: 4 / 5; }
-.fl-device3d img { display: block; width: 100%; height: 100%; object-fit: contain; transition: opacity .8s var(--fl-ease-out); }
-/* the line-art clip sits over the still; while drawing, the still is hidden,
-   then the two crossfade (device-boot.js flips the classes) */
-.fl-device3d__wire {
+.fl-device3d img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* the draw-in, on either hero: the line-art clip sits over the still; while
+   it draws the still is hidden, then the two crossfade (device-boot.js
+   flips the classes) */
+.fl-draw { position: relative; }
+.fl-draw > img { transition: opacity .8s var(--fl-ease-out); }
+.fl-draw__wire {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block;
-  opacity: .95; transition: opacity .7s var(--fl-ease-out) .1s; pointer-events: none;
+  opacity: .95; transition: opacity .7s var(--fl-ease-out) .1s; pointer-events: none; z-index: 1;
 }
-.fl-device3d.is-drawing img { opacity: 0; }
-.fl-device3d.is-drawn .fl-device3d__wire { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .fl-device3d__wire { display: none; } .fl-device3d.is-drawing img { opacity: 1; } }
+.fl-draw.is-drawing > img { opacity: 0; }
+.fl-draw.is-drawn .fl-draw__wire { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .fl-draw__wire { display: none; } .fl-draw.is-drawing > img { opacity: 1; } }
 .fl-device3d__canvas {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; transition: opacity .9s var(--fl-ease-out);
@@ -2133,15 +2144,15 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-tech__drawing.is-visible .fl-tech__draw path { animation-play-state: running; }
 @media (max-width: 860px) { .fl-tech__drawing { width: 120vw; right: -40vw; top: 40%; opacity: .14; } }
 
-/* ---------- home: the original outline drawn in behind the product stage ----------
-   The first hero's hand-traced h1, large and faint in white over the
-   stage's colour sweep, tracing itself in as the stage scrolls into view. */
-.fl-intro__stage { overflow: hidden; }
-.fl-intro__draw {
-  position: absolute; left: 50%; top: 50%; width: min(118%, 1100px); aspect-ratio: 1;
-  transform: translate(-50%, -50%); color: #fff; opacity: .34; pointer-events: none; z-index: 0;
+/* ---------- home: the original outline drawn in behind the two editions ----------
+   The first hero's hand-traced h1, large and faint in the brand ramp,
+   tracing itself in as the fork scrolls into view. */
+.fl-audience { position: relative; }
+.fl-audience__draw {
+  position: absolute; left: 50%; top: 50%; width: min(150%, 1240px); aspect-ratio: 1; z-index: 0;
+  transform: translate(-50%, -50%); color: var(--fl-blue-ink); opacity: .13; pointer-events: none;
 }
-.fl-intro__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
-.fl-intro__draw path { animation-play-state: paused; animation-duration: 1.8s; }
-[data-reveal].is-visible .fl-intro__draw path { animation-play-state: running; }
-.fl-intro__rings { display: none; }
+.fl-audience__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
+.fl-audience__draw path { animation-play-state: paused; animation-duration: 1.8s; }
+[data-reveal].is-visible .fl-audience__draw path { animation-play-state: running; }
+.fl-audience__card { position: relative; z-index: 1; }

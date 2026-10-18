@@ -21,12 +21,15 @@
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var sheet = new Image(), ready = false, current = -1, shown = 0, target = 0, raf = null;
-    var fetched = false;
+    var fetched = false, held = canvas.hasAttribute('data-live-first');
     function fetchSheet() {
-      if (fetched) return;
+      if (fetched || held) return;
       if (!loaded) { pending.push(fetchSheet); return; }
       fetched = true; sheet.src = canvas.getAttribute('data-sheet');
     }
+    // a live (WebGL) version may take this canvas's place; while that is
+    // being decided the sheet isn't fetched. flSheetEnable() releases it.
+    canvas.flSheetEnable = function () { held = false; fetchSheet(); };
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es, io) { if (es[0].isIntersecting) { fetchSheet(); io.disconnect(); } }, { rootMargin: '120% 0px' }).observe(canvas);
     } else fetchSheet();
@@ -59,6 +62,10 @@
       if (!raf) raf = requestAnimationFrame(tick);
     };
     canvas.flSheetShown = function () { return shown; };
+    // whoever scrubs this (motion.js) talks to the container, so a live
+    // renderer can take over the same two calls
+    var box = canvas.parentNode;
+    if (box && !box.flTurnSet) { box.flTurnSet = canvas.flSheetSet; box.flTurnShown = canvas.flSheetShown; }
     sheet.addEventListener('load', function () {
       ready = true; canvas.classList.add('is-ready');
       if (first) first.hidden = true;

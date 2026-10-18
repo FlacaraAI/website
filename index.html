@@ -129,7 +129,23 @@
     </div>
 
     <a class="fl-intro__stage" href="#choose" data-reveal="scale" style="--fl-reveal-delay:160ms">
-      <span class="fl-intro__draw" aria-hidden="true">
+      <span class="fl-intro__rings fl-intro__rings--front" aria-hidden="true"></span>
+      <span class="fl-intro__rings fl-intro__rings--side" aria-hidden="true"></span>
+      <img class="fl-intro__shot fl-intro__shot--front" src="flacara_full.webp" loading="lazy" decoding="async" alt="The flacara h1 housing, front view" width="1920" height="1080">
+      <img class="fl-intro__shot fl-intro__shot--side" src="flacara_full_side.webp" loading="lazy" decoding="async" alt="The flacara h1 housing, three-quarter view" width="1920" height="1080">
+      <span class="fl-intro__cue">Choose your edition</span>
+    </a>
+
+    <dl class="fl-intro__specs" data-reveal style="--fl-reveal-delay:120ms">
+      <div><dt>Resolution</dt><dd>≈16<small>µm</small></dd></div>
+      <div><dt>Lighting</dt><dd>2<small>modes</small></dd></div>
+      <div><dt>Charging</dt><dd>USB-C</dd></div>
+      <div><dt>Works with</dt><dd>iPhone</dd></div>
+    </dl>
+
+    <div class="fl-audience" id="choose" data-reveal>
+      <!-- the first hero's hand-traced h1, drawn in large behind the two editions -->
+      <span class="fl-audience__draw" aria-hidden="true">
         <svg class="fl-outline" viewBox="250.3 139.3 460 460" focusable="false">
           <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">
           <path pathLength="1" style="--s:.00;--i:5" d="m313.84085 360.42007c0 -91.93152 74.52521 -166.45671 166.4567 -166.45671c44.147034 0 86.48596 17.537354 117.70264 48.754044c31.216736 31.216675 48.75403 73.5556 48.75403 117.70267c0 91.93149 -74.52515 166.4567 -166.45667 166.4567c-91.93149 0 -166.4567 -74.52521 -166.4567 -166.4567z"/>
@@ -151,34 +167,19 @@
           </g>
         </svg>
       </span>
-      <img class="fl-intro__shot fl-intro__shot--front" src="flacara_full.webp" loading="lazy" decoding="async" alt="The flacara h1 housing, front view" width="1920" height="1080">
-      <img class="fl-intro__shot fl-intro__shot--side" src="flacara_full_side.webp" loading="lazy" decoding="async" alt="The flacara h1 housing, three-quarter view" width="1920" height="1080">
-      <span class="fl-intro__cue">Choose your edition</span>
-    </a>
-
-    <dl class="fl-intro__specs" data-reveal style="--fl-reveal-delay:120ms">
-      <div><dt>Resolution</dt><dd>≈16<small>µm</small></dd></div>
-      <div><dt>Lighting</dt><dd>2<small>modes</small></dd></div>
-      <div><dt>Charging</dt><dd>USB-C</dd></div>
-      <div><dt>Works with</dt><dd>iPhone</dd></div>
-    </dl>
-
-    <div class="fl-audience" id="choose">
-      <a class="fl-audience__card" href="/patients" data-reveal style="--fl-reveal-delay:100ms">
-        <span class="fl-label">For patients · home edition</span>
-        <h3>Worried about a spot? Track it.</h3>
-        <p>Take a clear photo today and another next month. See if anything has changed, and
-          have something worth showing your doctor.</p>
+      <a class="fl-audience__card" href="/patients">
+        <span class="fl-label">Home edition</span>
+        <h3>For <mark>patients</mark></h3>
+        <p class="fl-audience__pitch">Worried about a spot? Track it. Take a clear photo today and another next month, and have something worth showing your doctor.</p>
         <div class="fl-audience__foot">
           <span class="fl-audience__price">$199</span>
           <span class="fl-audience__go">For patients →</span>
         </div>
       </a>
-      <a class="fl-audience__card fl-audience__card--doctors" href="/doctors" data-reveal style="--fl-reveal-delay:180ms">
-        <span class="fl-label">For doctors · clinical edition</span>
-        <h3>The dermatoscope is the camera.</h3>
-        <p>Capture, locate and compare lesions on one phone, with both lighting modes. One in every
-          exam room.</p>
+      <a class="fl-audience__card fl-audience__card--doctors" href="/doctors">
+        <span class="fl-label">Clinical edition</span>
+        <h3>For <mark>doctors</mark></h3>
+        <p class="fl-audience__pitch">The dermatoscope is the camera. Capture, locate and compare lesions on one phone, with both lighting modes. One in every exam room.</p>
         <div class="fl-audience__foot">
           <span class="fl-audience__price">$249</span>
           <span class="fl-audience__go">For doctors →</span>
