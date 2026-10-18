@@ -124,7 +124,7 @@
 <section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--turn" aria-labelledby="workflow-h">
   <div class="fl-wrap">
     <div class="fl-section-head" data-reveal>
-      <span class="fl-label fl-kicker">The workflow</span>
+      <span class="fl-label fl-kicker">In the exam room</span>
       <h2 class="fl-display-m" id="workflow-h">Exam to record.</h2>
     </div>
 
@@ -581,7 +581,7 @@
     fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, org, source: 'doctors' }),
+      body: JSON.stringify({ email, org, source: 'doctors', audience: 'doctor', edition: 'clinical' }),
     }).catch(() => {});
   });
 </script>

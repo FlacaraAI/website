@@ -240,7 +240,7 @@ export async function mountRun(container, screenUrls) {
     setRing(Math.max(0, Math.min(1, (p - 0.5) / 0.14)));
     const t = easeInOut(Math.max(0, Math.min(1, (p - 0.6) / 0.4)));
     // the comparison step turns the phone on its side, as the CSS phone does
-    pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t) - Math.PI / 2 * land);
+    pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t) + Math.PI / 2 * land);
     pivot.scale.setScalar(1 - (1 - landScale) * land);
   }
   const canvas = renderer.domElement;

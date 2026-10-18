@@ -117,7 +117,7 @@
 <section class="fl-section fl-swap-section" aria-labelledby="over-time-h">
   <div class="fl-wrap">
     <div class="fl-section-head" data-reveal>
-      <span class="fl-label fl-kicker">How it works</span>
+      <span class="fl-label fl-kicker">The app</span>
       <h2 class="fl-display-m" id="over-time-h">Snap. Save. Compare.</h2>
     </div>
 
@@ -373,7 +373,7 @@
     fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'patients' }),
+      body: JSON.stringify({ email, source: 'patients', audience: 'patient', edition: 'home' }),
     }).catch(() => {});
   });
 </script>

@@ -8,20 +8,25 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, org, source } = req.body || {};
+  const { email, org, source, audience, edition } = req.body || {};
 
   if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
+  // who is ordering: the page tells us, so the note and the subject say it up front
+  const who = audience === 'doctor' ? 'Doctor' : audience === 'patient' ? 'Patient' : 'Unknown';
+  const which = edition === 'clinical' ? 'clinical edition ($249)' : edition === 'home' ? 'home edition ($199)' : 'edition not given';
+
   const lines = [
+    `Who: ${who} — ${which}`,
     `Email: ${email}`,
     org ? `Practice/company: ${org}` : null,
     source ? `Source page: ${source}` : null,
   ].filter(Boolean);
 
   const stamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
-  const subject = `New Flacara pre-order — ${email} — ${stamp} UTC`;
+  const subject = `New Flacara pre-order — ${who} — ${email} — ${stamp} UTC`;
 
   try {
     const r = await fetch('https://api.resend.com/emails', {
