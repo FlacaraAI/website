@@ -19,18 +19,19 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserv
 renderer.setPixelRatio(1); renderer.setSize(W, H);
 document.body.appendChild(renderer.domElement);
 const { scene, camera, pivot, holder, setRing } = await createScene(renderer, '../');
-// a flatter, more frontal pose than the hero, so the drop reads as straight down onto the plateau
-pivot.rotation.set(0.16, 0.30, -0.03);
+// the hero's own angle, a little more turned so the housing's depth shows as it comes down
+pivot.rotation.set(-0.26, 0.62, 0.22);
 // the lifted device needs headroom: the pair sits low in the frame
-pivot.position.y = -0.028;
-camera.position.z *= 1.12; camera.updateProjectionMatrix();
+pivot.position.y = -0.03;
+camera.position.z *= 1.34; camera.updateProjectionMatrix();
 const seated = holder.position.clone();
 const ease = (t) => 1 - Math.pow(1 - t, 3);
 window.renderFrame = (i, n) => {
   const p = i / (n - 1);
   const d = ease(Math.min(1, p / 0.7));            // descends over the first 70%
-  holder.position.copy(seated).add(new THREE.Vector3(-0.012, 0.028, 0.11).multiplyScalar(1 - d));
-  holder.rotation.set(-0.55 * (1 - d), 0.40 * (1 - d), 0.1 * (1 - d));
+  // comes in from up and to the right, tipped, settling flat as it lands
+  holder.position.copy(seated).add(new THREE.Vector3(0.03, 0.03, 0.12).multiplyScalar(1 - d));
+  holder.rotation.set(-0.7 * (1 - d), 0.55 * (1 - d), 0.25 * (1 - d));
   setRing(Math.max(0, (p - 0.7) / 0.3));         // ring lights over the last 30%
   renderer.render(scene, camera);
   return renderer.domElement.toDataURL('image/png');

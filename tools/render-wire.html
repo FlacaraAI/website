@@ -22,14 +22,19 @@ const { scene, camera, pivot, phone } = await createScene(renderer, '../');
 // edges of every mesh, in the pivot's own space (pivot unrotated while measuring)
 pivot.rotation.set(0, 0, 0); pivot.updateMatrixWorld(true);
 const segs = [];
+// only the large parts, and only their decisive edges: the drawing should
+// read as the object, not as every screw and pad in the CAD
 phone.traverse((o) => {
   if (!o.isMesh) return;
-  const e = new THREE.EdgesGeometry(o.geometry, 24), pos = e.attributes.position;
+  const b = new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
+  const big = Math.max(b.x, b.y, b.z) > 0.012;
+  o.visible = false;
+  if (!big) return;
+  const e = new THREE.EdgesGeometry(o.geometry, 38), pos = e.attributes.position;
   for (let i = 0; i < pos.count; i += 2) {
     segs.push([new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld),
                new THREE.Vector3().fromBufferAttribute(pos, i + 1).applyMatrix4(o.matrixWorld)]);
   }
-  o.visible = false;
 });
 // sweep order: out from the housing, then down the phone
 const origin = new THREE.Vector3(-0.015, 0.056, 0.01);
@@ -37,7 +42,7 @@ segs.sort((p, q) => p[0].distanceTo(origin) - q[0].distanceTo(origin));
 const arr = new Float32Array(segs.length * 6);
 segs.forEach(([a, b], i) => { arr.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6); });
 const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92 }));
+const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 }));
 pivot.add(lines);
 pivot.rotation.set(BASE.x, BASE.y, BASE.z);
 scene.environment = null; scene.traverse((o) => { if (o.isLight) o.visible = false; });

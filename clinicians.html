@@ -120,7 +120,7 @@
 </section>
 
 <!-- ============ 00 lift it on: scroll (or drag) seats the device ============ -->
-<section class="fl-attach" data-fl-attach data-sheet="images/attach-sheet.webp" data-cols="8" data-frames="40" data-w="640" data-h="800" aria-labelledby="attach-h">
+<section class="fl-attach" data-fl-attach aria-labelledby="attach-h">
   <div class="fl-attach__sticky">
     <div class="fl-wrap fl-attach__grid">
       <div class="fl-attach__copy">
@@ -131,8 +131,8 @@
         <p class="fl-attach__seated" data-attach-seated><span class="fl-label">Seated</span> Fixed distance. Fixed light.</p>
       </div>
       <figure class="fl-attach__stage">
-        <img class="fl-attach__first" src="images/attach-first.webp" width="320" height="400" loading="lazy" decoding="async" alt="">
-        <canvas class="fl-attach__canvas" width="800" height="1000" aria-hidden="true"></canvas>
+        <img class="fl-sheet__first fl-attach__first" src="images/attach-first.webp" width="360" height="400" loading="lazy" decoding="async" alt="">
+        <canvas class="fl-attach__canvas" data-fl-sheet data-sheet="images/attach-sheet.webp" data-cols="8" data-frames="40" data-w="720" data-h="800" width="720" height="800" aria-hidden="true"></canvas>
         <label class="fl-attach__slider">
           <span class="fl-label">Slide to attach</span>
           <input type="range" min="0" max="1000" value="0" step="1" aria-label="Move the flacara h1 onto the phone">
@@ -143,7 +143,7 @@
 </section>
 
 <!-- ============ 01 exam to record: each step is the old way, struck out, then the fix ============ -->
-<section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--flip" aria-labelledby="workflow-h">
+<section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--turn" aria-labelledby="workflow-h">
   <div class="fl-wrap">
     <div class="fl-section-head" data-reveal>
       <span class="fl-label fl-kicker">The workflow</span>
@@ -171,7 +171,12 @@
 
           <div class="fl-phone-float">
           <div class="fl-swap__stage" data-tilt data-reveal="scale">
-          <img class="fl-swap__back" loading="lazy" decoding="async" src="images/h1-seated.webp" width="536" height="1043" alt="flacara h1 seated over the camera of an iPhone, seen from the back">
+          <!-- the turn: back of the phone with the h1 on it, swinging round to
+               the front (motion.js scrubs it across the first step) -->
+          <div class="fl-swap__turn" aria-hidden="true">
+            <img class="fl-sheet__first" src="images/turn-first.webp" width="300" height="400" loading="lazy" decoding="async" alt="">
+            <canvas data-fl-sheet data-sheet="images/turn-sheet.webp" data-cols="7" data-frames="28" data-w="600" data-h="800" width="600" height="800"></canvas>
+          </div>
           <div class="fl-phone">
             <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
             <span class="fl-phone__btn fl-phone__btn--vol-up" aria-hidden="true"></span>

@@ -2024,38 +2024,25 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-swap__caption--below .fl-swap__was { margin-inline: auto; }
 .fl-swap-section .fl-swap__cap .fl-swap__was + .fl-title { margin-top: 10px; }
 
-/* ---------- the flip: step one is the back of the phone, with the h1 on it ----------
-   On the opening step the render stands in for the phone; scrolling on turns
-   it over (the render swings away, the phone swings in), so you see the
-   device on the phone first and then what it captured. The separate
-   rotate property is used on purpose: motion.js drives .fl-phone's inline
-   transform for the landscape turn, and the two compose instead of fighting. */
-/* flat, not the preserve-3d [data-tilt] gives it: in a shared 3D space the
-   turning render cut through the edge-on phone and showed as a seam */
-.fl-swap-section--flip .fl-swap__stage { perspective: 1400px; transform-style: flat; }
-.fl-swap__back {
-  position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
-  /* the render is wider than the phone (the housing overhangs its corner):
-     sized so the phone body matches .fl-phone, and shifted so the phone's
-     centre, not the picture's, sits on the stage's centre */
-  width: calc(var(--ph-w, 340px) * 1.1602); max-width: calc(76vw * 1.1602); height: auto;
-  translate: -56.06% -53.74%; opacity: 0; rotate: y 90deg;
-  filter: drop-shadow(0 40px 50px rgba(74,32,24,.25));
-  transition: rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
+/* ---------- the turn: step one is the back of the phone, with the h1 on it ----------
+   A rendered frame sequence of the pair swinging round to the front
+   (images/turn-sheet.webp) sits over the CSS phone, sized so the phone body
+   in the frames matches .fl-phone exactly; the last frame is straight-on,
+   and the CSS phone — with the app's first screen already up — fades in
+   under it as the turn completes. motion.js drives the frame from scroll. */
+.fl-swap__turn {
+  position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
+  width: calc(var(--ph-w, 340px) * 1.7496); max-width: calc(76vw * 1.7496); aspect-ratio: 3 / 4;
+  translate: -49.25% -50.36%;
+  transition: opacity .35s var(--fl-ease-out);
 }
-.fl-swap[data-step="0"] .fl-swap__back {
-  opacity: 1; rotate: y 0deg;
-  transition: rotate .6s var(--fl-ease-out) .4s, opacity .3s linear .4s;
-}
-.fl-swap-section--flip .fl-phone {
-  transition: transform .12s linear, rotate .6s var(--fl-ease-out) .4s, opacity .3s linear .4s;
-}
-.fl-swap-section--flip .fl-swap[data-step="0"] .fl-phone {
-  opacity: 0; rotate: y -90deg;
-  transition: transform .12s linear, rotate .45s cubic-bezier(.55,0,1,.45), opacity .3s linear .15s;
-}
+.fl-swap__turn > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; }
+.fl-swap__turn img[hidden] { display: none; }
+.fl-swap-section--turn .fl-phone { opacity: 0; transition: opacity .35s var(--fl-ease-out); }
+.fl-swap.is-turned .fl-swap__turn { opacity: 0; }
+.fl-swap-section--turn .fl-swap.is-turned .fl-phone { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-  .fl-swap__was, .fl-swap__back, .fl-swap-section--flip .fl-phone { transition: none !important; }
+  .fl-swap__was, .fl-swap__turn, .fl-swap-section--turn .fl-phone { transition: none !important; }
 }
 
 /* ---------- doctors: one in every room ---------- */
@@ -2124,26 +2111,33 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-device3d.is-3d .fl-device3d__canvas { opacity: 1; }
 @media (max-width: 860px) { .fl-device3d { width: 100%; max-width: 420px; margin: 0 auto; } }
 
-/* ---------- doctors: lift it on (scroll-scrubbed frame sequence) ---------- */
-.fl-attach { position: relative; height: 160vh; }
-.fl-attach__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; align-items: center; }
-.fl-attach__grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: center; width: 100%; }
+/* ---------- doctors: lift it on (scroll-scrubbed frame sequence) ----------
+   The frame fills the height of the screen; the copy sits over its empty
+   left side, so the device is the whole picture while it comes down. */
+.fl-attach { position: relative; height: 170vh; }
+.fl-attach__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.fl-attach__grid { position: relative; height: 100%; }
+.fl-attach__stage { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; }
+.fl-attach__stage > .fl-attach__first, .fl-attach__stage > .fl-attach__canvas {
+  grid-area: 1 / 1; width: auto; height: min(100svh - 96px, 1040px); aspect-ratio: 9 / 10; max-width: 100%;
+  margin: 0 0 56px 18%;
+}
+.fl-attach__first { object-fit: contain; }
+.fl-attach__first[hidden] { display: none; }
+.fl-attach__copy { position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 2; max-width: 36ch; }
 .fl-attach__copy .fl-kicker { display: block; color: var(--fl-red-ink); }
 .fl-attach__copy .fl-display-m { margin-top: 10px; }
-.fl-attach__copy .fl-body--l { margin-top: 18px; color: var(--fl-muted); max-width: 40ch; }
+.fl-attach__copy .fl-body--l { margin-top: 18px; color: var(--fl-muted); max-width: 34ch; }
 .fl-attach__seated {
   margin: 22px 0 0; font-size: 1.0625rem; color: var(--fl-ink);
   opacity: 0; transform: translateY(8px); transition: opacity .5s var(--fl-ease-out), transform .6s var(--fl-ease-out);
 }
 .fl-attach__seated .fl-label { color: var(--fl-red-ink); margin-right: 10px; }
 .fl-attach.is-seated .fl-attach__seated { opacity: 1; transform: none; }
-.fl-attach__stage { margin: 0; display: grid; justify-items: center; gap: 16px; }
-.fl-attach__stage > .fl-attach__first, .fl-attach__stage > .fl-attach__canvas { grid-area: 1 / 1; }
-.fl-attach__first { width: min(100%, calc((100svh - 220px) * .8)); aspect-ratio: 4 / 5; height: auto; object-fit: contain; }
-.fl-attach__first[hidden] { display: none; }
-.fl-attach__slider { grid-area: 2 / 1; }
-.fl-attach__canvas { width: min(100%, calc((100svh - 220px) * .8)); aspect-ratio: 4 / 5; height: auto; display: block; }
-.fl-attach__slider { display: grid; gap: 8px; width: min(360px, 100%); text-align: center; }
+.fl-attach__slider {
+  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2;
+  display: grid; gap: 8px; width: min(360px, 80%); text-align: center;
+}
 .fl-attach__slider .fl-label { color: var(--fl-muted); }
 .fl-attach__slider input {
   -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; margin: 10px 0;
@@ -2157,10 +2151,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-attach__slider input::-moz-range-thumb { width: 28px; height: 28px; border: 2px solid var(--fl-red-ink); border-radius: 999px; background: #fff; }
 @media (max-width: 860px) {
   .fl-attach { height: 150vh; }
-  .fl-attach__grid { grid-template-columns: 1fr; gap: 16px; }
-  .fl-attach__copy { text-align: center; }
+  .fl-attach__stage > .fl-attach__first, .fl-attach__stage > .fl-attach__canvas { height: min(100svh - 300px, 760px); margin: 90px 0 0; }
+  .fl-attach__copy { position: static; transform: none; text-align: center; max-width: none; padding-top: 72px; }
   .fl-attach__copy .fl-body--l { margin-inline: auto; }
-  .fl-attach__canvas { width: min(100%, calc((100svh - 330px) * .8)); }
+  .fl-attach__seated { display: none; }
 }
 
 

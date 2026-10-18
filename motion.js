@@ -356,10 +356,23 @@
     var current = -1;
     function setStep(idx) { if (idx !== current) { current = idx; activate(idx); } }
     setStep(0);
+    if (reduceMotion && swap.querySelector('canvas[data-fl-sheet]')) swap.classList.add('is-turned');
 
     /* each caption rises with the scroll while its step is on screen:
        it comes in low, drifts up through its slot, and leaves high — the
        text moves with your scrolling instead of sitting parked. */
+    /* the opening turn: a frame sequence of the device swinging from the
+       phone's back to its front, scrubbed across the first step; the CSS
+       phone takes over on the last frame */
+    var turn = swap.querySelector('canvas[data-fl-sheet]');
+    var turnStep = turn ? steps[0] : null;
+    function scrubTurn() {
+      if (!turn || !turnStep || !turn.flSheetSet) return;
+      var r = turnStep.getBoundingClientRect(), mid = window.innerHeight / 2;
+      var p = Math.max(0, Math.min(1, (mid - r.top) / (r.height * 0.9)));
+      turn.flSheetSet(p);
+      swap.classList.toggle('is-turned', p >= 0.985);
+    }
     var landscapeScreen = screens.filter(function (sc) { return sc.classList.contains('fl-phone__view--landscape'); })[0];
     var landscapeStep = landscapeScreen ? steps[parseInt(landscapeScreen.getAttribute('data-swap-screen'), 10)] : null;
     if (!reduceMotion) {
@@ -381,6 +394,7 @@
             if (c.getAttribute('data-swap-caption') === String(i)) c.style.setProperty('--cap-shift', shift.toFixed(1) + 'px');
           });
         });
+        scrubTurn();
         /* the landscape flip is scrubbed by scroll, not timed: it turns
            across a 45vh window centred on the moment its screen swaps in,
            so it moves exactly as fast as you scroll — and reverses too. */
