@@ -1538,20 +1538,10 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    whichever side caption belongs to it, so text rises in beside the phone
    without ever scrolling behind it. */
 /* the phone is as big as the screen allows, up to 340px wide */
-.fl-swap-section { --ph-w: min(340px, calc((100vh - 360px) * .486)); }
+.fl-swap-section { --ph-w: min(340px, calc((100vh - 190px) * .486)); }
 .fl-swap { position: relative; }
-/* the pinned block is a full screen tall and centres the phone in it, so
-   the phone sits mid-screen at any window height; the section heading
-   stays pinned under the nav pill the whole way (over the phone if the
-   screen is short — that's allowed) */
-.fl-swap__pinned {
-  position: sticky; top: 0; z-index: 2; height: 100vh; height: 100svh; box-sizing: border-box;
-  padding-top: calc(var(--fl-nav-h) + 8px);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
-.fl-swap-section > .fl-wrap > .fl-section-head {
-  position: sticky; top: calc(var(--fl-nav-h) + 14px); z-index: 3; pointer-events: none; margin-bottom: 0;
-}
+.fl-swap__pinned { position: sticky; top: 112px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 8px; }
 .fl-swap__row { display: flex; align-items: center; justify-content: center; gap: 40px; }
 .fl-swap__caption { position: relative; width: 300px; flex: none; min-height: 170px; }
 .fl-swap__caption--right { text-align: left; }
@@ -1661,7 +1651,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 
 @media (max-width: 900px) {
-  .fl-swap__pinned { gap: 16px; }
+  .fl-swap__pinned { top: 72px; gap: 16px; }
   .fl-swap__row { flex-direction: column; gap: 16px; }
   .fl-swap__caption, .fl-swap__caption--below { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
   .fl-phone { width: 240px; }
@@ -1899,8 +1889,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    top, sized to leave room, and all four captions share one slot under it,
    crossfading in place exactly as they do beside it on desktop. */
 @media (max-width: 900px) {
-  .fl-swap-section { --ph-w: clamp(135px, calc((100svh - 440px) * .486), 250px); }
-  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; align-content: center; gap: 0; }
+  .fl-swap-section { --ph-w: clamp(160px, calc((100svh - 330px) * .486), 270px); }
+  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 34px); }
   .fl-swap__row { display: contents; }
   .fl-phone-float { grid-area: stage; height: calc(var(--ph-w) * 18.5 / 9 + 16px); }
   .fl-phone { width: var(--ph-w); max-width: none; border-radius: 34px; padding: 8px; }
@@ -2183,7 +2173,9 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    screen still reads as moving. */
 .fl-swap__rail { display: none; }
 @media (max-width: 860px) {
-  .fl-swap-section > .fl-wrap > .fl-section-head { text-align: center; top: calc(var(--fl-nav-h) + 6px); }
+  /* the heading is read first, then leaves: by the time the phone pins
+     the heading has already passed above the pill */
+  .fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 84px; text-align: center; }
   .fl-swap-section > .fl-wrap > .fl-section-head .fl-display-m { font-size: clamp(1.625rem, 7.4vw, 2.125rem); max-width: none; margin-inline: auto; }
   .fl-swap__rail {
     display: flex; flex-direction: column; justify-content: space-between; list-style: none; margin: 0; padding: 0;
@@ -2204,23 +2196,18 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-swap[data-step="4"] .fl-swap__rail li:nth-child(5) { transform: scale(1.45); }
 }
 
-/* ---------- phones: the riding heading, dressed, and out of the way at the end ----------
-   Centred over the phone's top, on a frosted pill so it reads over whatever
-   is under it, with a short ramp rule beneath; it fades as the pinned block
-   scrolls out so the captions never pass under it. Desktop is untouched. */
+/* ---------- the run-through heading's last word, in the page's colour ---------- */
+.fl-swap-section .fl-section-head mark { background: none; color: inherit; }
 @media (max-width: 860px) {
-  .fl-swap-section > .fl-wrap > .fl-section-head {
-    transition: opacity .3s var(--fl-ease-out), transform .3s var(--fl-ease-out);
+  .fl-swap-section .fl-section-head mark {
+    background: linear-gradient(135deg, var(--fl-red-ink) 0%, #c47a64 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   }
-  .fl-swap-section > .fl-wrap > .fl-section-head .fl-display-m {
-    display: inline-block; padding: 8px 18px 12px; border-radius: 999px;
-    background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    box-shadow: inset 0 0 0 1px rgba(21,22,22,.06);
-    font-size: clamp(1.375rem, 6vw, 1.75rem); letter-spacing: -.02em;
-  }
-  .fl-swap-section > .fl-wrap > .fl-section-head .fl-display-m::after {
-    content: ""; display: block; width: 36px; height: 3px; margin: 8px auto 0; border-radius: 3px;
-    background: var(--fl-ramp-even);
-  }
-  .fl-swap-section:has(.fl-swap.is-leaving) > .fl-wrap > .fl-section-head { opacity: 0; transform: translateY(-10px); }
+  .fl-page--patients .fl-swap-section .fl-section-head mark { background-image: linear-gradient(135deg, var(--fl-blue-ink) 0%, #6f8fca 100%); }
+
+  /* phones: as the pinned block leaves at the end of the section, the
+     captions and the rail sweep up and out fast, the way the captions move
+     between steps, instead of sliding under the nav pill */
+  .fl-swap__caption, .fl-swap__rail { transition: opacity .28s var(--fl-ease-out), transform .32s var(--fl-ease-out); }
+  .fl-swap.is-leaving .fl-swap__caption, .fl-swap.is-leaving .fl-swap__rail { opacity: 0; transform: translateY(-56px); pointer-events: none; }
 }
