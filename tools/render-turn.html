@@ -1,9 +1,10 @@
 <!doctype html>
-<!-- Offline: the turn that opens the doctors run-through — the h1 on the
-     phone's back swings round to the phone's front, screen showing the app's
-     first screen. Frames go into images/turn-sheet.webp (tools/render-turn.mjs)
-     and are scrubbed by scroll on the page. Straight-on at both ends, so the
-     last frame lands exactly on the page's CSS phone. -->
+<!-- Offline: the run-through's first step, as one frame sequence — the h1
+     comes down onto the phone's camera and its ring lights (first 60%), then
+     the pair swings round to the phone's front with the app's first screen
+     up (last 40%). Straight-on at the end so the page's CSS phone can take
+     over. tools/render-turn.mjs packs the frames into images/turn-sheet.webp;
+     the page scrubs it by scroll. -->
 <meta charset="utf-8">
 <style>html,body{margin:0;background:transparent}</style>
 <script type="importmap">
@@ -14,22 +15,30 @@
 </script>
 <script type="module">
 import * as THREE from 'three';
-import { createScene } from '../device3d.js';
-const W = 1100, H = 1500;
+import { createScene, BASE } from '../device3d.js';
+const W = 1200, H = 1600;
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H);
 document.body.appendChild(renderer.domElement);
-const { scene, camera, pivot, setRing, screen } = await createScene(renderer, '../');
-camera.aspect = W / H; camera.updateProjectionMatrix();
+const { scene, camera, pivot, holder, setRing, screen } = await createScene(renderer, '../');
+camera.aspect = W / H; camera.position.z *= 1.22; camera.updateProjectionMatrix();
 const tex = await new THREE.TextureLoader().loadAsync('../images/app-home.webp');
 tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = true; tex.anisotropy = 8;
 if (screen) screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
-setRing(1);
-const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const seated = holder.position.clone();
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const easeInOut = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const lerp = (a, b, t) => a + (b - a) * t;
 window.renderFrame = (i, n) => {
-  const p = ease(i / (n - 1));
-  // back (0) → front (π); a slight tip toward the viewer in the middle of the turn
-  pivot.rotation.set(0.10 * Math.sin(p * Math.PI), Math.PI * p, 0);
+  const p = i / (n - 1);
+  // phase A: the device descends (0 → .58) and the ring lights as it lands
+  const a = easeOut(Math.min(1, p / 0.58));
+  holder.position.copy(seated).add(new THREE.Vector3(0.03, 0.03, 0.12).multiplyScalar(1 - a));
+  holder.rotation.set(-0.7 * (1 - a), 0.55 * (1 - a), 0.25 * (1 - a));
+  setRing(Math.max(0, Math.min(1, (p - 0.5) / 0.14)));
+  // phase B: from the hero's angle round to straight-on front (.6 → 1)
+  const t = easeInOut(Math.max(0, Math.min(1, (p - 0.6) / 0.4)));
+  pivot.rotation.set(lerp(BASE.x, 0, t) + 0.08 * Math.sin(t * Math.PI), lerp(BASE.y, Math.PI, t), lerp(BASE.z, 0, t));
   renderer.render(scene, camera);
   return renderer.domElement.toDataURL('image/png');
 };

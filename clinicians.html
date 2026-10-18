@@ -119,29 +119,6 @@
   </div>
 </section>
 
-<!-- ============ 00 lift it on: scroll (or drag) seats the device ============ -->
-<section class="fl-attach" data-fl-attach aria-labelledby="attach-h">
-  <div class="fl-attach__sticky">
-    <div class="fl-wrap fl-attach__grid">
-      <div class="fl-attach__copy">
-        <span class="fl-label fl-kicker">Setup</span>
-        <h2 class="fl-display-m" id="attach-h">Lift it on.</h2>
-        <p class="fl-body fl-body--l">The housing seats over the camera plateau and the ring lights. No
-          adapter plate, no app to pair, nothing to focus.</p>
-        <p class="fl-attach__seated" data-attach-seated><span class="fl-label">Seated</span> Fixed distance. Fixed light.</p>
-      </div>
-      <figure class="fl-attach__stage">
-        <img class="fl-sheet__first fl-attach__first" src="images/attach-first.webp" width="360" height="400" loading="lazy" decoding="async" alt="">
-        <canvas class="fl-attach__canvas" data-fl-sheet data-sheet="images/attach-sheet.webp" data-cols="8" data-frames="40" data-w="720" data-h="800" width="720" height="800" aria-hidden="true"></canvas>
-        <label class="fl-attach__slider">
-          <span class="fl-label">Slide to attach</span>
-          <input type="range" min="0" max="1000" value="0" step="1" aria-label="Move the flacara h1 onto the phone">
-        </label>
-      </figure>
-    </div>
-  </div>
-</section>
-
 <!-- ============ 01 exam to record: each step is the old way, struck out, then the fix ============ -->
 <section class="fl-section fl-swap-section fl-swap-section--red fl-swap-section--turn" aria-labelledby="workflow-h">
   <div class="fl-wrap">
@@ -158,8 +135,8 @@
             <div class="fl-swap__cap is-active" data-swap-caption="0">
               <span class="fl-label fl-swap__num">01</span>
               <p class="fl-swap__was"><span>Today</span> A scope clipped to a phone, then three apps.</p>
-              <h3 class="fl-title">One device. <mark>One tap.</mark></h3>
-              <p class="fl-body" style="margin-top:12px">It seats over the phone's camera, and the shot <strong>lands in the app</strong>.</p>
+              <h3 class="fl-title">Lift it on. <mark>One tap.</mark></h3>
+              <p class="fl-body" style="margin-top:12px">It seats over the camera, the ring lights, and the shot <strong>lands in the app</strong>.</p>
             </div>
             <div class="fl-swap__cap" data-swap-caption="2">
               <span class="fl-label fl-swap__num">03</span>
@@ -171,11 +148,12 @@
 
           <div class="fl-phone-float">
           <div class="fl-swap__stage" data-tilt data-reveal="scale">
-          <!-- the turn: back of the phone with the h1 on it, swinging round to
-               the front (motion.js scrubs it across the first step) -->
+          <!-- step 01, as frames: the h1 comes down onto the phone and the ring
+               lights, then the pair swings round to the front (motion.js scrubs
+               it across the first step; the CSS phone takes over at the end) -->
           <div class="fl-swap__turn" aria-hidden="true">
-            <img class="fl-sheet__first" src="images/turn-first.webp" width="300" height="400" loading="lazy" decoding="async" alt="">
-            <canvas data-fl-sheet data-sheet="images/turn-sheet.webp" data-cols="7" data-frames="28" data-w="600" data-h="800" width="600" height="800"></canvas>
+            <img class="fl-sheet__first" src="images/turn-first.webp" width="280" height="380" loading="lazy" decoding="async" alt="">
+            <canvas data-fl-sheet data-sheet="images/turn-sheet.webp" data-cols="8" data-frames="56" data-w="560" data-h="760" width="560" height="760"></canvas>
           </div>
           <div class="fl-phone">
             <span class="fl-phone__btn fl-phone__btn--action" aria-hidden="true"></span>
@@ -272,7 +250,95 @@
   </div>
 </section>
 
-<!-- ============ 03 proof ============ -->
+<!-- ============ 04 pre-order ============ -->
+<section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
+  <div class="fl-wrap">
+    <div class="fl-pill" data-reveal aria-hidden="true"></div>
+    <h2 class="fl-display-m" id="pre-order-h" data-reveal>Reserve one.</h2>
+
+    <div class="fl-buy" style="margin-top:48px" data-reveal="scale">
+      <div class="fl-buy__banner" data-tilt>
+        <img src="flacara_full.webp" loading="lazy" decoding="async" alt="The flacara housing seated over a phone camera array" width="960" height="720">
+        <img src="flacara_full_side.webp" loading="lazy" decoding="async" alt="The flacara housing from the side" width="960" height="720">
+      </div>
+
+      <div class="fl-buy__cols">
+      <div class="fl-buy__body">
+        <div>
+          <span class="fl-device__for">flacara h1 · clinical edition</span>
+          <h3 class="fl-title" style="margin-top:12px">One for every exam room</h3>
+        </div>
+
+        <div class="fl-buy__price">
+          <span class="amt">$<span data-count="249">0</span></span>
+          <span class="qual">USD per device · directional, may change before launch</span>
+        </div>
+
+        <p class="fl-body" style="font-size:.9375rem">Both lighting modes, a machined aluminium top
+          plate, and the clinician side of the app: notes on the capture, drafted write-ups, body
+          mapping and visit-to-visit comparison. It seats over the phone camera array with no added
+          lens, which is why a practice can put one in every room instead of sharing a single
+          $1,695 instrument.</p>
+
+        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
+      </div>
+
+      <div class="fl-buy__aside">
+        <div class="fl-table-wrap">
+          <table class="fl-table">
+            <tbody>
+              <tr><th scope="row">Lighting</th><td>Polarized · Unpolarized</td></tr>
+              <tr><th scope="row">Detail</th><td class="num">~16 µm</td></tr>
+              <tr><th scope="row">Optics</th><td>Phone sensor and software</td></tr>
+              <tr><th scope="row">Top plate</th><td>Machined aluminium</td></tr>
+              <tr><th scope="row">Charging</th><td>USB-C</td></tr>
+              <tr><th scope="row">Phone</th><td>iPhone</td></tr>
+              <tr><th scope="row">Regulatory</th><td>FDA registered · Class I</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="fl-note">flacara h1 is an FDA registered Class I medical device. It captures and
+          organises images for a clinician to review; it does not diagnose or assess any condition on
+          its own.</p>
+
+        <details class="fl-faq-outer" style="margin-top:8px">
+          <summary>Frequently asked questions</summary>
+          <div class="fl-faq">
+            <details>
+              <summary>When does it ship?</summary>
+              <p>Units are between prototype and pilot. Reserving puts you in the first batch and
+                tells us how many to build; we will email a date before anything is charged.</p>
+            </details>
+            <details>
+              <summary>Am I being charged now?</summary>
+              <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
+            </details>
+            <details>
+              <summary>How is the clinical edition different from the home edition?</summary>
+              <p>The clinical edition has both lighting modes (the home edition is polarized only), a
+                machined aluminium top plate, and the clinician features in the app: notes, drafted
+                write-ups and patient lists. Same sensor path, same detail.</p>
+            </details>
+            <details>
+              <summary>Does it work with my phone?</summary>
+              <p>iPhone at launch. The housing seats over the camera array rather than clipping to a
+                single lens, so support is per phone body and we will publish the list.</p>
+            </details>
+            <details>
+              <summary>Where do my photographs go?</summary>
+              <p>They stay on your phone unless you export them. We will publish the full data terms
+                before the first unit ships.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04b proof ============ -->
 <section class="fl-section fl-proof-head" aria-labelledby="proof-h">
   <div class="fl-wrap">
     <div class="fl-section-head fl-section-head--center" data-reveal>
@@ -284,7 +350,7 @@
   </div>
 </section>
 
-<!-- ============ 03b proof gallery: resolution, a real lesion, alignment — one pinned frame, scroll to swap ============ -->
+<!-- ============ 04c proof gallery: resolution, a real lesion, alignment — one pinned frame, scroll to swap ============ -->
 <section class="fl-section fl-section--scrub" aria-label="flacara compared against a DermLite DL4, and frame alignment">
   <div class="fl-wrap">
     <div class="fl-scrub" data-fl-scrub style="--n:3">
@@ -376,94 +442,6 @@
       </div>
     </div>
 
-  </div>
-</section>
-
-<!-- ============ 04 pre-order ============ -->
-<section class="fl-section--tall" id="pre-order" aria-labelledby="pre-order-h">
-  <div class="fl-wrap">
-    <div class="fl-pill" data-reveal aria-hidden="true"></div>
-    <h2 class="fl-display-m" id="pre-order-h" data-reveal>Reserve one.</h2>
-
-    <div class="fl-buy" style="margin-top:48px" data-reveal="scale">
-      <div class="fl-buy__banner" data-tilt>
-        <img src="flacara_full.webp" loading="lazy" decoding="async" alt="The flacara housing seated over a phone camera array" width="960" height="720">
-        <img src="flacara_full_side.webp" loading="lazy" decoding="async" alt="The flacara housing from the side" width="960" height="720">
-      </div>
-
-      <div class="fl-buy__cols">
-      <div class="fl-buy__body">
-        <div>
-          <span class="fl-device__for">flacara h1 · clinical edition</span>
-          <h3 class="fl-title" style="margin-top:12px">One for every exam room</h3>
-        </div>
-
-        <div class="fl-buy__price">
-          <span class="amt">$<span data-count="249">0</span></span>
-          <span class="qual">USD per device · directional, may change before launch</span>
-        </div>
-
-        <p class="fl-body" style="font-size:.9375rem">Both lighting modes, a machined aluminium top
-          plate, and the clinician side of the app: notes on the capture, drafted write-ups, body
-          mapping and visit-to-visit comparison. It seats over the phone camera array with no added
-          lens, which is why a practice can put one in every room instead of sharing a single
-          $1,695 instrument.</p>
-
-        <button class="fl-btn fl-btn--primary" type="button" id="reserve-open">Pre-order a flacara h1</button>
-      </div>
-
-      <div class="fl-buy__aside">
-        <div class="fl-table-wrap">
-          <table class="fl-table">
-            <tbody>
-              <tr><th scope="row">Lighting</th><td>Polarized · Unpolarized</td></tr>
-              <tr><th scope="row">Detail</th><td class="num">~16 µm</td></tr>
-              <tr><th scope="row">Optics</th><td>Phone sensor and software</td></tr>
-              <tr><th scope="row">Top plate</th><td>Machined aluminium</td></tr>
-              <tr><th scope="row">Charging</th><td>USB-C</td></tr>
-              <tr><th scope="row">Phone</th><td>iPhone</td></tr>
-              <tr><th scope="row">Regulatory</th><td>FDA registered · Class I</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p class="fl-note">flacara h1 is an FDA registered Class I medical device. It captures and
-          organises images for a clinician to review; it does not diagnose or assess any condition on
-          its own.</p>
-
-        <details class="fl-faq-outer" style="margin-top:8px">
-          <summary>Frequently asked questions</summary>
-          <div class="fl-faq">
-            <details>
-              <summary>When does it ship?</summary>
-              <p>Units are between prototype and pilot. Reserving puts you in the first batch and
-                tells us how many to build; we will email a date before anything is charged.</p>
-            </details>
-            <details>
-              <summary>Am I being charged now?</summary>
-              <p>No. Reserving takes an email address and nothing else. No card, no deposit.</p>
-            </details>
-            <details>
-              <summary>How is the clinical edition different from the home edition?</summary>
-              <p>The clinical edition has both lighting modes (the home edition is polarized only), a
-                machined aluminium top plate, and the clinician features in the app: notes, drafted
-                write-ups and patient lists. Same sensor path, same detail.</p>
-            </details>
-            <details>
-              <summary>Does it work with my phone?</summary>
-              <p>iPhone at launch. The housing seats over the camera array rather than clipping to a
-                single lens, so support is per phone body and we will publish the list.</p>
-            </details>
-            <details>
-              <summary>Where do my photographs go?</summary>
-              <p>They stay on your phone unless you export them. We will publish the full data terms
-                before the first unit ships.</p>
-            </details>
-          </div>
-        </details>
-      </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -610,7 +588,7 @@
 
 <script src="motion.js" defer></script>
 <script src="device-boot.js" defer></script>
-<script src="attach.js" defer></script>
+<script src="sheets.js" defer></script>
 
 </body>
 </html>

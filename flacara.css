@@ -2032,14 +2032,17 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    under it as the turn completes. motion.js drives the frame from scroll. */
 .fl-swap__turn {
   position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
-  width: calc(var(--ph-w, 340px) * 1.7496); max-width: calc(76vw * 1.7496); aspect-ratio: 3 / 4;
-  translate: -49.25% -50.36%;
+  width: calc(var(--ph-w, 340px) * 2.0754); max-width: calc(76vw * 2.0754); aspect-ratio: 560 / 760;
+  translate: -46.06% -60.35%;
   transition: opacity .35s var(--fl-ease-out);
 }
 .fl-swap__turn > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; }
 .fl-swap__turn img[hidden] { display: none; }
 .fl-swap-section--turn .fl-phone { opacity: 0; transition: opacity .35s var(--fl-ease-out); }
 .fl-swap.is-turned .fl-swap__turn { opacity: 0; }
+/* while the frames play, the CSS phone underneath already holds the first
+   screen, so the moment it shows through there is no black screen first */
+.fl-swap-section--turn .fl-swap[data-step="0"] .fl-phone__view[data-swap-screen="1"] { opacity: 1; transform: none; }
 .fl-swap-section--turn .fl-swap.is-turned .fl-phone { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .fl-swap__was, .fl-swap__turn, .fl-swap-section--turn .fl-phone { transition: none !important; }
@@ -2111,51 +2114,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-device3d.is-3d .fl-device3d__canvas { opacity: 1; }
 @media (max-width: 860px) { .fl-device3d { width: 100%; max-width: 420px; margin: 0 auto; } }
 
-/* ---------- doctors: lift it on (scroll-scrubbed frame sequence) ----------
-   The frame fills the height of the screen; the copy sits over its empty
-   left side, so the device is the whole picture while it comes down. */
-.fl-attach { position: relative; height: 170vh; }
-.fl-attach__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.fl-attach__grid { position: relative; height: 100%; }
-.fl-attach__stage { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; }
-.fl-attach__stage > .fl-attach__first, .fl-attach__stage > .fl-attach__canvas {
-  grid-area: 1 / 1; width: auto; height: min(100svh - 96px, 1040px); aspect-ratio: 9 / 10; max-width: 100%;
-  margin: 0 0 56px 18%;
-}
-.fl-attach__first { object-fit: contain; }
-.fl-attach__first[hidden] { display: none; }
-.fl-attach__copy { position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 2; max-width: 36ch; }
-.fl-attach__copy .fl-kicker { display: block; color: var(--fl-red-ink); }
-.fl-attach__copy .fl-display-m { margin-top: 10px; }
-.fl-attach__copy .fl-body--l { margin-top: 18px; color: var(--fl-muted); max-width: 34ch; }
-.fl-attach__seated {
-  margin: 22px 0 0; font-size: 1.0625rem; color: var(--fl-ink);
-  opacity: 0; transform: translateY(8px); transition: opacity .5s var(--fl-ease-out), transform .6s var(--fl-ease-out);
-}
-.fl-attach__seated .fl-label { color: var(--fl-red-ink); margin-right: 10px; }
-.fl-attach.is-seated .fl-attach__seated { opacity: 1; transform: none; }
-.fl-attach__slider {
-  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2;
-  display: grid; gap: 8px; width: min(360px, 80%); text-align: center;
-}
-.fl-attach__slider .fl-label { color: var(--fl-muted); }
-.fl-attach__slider input {
-  -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; margin: 10px 0;
-  background: linear-gradient(90deg, var(--fl-red-ink) 0%, var(--fl-red-ink) calc(var(--p, 0) * 1%), var(--fl-rule) calc(var(--p, 0) * 1%), var(--fl-rule) 100%);
-  cursor: ew-resize;
-}
-.fl-attach__slider input::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 28px; height: 28px; border-radius: 999px; background: #fff;
-  box-shadow: inset 0 0 0 2px var(--fl-red-ink), 0 2px 6px rgba(74,32,24,.25);
-}
-.fl-attach__slider input::-moz-range-thumb { width: 28px; height: 28px; border: 2px solid var(--fl-red-ink); border-radius: 999px; background: #fff; }
-@media (max-width: 860px) {
-  .fl-attach { height: 150vh; }
-  .fl-attach__stage > .fl-attach__first, .fl-attach__stage > .fl-attach__canvas { height: min(100svh - 300px, 760px); margin: 90px 0 0; }
-  .fl-attach__copy { position: static; transform: none; text-align: center; max-width: none; padding-top: 72px; }
-  .fl-attach__copy .fl-body--l { margin-inline: auto; }
-  .fl-attach__seated { display: none; }
-}
 
 
 /* ---------- doctors: the original outline as a technical drawing ----------
@@ -2174,3 +2132,16 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-tech__draw path { animation-play-state: paused; animation-duration: 1.6s; }
 .fl-tech__drawing.is-visible .fl-tech__draw path { animation-play-state: running; }
 @media (max-width: 860px) { .fl-tech__drawing { width: 120vw; right: -40vw; top: 40%; opacity: .14; } }
+
+/* ---------- home: the original outline drawn in behind the product stage ----------
+   The first hero's hand-traced h1, large and faint in white over the
+   stage's colour sweep, tracing itself in as the stage scrolls into view. */
+.fl-intro__stage { overflow: hidden; }
+.fl-intro__draw {
+  position: absolute; left: 50%; top: 50%; width: min(118%, 1100px); aspect-ratio: 1;
+  transform: translate(-50%, -50%); color: #fff; opacity: .34; pointer-events: none; z-index: 0;
+}
+.fl-intro__draw .fl-outline { display: block; width: 100%; height: 100%; overflow: visible; }
+.fl-intro__draw path { animation-play-state: paused; animation-duration: 1.8s; }
+[data-reveal].is-visible .fl-intro__draw path { animation-play-state: running; }
+.fl-intro__rings { display: none; }

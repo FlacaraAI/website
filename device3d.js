@@ -69,7 +69,7 @@ export async function createScene(renderer, base = '') {
   // falls on the phone's back and the housing's rim, and six small lights
   // spaced around the ring so its own face lights unevenly, like LEDs do.
   // Intensities are in candela (physical units) at the model's metre scale.
-  const ringLight = new THREE.PointLight(0xfff0d8, 0, 0.16, 2);
+  const ringLight = new THREE.PointLight(0xfff0d8, 0, 0.22, 2);
   ringLight.position.set(0, 0, 0.38); holder.add(ringLight);
   const ledLights = [];
   for (let i = 0; i < 6; i++) {
@@ -95,11 +95,11 @@ export async function createScene(renderer, base = '') {
     const n = leds.length;
     leds.forEach((l, i) => {
       const on = THREE.MathUtils.clamp((t * (n + 6) - i) / 6, 0, 1);
-      l.mesh.material.emissiveIntensity = on * 3.2;
+      l.mesh.material.emissiveIntensity = on * 4.5;
     });
     const lit = THREE.MathUtils.smoothstep(t, 0.15, 1);
-    ringLight.intensity = lit * 0.03;
-    ledLights.forEach((l, i) => { l.intensity = lit * 0.006 * (0.8 + 0.2 * Math.sin(i * 2.1)); });
+    ringLight.intensity = lit * 0.075;
+    ledLights.forEach((l, i) => { l.intensity = lit * 0.014 * (0.8 + 0.2 * Math.sin(i * 2.1)); });
   }
   return { scene, camera, pivot, holder, phone, setRing, screen: phone.getObjectByName('xXDHkMplTIDAXLN') };
 }
@@ -139,9 +139,11 @@ export async function mount(stage) {
     // the ring lights up 0.6s after the canvas lands, over 1.4s, then breathes
     const lit = reduceMotion ? 1 : THREE.MathUtils.clamp((t - 0.6) / 1.4, 0, 1);
     setRing(lit * (0.94 + 0.06 * Math.sin(t * 1.6)));
-    const sway = reduceMotion ? 0 : 1;
-    const tx = BASE.x * ease - py * 0.22 + sway * 0.03 * Math.sin(t * 0.7);
-    const ty = BASE.y * ease + px * 0.45 + sway * 0.10 * Math.sin(t * 0.45);
+    // no movement at all while the canvas is crossfading over the still (it
+    // would read as two phones), then the sway and the pointer ease in
+    const sway = reduceMotion ? 0 : THREE.MathUtils.smoothstep(t, 1.0, 2.6);
+    const tx = BASE.x * ease - py * 0.22 * sway + sway * 0.03 * Math.sin(t * 0.7);
+    const ty = BASE.y * ease + px * 0.45 * sway + sway * 0.10 * Math.sin(t * 0.45);
     const tz = BASE.z * ease + sway * 0.015 * Math.sin(t * 0.9);
     pivot.rotation.x += (tx - pivot.rotation.x) * 0.06;
     pivot.rotation.y += (ty - pivot.rotation.y) * 0.06;

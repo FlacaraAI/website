@@ -1,4 +1,4 @@
-/* attach.js — scroll-scrubbed frame sequences. Each [data-fl-sheet] canvas
+/* sheets.js — scroll-scrubbed frame sequences. Each [data-fl-sheet] canvas
    blits one cell of a sprite sheet (one image to fetch, no decoder to wait
    on). Two users:
    - the "lift it on" section: scrubbed by scroll while pinned, or by its
@@ -69,31 +69,4 @@
   }
   document.querySelectorAll('canvas[data-fl-sheet]').forEach(sheetCanvas);
 
-  /* lift it on: scroll drives the frame while the section is pinned; the
-     handle takes over while it's being used */
-  document.querySelectorAll('[data-fl-attach]').forEach(function (root) {
-    var canvas = root.querySelector('canvas[data-fl-sheet]');
-    var range = root.querySelector('input[type=range]');
-    if (!canvas || !range) return;
-    var manual = false, manualUntil = 0;
-    canvas.onframe = function (shown) {
-      root.classList.toggle('is-seated', shown > 0.97);
-      range.value = Math.round(shown * 1000);
-      range.style.setProperty('--p', (shown * 100).toFixed(1));
-    };
-    function fromScroll() {
-      var r = root.getBoundingClientRect();
-      var run = r.height - window.innerHeight;
-      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 1;
-    }
-    range.addEventListener('input', function () {
-      manual = true; manualUntil = Date.now() + 1500;
-      canvas.flSheetSet(range.value / 1000);
-    });
-    window.addEventListener('scroll', function () {
-      if (manual && Date.now() > manualUntil) manual = false;
-      if (!manual) canvas.flSheetSet(fromScroll());
-    }, { passive: true });
-    canvas.flSheetSet(fromScroll());
-  });
 })();

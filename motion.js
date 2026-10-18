@@ -369,9 +369,10 @@
     function scrubTurn() {
       if (!turn || !turnStep || !turn.flSheetSet) return;
       var r = turnStep.getBoundingClientRect(), mid = window.innerHeight / 2;
-      var p = Math.max(0, Math.min(1, (mid - r.top) / (r.height * 0.9)));
+      var p = Math.max(0, Math.min(1, (mid - r.top) / (r.height * 0.96)));
       turn.flSheetSet(p);
-      swap.classList.toggle('is-turned', p >= 0.985);
+      // the CSS phone only takes over once the frame actually on screen is the last one
+      swap.classList.toggle('is-turned', (turn.flSheetShown ? turn.flSheetShown() : p) >= 0.985);
     }
     var landscapeScreen = screens.filter(function (sc) { return sc.classList.contains('fl-phone__view--landscape'); })[0];
     var landscapeStep = landscapeScreen ? steps[parseInt(landscapeScreen.getAttribute('data-swap-screen'), 10)] : null;
