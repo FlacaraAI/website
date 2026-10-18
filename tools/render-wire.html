@@ -47,19 +47,60 @@ phone.traverse((o) => {
     segs.push([a, c]);
   }
 });
+// chain the segments into strokes (shared endpoints), so a line is drawn
+// end to end like a pen, not switched on piece by piece
+const key = (v) => v.x.toFixed(4) + ',' + v.y.toFixed(4) + ',' + v.z.toFixed(4);
+const adj = new Map();
+segs.forEach((sg, i) => { for (const v of sg) { const k = key(v); if (!adj.has(k)) adj.set(k, []); adj.get(k).push(i); } });
+const used = new Uint8Array(segs.length), strokes = [];
+for (let i = 0; i < segs.length; i++) {
+  if (used[i]) continue;
+  used[i] = 1;
+  let pts = [segs[i][0], segs[i][1]];
+  // extend forward from the end, then backward from the start
+  for (const dir of [1, -1]) {
+    for (;;) {
+      const end = dir === 1 ? pts[pts.length - 1] : pts[0];
+      const next = (adj.get(key(end)) || []).find((j) => !used[j]);
+      if (next === undefined) break;
+      used[next] = 1;
+      const [p, q] = segs[next];
+      const other = key(p) === key(end) ? q : p;
+      if (dir === 1) pts.push(other); else pts.unshift(other);
+      if (pts.length > 400) break;
+    }
+  }
+  let len = 0; for (let k = 1; k < pts.length; k++) len += pts[k - 1].distanceTo(pts[k]);
+  strokes.push({ pts, len });
+}
 const origin = new THREE.Vector3(-0.015, 0.056, 0.01);
-segs.sort((p, q) => p[0].distanceTo(origin) - q[0].distanceTo(origin));
-const arr = new Float32Array(segs.length * 6);
-segs.forEach(([a, b], i) => { arr.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6); });
+strokes.sort((p, q) => p.pts[0].distanceTo(origin) - q.pts[0].distanceTo(origin));
+// timing: strokes start in a wave out from the housing over DRAW s, each
+// drawing at a steady pen speed (long strokes take longer); all done by DRAW + 0.35
+const DRAW = 1.15, SPEED = 0.45; // metres per second of line, at model scale
+strokes.forEach((st, i) => { st.t0 = Math.pow(i / strokes.length, 0.85) * DRAW; st.dur = Math.max(0.08, Math.min(0.35, st.len / SPEED)); });
+const segCount = segs.length;
+const arr = new Float32Array(segCount * 6);
 const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
 const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 }));
 pivot.add(lines);
 scene.environment = null; scene.traverse((o) => { if (o.isLight) o.visible = false; });
-window.segCount = segs.length;
+window.segCount = segCount;
 window.renderAt = (t) => {
-  const drawn = Math.min(1, Math.max(0, t / 1.4));
-  geo.setDrawRange(0, Math.floor(segs.length * (1 - Math.pow(1 - drawn, 2.2))) * 2);
-  const k = 1 - drawn;
+  let n = 0;
+  const put = (a, b) => { arr.set([a.x, a.y, a.z, b.x, b.y, b.z], n * 6); n++; };
+  for (const st of strokes) {
+    const f = Math.min(1, Math.max(0, (t - st.t0) / st.dur));
+    if (f <= 0) continue;
+    let budget = st.len * f;
+    for (let k = 1; k < st.pts.length && budget > 0; k++) {
+      const a = st.pts[k - 1], b = st.pts[k], d = a.distanceTo(b);
+      if (d <= budget) { put(a, b); budget -= d; }
+      else { put(a, a.clone().lerp(b, budget / d)); budget = 0; }
+    }
+  }
+  geo.attributes.position.needsUpdate = true; geo.setDrawRange(0, n * 2);
+  const drawn = Math.min(1, t / (DRAW + 0.35)), k = 1 - drawn;
   pivot.rotation.set(base.x + 0.05 * k, base.y - 0.18 * k, base.z + 0.02 * k);
   renderer.render(scene, camera);
   return renderer.domElement.toDataURL('image/png');

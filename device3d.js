@@ -142,19 +142,22 @@ export async function mount(stage) {
   });
   stage.addEventListener('pointerleave', () => { px = 0; py = 0; });
 
-  const t0 = performance.now();
+  let t0 = performance.now();
   let visible = true, raf = null;
+  const small = window.innerWidth < 900;
   const frame = (now) => {
     raf = visible ? requestAnimationFrame(frame) : null;
     const t = (now - t0) / 1000;
-    const s = Math.min(1, window.scrollY / window.innerHeight);
+    // no movement at all while the canvas is crossfading in (it would read as
+    // two phones), then the sway, the pointer and the scroll lift ease in.
+    // On phones the hero stacks and is scrolled past at once, so the scroll
+    // lift stays off there — it moved the model away from the still's spot.
+    const sway = reduceMotion ? 0 : THREE.MathUtils.smoothstep(t, 1.0, 2.6);
+    const s = small ? 0 : Math.min(1, window.scrollY / window.innerHeight) * sway;
     const ease = 1 - s * 0.6;
     // the ring lights up 0.6s after the canvas lands, over 1.4s, then breathes
     const lit = reduceMotion ? 1 : THREE.MathUtils.clamp((t - 0.6) / 1.4, 0, 1);
     setRing(lit * (0.94 + 0.06 * Math.sin(t * 1.6)));
-    // no movement at all while the canvas is crossfading over the still (it
-    // would read as two phones), then the sway and the pointer ease in
-    const sway = reduceMotion ? 0 : THREE.MathUtils.smoothstep(t, 1.0, 2.6);
     const tx = BASE.x * ease - py * 0.22 * sway + sway * 0.03 * Math.sin(t * 0.7);
     const ty = BASE.y * ease + px * 0.45 * sway + sway * 0.10 * Math.sin(t * 0.45);
     const tz = BASE.z * ease + sway * 0.015 * Math.sin(t * 0.9);
@@ -171,20 +174,19 @@ export async function mount(stage) {
 
   setRing(0);
   renderer.render(scene, camera);
-  // the drawing hands off to the still first; the live scene only fades in
-  // over the still, never over the line art
-  if (!stage.classList.contains('is-drawn')) {
+  // first frame is up: tell the draw-in it can hand straight to us. If the
+  // drawing has already handed off to the still, come in over the still.
+  const show = () => { t0 = performance.now(); if (!raf) raf = requestAnimationFrame(frame); };
+  stage.classList.add('is-3d-ready');
+  if (stage.classList.contains('is-3d')) show();
+  else if (stage.classList.contains('is-drawn')) { await new Promise((r) => setTimeout(r, 300)); stage.classList.add('is-3d'); show(); }
+  else {
     await new Promise((resolve) => {
-      const mo = new MutationObserver(() => { if (stage.classList.contains('is-drawn')) { mo.disconnect(); resolve(); } });
+      const mo = new MutationObserver(() => { if (stage.classList.contains('is-3d')) { mo.disconnect(); resolve(); } });
       mo.observe(stage, { attributes: true, attributeFilter: ['class'] });
     });
-    await new Promise((r) => setTimeout(r, 900));
+    show();
   }
-  requestAnimationFrame(() => {
-    stage.classList.add('is-3d');
-    canvas.addEventListener('transitionend', () => { if (still) still.style.visibility = 'hidden'; }, { once: true });
-    if (!raf) raf = requestAnimationFrame(frame);
-  });
 }
 
 /* ---------- the doctors run-through, live ----------

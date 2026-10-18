@@ -23,20 +23,29 @@
       drawn = true;
       stage.classList.remove('is-drawing');
       stage.classList.add('is-drawn');
+      // straight to the live scene if it's already rendering; the still only
+      // stands in when the 3D isn't there yet (the 3D module takes over then)
+      if (stage.classList.contains('is-3d-ready')) stage.classList.add('is-3d');
       if (wire) setTimeout(function () { wire.pause(); wire.removeAttribute('src'); }, 1200);
+    }
+    // the drawing is complete at 1.5 s; hand off then if the 3D is up, or
+    // hold the finished drawing up to 1.1 s more for it (the clip's last
+    // frame is the complete drawing, so holding costs nothing)
+    function handOff() {
+      if (drawn) return;
+      if (stage.classList.contains('is-3d-ready') || reduceMotion) return finishDrawing();
+      var waited = 0, tick = setInterval(function () {
+        waited += 50;
+        if (stage.classList.contains('is-3d-ready') || waited >= 1100) { clearInterval(tick); finishDrawing(); }
+      }, 50);
     }
     if (!wire || reduceMotion || conn.saveData) { finishDrawing(); return; }
     var started = false;
-    wire.addEventListener('playing', function () {
-      started = true;
-      // the drawing takes 1.4 s; hand off a beat before it ends (wall clock,
-      // so a stuttering decode can't hold the page on the line art)
-      setTimeout(finishDrawing, 1300);
-    }, { once: true });
+    wire.addEventListener('playing', function () { started = true; setTimeout(handOff, 1500); }, { once: true });
     wire.addEventListener('error', finishDrawing, { once: true });
     wire.play().catch(function () {});
     setTimeout(function () { if (!started) finishDrawing(); }, 1000);
-    setTimeout(finishDrawing, 3000);
+    setTimeout(finishDrawing, 4200);
   });
 
   var stage = document.querySelector('[data-device3d]');
@@ -56,8 +65,8 @@
       })
       .catch(function (err) { console.warn('device3d: staying on the still', err); releaseSheet(); });
   };
-  // the models download while the line art is still drawing; mount() itself
-  // waits for the handoff before fading in
-  var idle = function () { (window.requestIdleCallback || setTimeout)(start, { timeout: 1500 }); };
-  if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
+  // the models start downloading right away, while the line art draws (its
+  // clip is already in flight, so it stays ahead); mount() waits for the
+  // handoff before showing anything
+  (window.requestIdleCallback || setTimeout)(start, { timeout: 300 });
 })();

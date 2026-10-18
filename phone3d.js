@@ -87,12 +87,16 @@ export async function mount(wrap, screenUrl, img) {
   });
   wrap.addEventListener('pointerleave', () => { px = 0; py = 0; });
 
-  let visible = true, raf = null;
-  const frame = () => {
+  let visible = true, raf = null, t0 = performance.now();
+  const small = window.innerWidth < 900;
+  const frame = (now) => {
     raf = visible ? requestAnimationFrame(frame) : null;
-    const s = Math.min(1, window.scrollY / window.innerHeight);
+    // held still through the crossfade, then the scroll and pointer response
+    // ease in; on phones the scroll term stays off (the hero is stacked there)
+    const ramp = Math.min(1, Math.max(0, ((now - t0) / 1000 - 0.9) / 1.4));
+    const s = small ? 0 : Math.min(1, window.scrollY / window.innerHeight) * ramp;
     const ease = 1 - s * 0.7;
-    const tx = BASE.x * ease - py * 0.25, ty = BASE.y * ease + px * 0.5, tz = BASE.z * ease;
+    const tx = BASE.x * ease - py * 0.25 * ramp, ty = BASE.y * ease + px * 0.5 * ramp, tz = BASE.z * ease;
     pivot.rotation.x += (tx - pivot.rotation.x) * 0.06;
     pivot.rotation.y += (ty - pivot.rotation.y) * 0.06;
     pivot.rotation.z += (tz - pivot.rotation.z) * 0.06;
@@ -103,19 +107,19 @@ export async function mount(wrap, screenUrl, img) {
     if (visible && !raf) raf = requestAnimationFrame(frame);
   }).observe(wrap);
 
-  // first frame on screen, then fade the canvas in over the snapshot — but
-  // never over the line-art draw-in, if the stage has one running
   renderer.render(scene, camera);
-  if (wrap.hasAttribute('data-draw-in') && !wrap.classList.contains('is-drawn')) {
+  // first frame is up: the draw-in can hand straight to this canvas; if the
+  // drawing has already handed off to the snapshot, come in over that
+  const show = () => { t0 = performance.now(); if (!raf) raf = requestAnimationFrame(frame); };
+  const hasDraw = wrap.hasAttribute('data-draw-in');
+  wrap.classList.add('is-3d-ready');
+  if (!hasDraw || wrap.classList.contains('is-3d')) { wrap.classList.add('is-3d'); show(); }
+  else if (wrap.classList.contains('is-drawn')) { await new Promise((r) => setTimeout(r, 300)); wrap.classList.add('is-3d'); show(); }
+  else {
     await new Promise((resolve) => {
-      const mo = new MutationObserver(() => { if (wrap.classList.contains('is-drawn')) { mo.disconnect(); resolve(); } });
+      const mo = new MutationObserver(() => { if (wrap.classList.contains('is-3d')) { mo.disconnect(); resolve(); } });
       mo.observe(wrap, { attributes: true, attributeFilter: ['class'] });
     });
-    await new Promise((r) => setTimeout(r, 900));
+    show();
   }
-  requestAnimationFrame(() => {
-    wrap.classList.add('is-3d');
-    canvas.addEventListener('transitionend', () => { if (img) img.style.visibility = 'hidden'; }, { once: true });
-    if (!raf) raf = requestAnimationFrame(frame);
-  });
 }
