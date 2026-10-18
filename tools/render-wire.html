@@ -1,8 +1,8 @@
 <!doctype html>
-<!-- Offline: the wireframe video of the h1 on the phone. The models' edges,
-     drawn in white, sweep in over the first seconds while the pair slowly
-     turns. Driven by tools/render-wire.mjs, which encodes the frames to
-     images/wire-h1.webm (VP9 alpha) and .mov (HEVC alpha, Safari). -->
+<!-- Offline: the wireframe draw-in that opens the doctors hero. The models'
+     edges, in white, sweep in over ~2.6 s at exactly device3d.js's hero pose
+     and framing, so the still can crossfade in on top. Driven by
+     tools/render-wire.mjs → images/wire-h1.webm (VP9 alpha) + .mov (HEVC). -->
 <meta charset="utf-8">
 <style>html,body{margin:0;background:transparent}</style>
 <script type="importmap">
@@ -13,50 +13,41 @@
 </script>
 <script type="module">
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { seatDevice } from '../device-fit.js';
-const S = 1000;
+import { createScene, ASPECT, BASE } from '../device3d.js';
+const H = 800, W = Math.round(H * ASPECT);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(1); renderer.setSize(S, S);
+renderer.setPixelRatio(1); renderer.setSize(W, H);
 document.body.appendChild(renderer.domElement);
-const draco = new DRACOLoader(); draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
-const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
-const [ph, dv] = await Promise.all([loader.loadAsync('../models/iphone-15-pro.glb'), loader.loadAsync('../models/flacara-v5.glb')]);
-const phone = ph.scene; seatDevice(phone, dv.scene);
-phone.updateMatrixWorld(true);
-// every mesh → its sharp edges, in world space, gathered into one line set
+const { scene, camera, pivot, phone } = await createScene(renderer, '../');
+// edges of every mesh, in the pivot's own space (pivot unrotated while measuring)
+pivot.rotation.set(0, 0, 0); pivot.updateMatrixWorld(true);
 const segs = [];
 phone.traverse((o) => {
   if (!o.isMesh) return;
-  const e = new THREE.EdgesGeometry(o.geometry, 24);
-  const pos = e.attributes.position;
+  const e = new THREE.EdgesGeometry(o.geometry, 24), pos = e.attributes.position;
   for (let i = 0; i < pos.count; i += 2) {
-    const a = new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld);
-    const b = new THREE.Vector3().fromBufferAttribute(pos, i + 1).applyMatrix4(o.matrixWorld);
-    segs.push([a, b]);
+    segs.push([new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld),
+               new THREE.Vector3().fromBufferAttribute(pos, i + 1).applyMatrix4(o.matrixWorld)]);
   }
+  o.visible = false;
 });
-// draw order: a sweep from the housing outward and down the phone
-const box = new THREE.Box3().setFromObject(phone); const c = box.getCenter(new THREE.Vector3());
-const origin = new THREE.Vector3(-0.02, 0.08, 0.02);
+// sweep order: out from the housing, then down the phone
+const origin = new THREE.Vector3(-0.015, 0.056, 0.01);
 segs.sort((p, q) => p[0].distanceTo(origin) - q[0].distanceTo(origin));
 const arr = new Float32Array(segs.length * 6);
-segs.forEach(([a, b], i) => { arr.set([a.x - c.x, a.y - c.y, a.z - c.z, b.x - c.x, b.y - c.y, b.z - c.z], i * 6); });
+segs.forEach(([a, b], i) => { arr.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6); });
 const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 }));
-const pivot = new THREE.Group(); pivot.add(lines);
-const scene = new THREE.Scene(); scene.add(pivot);
-const size = box.getSize(new THREE.Vector3());
-const camera = new THREE.PerspectiveCamera(22, 1, 0.01, 100);
-camera.position.set(0, 0, size.y * 2.9); camera.lookAt(0, 0, 0);
+const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92 }));
+pivot.add(lines);
+pivot.rotation.set(BASE.x, BASE.y, BASE.z);
+scene.environment = null; scene.traverse((o) => { if (o.isLight) o.visible = false; });
 window.segCount = segs.length;
-// t in seconds; the edges sweep in over 0–2.6 s, the pair turns a slow quarter over the clip
-window.renderAt = (t, dur) => {
+window.renderAt = (t) => {
   const drawn = Math.min(1, Math.max(0, t / 2.6));
   geo.setDrawRange(0, Math.floor(segs.length * (1 - Math.pow(1 - drawn, 2.2))) * 2);
-  const turn = t / dur;
-  pivot.rotation.set(0.12 + 0.06 * Math.sin(turn * Math.PI), -0.55 + 1.2 * turn, -0.04);
+  // the drawing settles into place: a touch of over-rotation that eases out
+  const k = 1 - drawn;
+  pivot.rotation.set(BASE.x + 0.05 * k, BASE.y - 0.18 * k, BASE.z + 0.02 * k);
   renderer.render(scene, camera);
   return renderer.domElement.toDataURL('image/png');
 };

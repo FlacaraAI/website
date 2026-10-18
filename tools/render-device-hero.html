@@ -18,7 +18,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserv
 renderer.setPixelRatio(1); renderer.setSize(W, H);
 document.body.appendChild(renderer.domElement);
 const { scene, camera, setRing } = await createScene(renderer, '../');
-setRing(0);
+window.__setRing = setRing; setRing(0);
 window.renderStill = () => { renderer.render(scene, camera); return renderer.domElement.toDataURL('image/png'); };
 window.ready = true;
 </script>

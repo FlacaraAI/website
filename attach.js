@@ -14,8 +14,23 @@
     var COLS = +root.getAttribute('data-cols') || 8, N = +root.getAttribute('data-frames') || 40;
     var CW = +root.getAttribute('data-w') || 400, CH = +root.getAttribute('data-h') || 500;
     var ctx = canvas.getContext('2d');
+    var first = root.querySelector('.fl-attach__first');
     var sheet = new Image();
-    sheet.src = root.getAttribute('data-sheet');
+    // the sheet is half a megabyte: fetched only once the section is near
+    var fetched = false;
+    // ...and never before the page has loaded: the first frame is in the HTML
+    // already, so nothing on screen waits for this
+    var loaded = document.readyState === 'complete';
+    if (!loaded) window.addEventListener('load', function () { loaded = true; if (wanted) fetchSheet(); });
+    var wanted = false;
+    function fetchSheet() {
+      wanted = true;
+      if (fetched || !loaded) return;
+      fetched = true; sheet.src = root.getAttribute('data-sheet');
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es, io) { if (es[0].isIntersecting) { fetchSheet(); io.disconnect(); } }, { rootMargin: '120% 0px' }).observe(root);
+    } else fetchSheet();
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var current = -1, progress = 0, shown = 0, manual = false, manualUntil = 0;
 
@@ -47,7 +62,7 @@
       if (!manual) fromScroll();
       // the shown frame eases toward the target so trackpad flicks don't stutter
       var d = progress - shown;
-      shown += reduceMotion ? d : d * 0.18;
+      shown += reduceMotion ? d : d * 0.32;
       if (Math.abs(progress - shown) < 0.002) shown = progress;
       draw();
       if (shown !== progress) raf = requestAnimationFrame(tick);
@@ -63,7 +78,7 @@
       if (!manual) wake();
     }, { passive: true });
     window.addEventListener('resize', size);
-    sheet.addEventListener('load', function () { size(); wake(); });
+    sheet.addEventListener('load', function () { root.classList.add('has-sheet'); if (first) first.hidden = true; size(); wake(); });
     size();
   });
 })();

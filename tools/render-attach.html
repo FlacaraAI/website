@@ -14,7 +14,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { createScene } from '../device3d.js';
-const W = 720, H = 900;
+const W = 1280, H = 1600;
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H);
 document.body.appendChild(renderer.domElement);
@@ -28,10 +28,10 @@ const seated = holder.position.clone();
 const ease = (t) => 1 - Math.pow(1 - t, 3);
 window.renderFrame = (i, n) => {
   const p = i / (n - 1);
-  const d = ease(Math.min(1, p / 0.8));            // descends over the first 80%
+  const d = ease(Math.min(1, p / 0.7));            // descends over the first 70%
   holder.position.copy(seated).add(new THREE.Vector3(-0.012, 0.028, 0.11).multiplyScalar(1 - d));
   holder.rotation.set(-0.55 * (1 - d), 0.40 * (1 - d), 0.1 * (1 - d));
-  setRing(Math.max(0, (p - 0.8) / 0.2));         // ring lights over the last 20%
+  setRing(Math.max(0, (p - 0.7) / 0.3));         // ring lights over the last 30%
   renderer.render(scene, camera);
   return renderer.domElement.toDataURL('image/png');
 };

@@ -27,7 +27,9 @@ export async function createScene(renderer, base = '') {
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
@@ -36,6 +38,9 @@ export async function createScene(renderer, base = '') {
   const [ph, dv] = await Promise.all([loader.loadAsync(base + PHONE_URL), loader.loadAsync(base + DEVICE_URL)]);
   const phone = ph.scene;
   const holder = seatDevice(phone, dv.scene);
+  // the housing throws a shadow onto the phone's back; the phone catches it
+  dv.scene.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  ph.scene.traverse((o) => { if (o.isMesh) o.receiveShadow = true; });
   // framed on the pair, device included, so the housing's overhang isn't cropped
   const box = new THREE.Box3().setFromObject(phone);
   const size = box.getSize(new THREE.Vector3());
@@ -57,32 +62,52 @@ export async function createScene(renderer, base = '') {
   });
   leds.sort((a, b) => a.angle - b.angle);
 
-  // a soft glow over the glass, additive, for when the ring is lit
+  // the ring is a real light source: a warm point light at the glass that
+  // falls on the phone's back and the housing's rim, and six small lights
+  // spaced around the ring so its own face lights unevenly, like LEDs do.
+  // Intensities are in candela (physical units) at the model's metre scale.
+  const ringLight = new THREE.PointLight(0xfff0d8, 0, 0.16, 2);
+  ringLight.position.set(0, 0, 0.5); holder.add(ringLight);
+  const ledLights = [];
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const l = new THREE.PointLight(0xfff2dc, 0, 0.05, 2);
+    l.position.set(Math.cos(a) * 0.5, Math.sin(a) * 0.5, 0.4);
+    holder.add(l); ledLights.push(l);
+  }
+  // and a faint haze over the glass once it's lit
   const glowTex = (() => {
     const c = document.createElement('canvas'); c.width = c.height = 256;
-    const g = c.getContext('2d'), r = g.createRadialGradient(128, 128, 20, 128, 128, 128);
-    r.addColorStop(0, 'rgba(255,240,215,.85)'); r.addColorStop(0.45, 'rgba(255,235,205,.28)'); r.addColorStop(1, 'rgba(255,230,200,0)');
+    const g = c.getContext('2d'), r = g.createRadialGradient(128, 128, 30, 128, 128, 128);
+    r.addColorStop(0, 'rgba(255,240,215,.55)'); r.addColorStop(0.5, 'rgba(255,235,205,.14)'); r.addColorStop(1, 'rgba(255,230,200,0)');
     g.fillStyle = r; g.fillRect(0, 0, 256, 256);
     return new THREE.CanvasTexture(c);
   })();
   const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
-  glow.scale.setScalar(1.6); glow.position.set(0, 0, 0.42); holder.add(glow);
+  glow.scale.setScalar(1.5); glow.position.set(0, 0, 0.42); holder.add(glow);
 
   const pivot = new THREE.Group(); pivot.add(phone); scene.add(pivot);
   pivot.rotation.set(BASE.x, BASE.y, BASE.z);
   camera.position.set(0, 0, size.y * 2.75); camera.lookAt(0, 0, 0);
-  const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(-3, 4, 5); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xffe4d6, 0.9); rim.position.set(4, -2, -3); scene.add(rim);
-  const fill = new THREE.DirectionalLight(0xdce6ff, 0.5); fill.position.set(3, 1, 4); scene.add(fill);
+  // studio: one soft key from upper left that casts the housing's shadow,
+  // a cool fill from the right, and a warm rim from behind for the edges
+  const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(-0.25, 0.4, 0.5); scene.add(key);
+  key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 6; key.shadow.bias = -0.0003;
+  const d = 0.12; Object.assign(key.shadow.camera, { left: -d, right: d, top: d, bottom: -d, near: 0.05, far: 2 });
+  const fill = new THREE.DirectionalLight(0xdce6ff, 0.45); fill.position.set(3, 1, 4); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffe4d6, 0.8); rim.position.set(4, -2, -3); scene.add(rim);
 
   // ring: 0 = dark, 1 = fully lit; the sweep lights LEDs in order of angle
   function setRing(t) {
     const n = leds.length;
     leds.forEach((l, i) => {
       const on = THREE.MathUtils.clamp((t * (n + 6) - i) / 6, 0, 1);
-      l.mesh.material.emissiveIntensity = on * 1.8;
+      l.mesh.material.emissiveIntensity = on * 3.2;
     });
-    glow.material.opacity = THREE.MathUtils.smoothstep(t, 0.3, 1) * 0.5;
+    glow.material.opacity = THREE.MathUtils.smoothstep(t, 0.3, 1) * 0.6;
+    const lit = THREE.MathUtils.smoothstep(t, 0.15, 1);
+    ringLight.intensity = lit * 0.05;
+    ledLights.forEach((l, i) => { l.intensity = lit * 0.006 * (0.8 + 0.2 * Math.sin(i * 2.1)); });
   }
   return { scene, camera, pivot, holder, phone, setRing };
 }
@@ -139,6 +164,15 @@ export async function mount(stage) {
 
   setRing(0);
   renderer.render(scene, camera);
+  // the drawing hands off to the still first; the live scene only fades in
+  // over the still, never over the line art
+  if (!stage.classList.contains('is-drawn')) {
+    await new Promise((resolve) => {
+      const mo = new MutationObserver(() => { if (stage.classList.contains('is-drawn')) { mo.disconnect(); resolve(); } });
+      mo.observe(stage, { attributes: true, attributeFilter: ['class'] });
+    });
+    await new Promise((r) => setTimeout(r, 900));
+  }
   requestAnimationFrame(() => {
     stage.classList.add('is-3d');
     canvas.addEventListener('transitionend', () => { if (still) still.style.visibility = 'hidden'; }, { once: true });
