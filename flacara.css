@@ -1101,6 +1101,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   color: transparent; -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 22px rgba(157,187,234,.45));
   animation: fl-accent-sheen 5.5s ease-in-out 1.2s infinite;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(0);
 }
 .fl-hero-mat--red .fl-hero-accent {
   background-image: linear-gradient(110deg, var(--fl-red-deep) 0%, var(--fl-red) 35%, #ffffff 50%, var(--fl-red) 65%, var(--fl-red-deep) 100%);
@@ -1537,9 +1538,20 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    whichever side caption belongs to it, so text rises in beside the phone
    without ever scrolling behind it. */
 /* the phone is as big as the screen allows, up to 340px wide */
-.fl-swap-section { --ph-w: min(340px, calc((100vh - 190px) * .486)); }
+.fl-swap-section { --ph-w: min(340px, calc((100vh - 360px) * .486)); }
 .fl-swap { position: relative; }
-.fl-swap__pinned { position: sticky; top: 112px; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+/* the pinned block is a full screen tall and centres the phone in it, so
+   the phone sits mid-screen at any window height; the section heading
+   stays pinned under the nav pill the whole way (over the phone if the
+   screen is short — that's allowed) */
+.fl-swap__pinned {
+  position: sticky; top: 0; z-index: 2; height: 100vh; height: 100svh; box-sizing: border-box;
+  padding-top: calc(var(--fl-nav-h) + 8px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.fl-swap-section > .fl-wrap > .fl-section-head {
+  position: sticky; top: calc(var(--fl-nav-h) + 14px); z-index: 3; pointer-events: none; margin-bottom: 0;
+}
 .fl-swap__row { display: flex; align-items: center; justify-content: center; gap: 40px; }
 .fl-swap__caption { position: relative; width: 300px; flex: none; min-height: 170px; }
 .fl-swap__caption--right { text-align: left; }
@@ -1649,7 +1661,7 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 }
 
 @media (max-width: 900px) {
-  .fl-swap__pinned { top: 72px; gap: 16px; }
+  .fl-swap__pinned { gap: 16px; }
   .fl-swap__row { flex-direction: column; gap: 16px; }
   .fl-swap__caption, .fl-swap__caption--below { width: 100%; max-width: 420px; text-align: center; min-height: 130px; }
   .fl-phone { width: 240px; }
@@ -1887,8 +1899,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    top, sized to leave room, and all four captions share one slot under it,
    crossfading in place exactly as they do beside it on desktop. */
 @media (max-width: 900px) {
-  .fl-swap-section { --ph-w: clamp(150px, calc((100svh - 350px) * .486), 250px); }
-  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; gap: 0; top: calc(var(--fl-nav-h) + 20px); }
+  .fl-swap-section { --ph-w: clamp(150px, calc((100svh - 420px) * .486), 250px); }
+  .fl-swap__pinned { display: grid; grid-template-areas: "stage" "cap"; justify-items: center; align-content: center; gap: 0; }
   .fl-swap__row { display: contents; }
   .fl-phone-float { grid-area: stage; height: calc(var(--ph-w) * 18.5 / 9 + 16px); }
   .fl-phone { width: var(--ph-w); max-width: none; border-radius: 34px; padding: 8px; }
@@ -1932,7 +1944,6 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
 .fl-page--patients .fl-section-head .fl-kicker { color: var(--fl-blue-ink); }
 
 /* ---------- the app section's heading sits above the pinned phone ---------- */
-.fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 8px; }
 
 /* ---------- doctors: the app section's accents in red instead of blue ---------- */
 .fl-swap-section--red .fl-kicker { color: var(--fl-red-ink); }
@@ -2172,12 +2183,8 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
    screen still reads as moving. */
 .fl-swap__rail { display: none; }
 @media (max-width: 860px) {
-  /* the heading is read first, then leaves: by the time the phone pins
-     (nav + 20px down), the heading has already passed above the pill — so
-     it is never half-hidden under it, and nothing sits over the phone */
-  .fl-swap-section > .fl-wrap > .fl-section-head { margin-bottom: 84px; text-align: center; }
+  .fl-swap-section > .fl-wrap > .fl-section-head { text-align: center; top: calc(var(--fl-nav-h) + 6px); }
   .fl-swap-section > .fl-wrap > .fl-section-head .fl-display-m { font-size: clamp(1.625rem, 7.4vw, 2.125rem); max-width: none; margin-inline: auto; }
-  .fl-swap-section > .fl-wrap > .fl-section-head .fl-kicker { display: block; margin-bottom: 4px; }
   .fl-swap__rail {
     display: flex; flex-direction: column; justify-content: space-between; list-style: none; margin: 0; padding: 0;
     position: absolute; right: 2px; top: 22%; height: 46%; width: 3px; border-radius: 3px;
