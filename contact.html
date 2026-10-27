@@ -49,6 +49,15 @@
   </symbol>
 </svg>
 
+<!-- founder sale banner -->
+<aside class="fl-founder-bar" aria-label="Founder sale">
+  <div class="fl-wrap">
+    <span class="fl-founder-bar__tag">Founder sale</span>
+    <span>$50 off <span class="fl-founder-bar__more">flacara h1 for </span>the first 300 units<span class="fl-founder-bar__more"> · ships within 3 months or a full refund</span></span>
+    <a href="/#choose">Pre-order →</a>
+  </div>
+</aside>
+
 <!-- partials/nav.html -->
 <nav class="fl-nav" aria-label="Primary">
   <div class="fl-wrap">
@@ -66,64 +75,103 @@
 </nav>
 
 <main>
-<section class="fl-section">
-  <div class="fl-wrap">
-    <h1 class="fl-display-m">Talk to us</h1>
-    <p class="fl-body fl-body--l" style="margin-top:16px">Questions about the device, an order you've
-      placed, or several units for a practice. A person reads every message and replies by email.</p>
+<section class="fl-section fl-contact">
+  <div class="fl-wrap fl-contact__grid">
 
-    <form class="fl-form" id="contact-form" style="margin-top:40px" novalidate>
-      <div class="fl-form__field">
-        <label for="c-name">Your name</label>
-        <input id="c-name" name="name" type="text" required autocomplete="name" maxlength="120">
-      </div>
-      <div class="fl-form__field">
-        <label for="c-email">Email</label>
-        <input id="c-email" name="email" type="email" required autocomplete="email">
-      </div>
-      <div class="fl-form__field">
-        <label for="c-role">You are</label>
-        <select id="c-role" name="role">
-          <option value="patient">A patient</option>
-          <option value="doctor">A doctor or clinician</option>
-          <option value="practice">Running a practice</option>
-          <option value="other">Something else</option>
-        </select>
-      </div>
-      <div class="fl-form__field">
-        <label for="c-topic">About</label>
-        <select id="c-topic" name="topic">
-          <option value="question">A question</option>
-          <option value="support">An order I've placed</option>
-          <option value="invoice">Ordering for a practice, paid by invoice</option>
-          <option value="press">Press</option>
-          <option value="partnership">Partnership</option>
-          <option value="other">Something else</option>
-        </select>
-      </div>
-      <div class="fl-form__field" data-for="invoice" hidden>
-        <label for="c-org">Practice name</label>
-        <input id="c-org" name="org" type="text" autocomplete="organization" maxlength="160">
-      </div>
-      <div class="fl-form__field" data-for="invoice" hidden>
-        <label for="c-qty">Clinical edition units ($249 each)</label>
-        <input id="c-qty" name="quantity" type="number" min="1" max="500" value="5" inputmode="numeric">
-      </div>
-      <div class="fl-form__field">
-        <label for="c-message">Message</label>
-        <textarea id="c-message" name="message" maxlength="5000"></textarea>
-      </div>
-      <div class="fl-form__hp" aria-hidden="true">
-        <label for="c-website">Leave this empty</label>
-        <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off">
-      </div>
-      <p class="fl-form__error" aria-live="polite"></p>
-      <div><button class="fl-btn fl-btn--primary" type="submit">Send</button></div>
-    </form>
-    <p class="fl-form__ok" id="contact-ok" role="status" hidden></p>
+    <div class="fl-contact__intro">
+      <span class="fl-label">Contact</span>
+      <h1 class="fl-display-l">Talk to a person.</h1>
+      <p class="fl-body fl-body--l">Questions about flacara h1, an order you've placed, or kitting
+        out a whole practice. The team reads every message and replies by email.</p>
 
-    <p class="fl-note" style="margin-top:40px">flacara takes photographs; it doesn't diagnose anything.
-      We can't give medical advice by email. If a spot worries you, talk to a doctor.</p>
+      <ul class="fl-contact__ways" aria-label="What it's about">
+        <li><button type="button" data-topic="support" aria-pressed="false">
+          <span class="fl-contact__k">Orders</span>
+          <strong>An order you've placed</strong>
+          <span>Shipping, a new address, or a refund before it ships.</span>
+        </button></li>
+        <li><button type="button" data-topic="invoice" data-role="practice" aria-pressed="false">
+          <span class="fl-contact__k">Practices</span>
+          <strong>Equip a practice</strong>
+          <span>Any number of clinical units, paid by invoice on 30-day terms.</span>
+        </button></li>
+        <li><button type="button" data-topic="partnership" aria-pressed="false">
+          <span class="fl-contact__k">Press &amp; partners</span>
+          <strong>Write about us, or work with us</strong>
+          <span>Interviews, images, research and distribution.</span>
+        </button></li>
+      </ul>
+
+      <p class="fl-note fl-contact__note">flacara takes photographs; it doesn't diagnose anything, and
+        we can't give medical advice by email. If a spot worries you, talk to a doctor.</p>
+    </div>
+
+    <div class="fl-card fl-contact__card">
+      <form class="fl-form" id="contact-form" novalidate>
+        <h2 class="fl-contact__h">Send us a message</h2>
+        <div class="fl-form__row">
+          <div class="fl-form__field">
+            <label for="c-name">Your name</label>
+            <input id="c-name" name="name" type="text" required autocomplete="name" maxlength="120">
+          </div>
+          <div class="fl-form__field">
+            <label for="c-email">Email</label>
+            <input id="c-email" name="email" type="email" required autocomplete="email">
+          </div>
+        </div>
+        <div class="fl-form__row">
+          <div class="fl-form__field">
+            <label for="c-role">You are</label>
+            <select id="c-role" name="role">
+              <option value="patient">A patient</option>
+              <option value="doctor">A doctor or clinician</option>
+              <option value="practice">Running a practice</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+          <div class="fl-form__field">
+            <label for="c-topic">About</label>
+            <select id="c-topic" name="topic">
+              <option value="question">A question</option>
+              <option value="support">An order I've placed</option>
+              <option value="invoice">Practice order (invoice)</option>
+              <option value="press">Press</option>
+              <option value="partnership">Partnership</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+        </div>
+        <div class="fl-form__row" data-for="invoice" hidden>
+          <div class="fl-form__field">
+            <label for="c-org">Practice name</label>
+            <input id="c-org" name="org" type="text" autocomplete="organization" maxlength="160">
+          </div>
+          <div class="fl-form__field">
+            <label for="c-qty">Clinical units</label>
+            <input id="c-qty" name="quantity" type="number" min="1" max="500" value="5" inputmode="numeric">
+          </div>
+        </div>
+        <div class="fl-form__field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" name="message" maxlength="5000"></textarea>
+        </div>
+        <div class="fl-form__hp" aria-hidden="true">
+          <label for="c-website">Leave this empty</label>
+          <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="fl-form__error" aria-live="polite"></p>
+        <div class="fl-contact__send">
+          <button class="fl-btn fl-btn--primary" type="submit">Send message</button>
+          <span class="fl-caption">We reply to the email above.</span>
+        </div>
+      </form>
+      <div class="fl-contact__ok" id="contact-ok" role="status" tabindex="-1" hidden>
+        <span class="fl-contact__tick" aria-hidden="true">✓</span>
+        <h2 class="fl-contact__h">Message sent</h2>
+        <p class="fl-body" id="contact-ok-text"></p>
+      </div>
+    </div>
+
   </div>
 </section>
 </main>
@@ -150,15 +198,26 @@
   const form = document.getElementById('contact-form');
   const err = form.querySelector('.fl-form__error');
   const ok = document.getElementById('contact-ok');
+  const okText = document.getElementById('contact-ok-text');
+  const ways = document.querySelectorAll('.fl-contact__ways button');
   const invoiceOnly = form.querySelectorAll('[data-for="invoice"]');
 
   /* practice orders by invoice need a practice name and a unit count */
   const syncTopic = () => {
+    ways.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topic === form.topic.value)));
     const inv = form.topic.value === 'invoice';
     invoiceOnly.forEach((el) => { el.hidden = !inv; });
     form.message.placeholder = inv ? 'Billing contact, delivery address, anything else we should know' : '';
   };
   form.topic.addEventListener('change', syncTopic);
+  /* the cards on the left fill in the form and take you to it */
+  ways.forEach((b) => b.addEventListener('click', () => {
+    form.topic.value = b.dataset.topic;
+    if (b.dataset.role) form.role.value = b.dataset.role;
+    syncTopic();
+    form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    form.name.focus({ preventScroll: true });
+  }));
   form.role.addEventListener('change', () => {
     if (form.role.value === 'practice' && form.topic.value === 'question') { form.topic.value = 'invoice'; syncTopic(); }
   });
@@ -182,15 +241,22 @@
       });
       const data = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(data.error || 'Your message could not be sent. Please try again.');
-      ok.textContent = form.topic.value === 'invoice'
+      okText.textContent = form.topic.value === 'invoice'
         ? `Thanks. We'll email an invoice for ${form.quantity.value} clinical edition units to ${form.email.value}.`
         : `Thanks. We'll reply to ${form.email.value}.`;
-      form.hidden = true; ok.hidden = false; ok.focus?.();
+      form.hidden = true; ok.hidden = false; ok.focus();
     } catch (x) {
       err.textContent = x.message;
-      btn.disabled = false; btn.textContent = 'Send';
+      btn.disabled = false; btn.textContent = 'Send message';
     }
   });
+</script>
+
+<script>
+  /* founder sale over: drop the banner */
+  fetch('/api/founder').then((r) => r.ok ? r.json() : null).then((f) => {
+    if (f && !f.active) document.querySelector('.fl-founder-bar')?.remove();
+  }).catch(() => {});
 </script>
 
 </body>

@@ -55,6 +55,15 @@
 
 </svg>
 
+<!-- founder sale banner -->
+<aside class="fl-founder-bar" aria-label="Founder sale">
+  <div class="fl-wrap">
+    <span class="fl-founder-bar__tag">Founder sale</span>
+    <span>$50 off <span class="fl-founder-bar__more">flacara h1 for </span>the first 300 units<span class="fl-founder-bar__more"> · ships within 3 months or a full refund</span></span>
+    <a href="/#choose">Pre-order →</a>
+  </div>
+</aside>
+
 <!-- partials/nav.html -->
 <nav class="fl-nav" aria-label="Primary">
   <div class="fl-wrap">
@@ -198,6 +207,13 @@
     var s = document.createElement('script'); s.src = '/feral-gradient.js'; s.async = true;
     document.body.appendChild(s);
   });
+</script>
+
+<script>
+  /* founder sale over: drop the banner */
+  fetch('/api/founder').then((r) => r.ok ? r.json() : null).then((f) => {
+    if (f && !f.active) document.querySelector('.fl-founder-bar')?.remove();
+  }).catch(() => {});
 </script>
 
 </body>

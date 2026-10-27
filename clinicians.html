@@ -63,6 +63,15 @@
 
 </svg>
 
+<!-- founder sale banner -->
+<aside class="fl-founder-bar" aria-label="Founder sale">
+  <div class="fl-wrap">
+    <span class="fl-founder-bar__tag">Founder sale</span>
+    <span>$50 off <span class="fl-founder-bar__more">flacara h1 for </span>the first 300 units<span class="fl-founder-bar__more"> · ships within 3 months or a full refund</span></span>
+    <a href="#pre-order">Pre-order →</a>
+  </div>
+</aside>
+
 <!-- partials/nav.html -->
 <nav class="fl-nav" aria-label="Primary">
   <div class="fl-wrap">
@@ -301,7 +310,7 @@
           <span class="amt">$<span data-count="249">0</span></span>
           <span class="qual">USD per device · founder price · free US shipping</span>
         </div>
-        <p class="fl-founder" data-founder-left>Founder price for the first 300 units. Ships within 3 months, or a full refund.</p>
+        <p class="fl-founder" data-founder-left>Founder price, for the first 300 units only. Ships within 3 months, or a full refund.</p>
 
         <p class="fl-body" style="font-size:.9375rem">Both lighting modes, a machined aluminium top
           plate, and the clinician side of the app: notes on the capture, drafted write-ups, body
@@ -589,10 +598,11 @@
     if (!f) return;
     document.querySelectorAll('[data-founder-left]').forEach((el) => {
       el.textContent = f.active
-        ? `Founder price: ${f.left} of ${f.limit} left. Ships within 3 months, or a full refund.`
+        ? 'Founder price, for the first 300 units only. Ships within 3 months, or a full refund.'
         : 'Ships within 3 months, or a full refund.';
     });
     if (f.active) return;
+    document.querySelector('.fl-founder-bar')?.remove();
     document.querySelectorAll('[data-founder-price]').forEach((el) => {
       const was = el.querySelector('.fl-was');
       const n = el.querySelector('[data-count]');

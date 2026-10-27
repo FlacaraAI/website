@@ -2221,3 +2221,70 @@ img.fl-slot { width: 100%; height: auto; object-fit: cover; }
   .fl-swap__caption, .fl-swap__rail { transition: opacity .28s var(--fl-ease-out), transform .32s var(--fl-ease-out); }
   .fl-swap.is-leaving .fl-swap__caption, .fl-swap.is-leaving .fl-swap__rail { opacity: 0; transform: translateY(-56px); pointer-events: none; }
 }
+
+/* ---------- founder sale banner ----------
+   A slim strip above the floating nav. It scrolls away with the page; the nav
+   stays sticky beneath it. Removed by script once the founder units are gone. */
+.fl-founder-bar {
+  background: var(--fl-ramp-even-ink); color: #fff;
+  font-family: var(--fl-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
+}
+.fl-founder-bar .fl-wrap {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 6px 16px; min-height: 40px; padding-block: 8px; text-align: center;
+}
+.fl-founder-bar__tag {
+  padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .35); font-weight: 500;
+}
+.fl-founder-bar a { color: #fff; font-weight: 500; text-underline-offset: 3px; white-space: nowrap; }
+.fl-founder-bar a:hover { text-decoration-thickness: 2px; }
+@media (max-width: 760px) {
+  .fl-founder-bar { font-size: .6875rem; letter-spacing: .04em; }
+  .fl-founder-bar .fl-wrap { flex-wrap: nowrap; gap: 10px; min-height: 36px; padding-block: 6px; }
+  .fl-founder-bar__more, .fl-founder-bar__tag { display: none; }
+}
+
+/* ---------- contact page ---------- */
+.fl-contact__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 72px; align-items: start; }
+.fl-contact__intro h1 { margin-top: 14px; }
+.fl-contact__intro .fl-body--l { margin-top: 20px; max-width: 46ch; }
+.fl-contact__ways { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 12px; max-width: 520px; }
+.fl-contact__ways button {
+  width: 100%; display: grid; gap: 4px; padding: 18px 22px; text-align: left; cursor: pointer;
+  font: inherit; color: var(--fl-ink);
+  background: rgba(255, 255, 255, .6); border: 1px solid var(--fl-rule); border-radius: 12px;
+  transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+.fl-contact__ways button:hover { background: #fff; border-color: var(--fl-blue-ink); transform: translateY(-1px); }
+.fl-contact__ways button:focus-visible { outline: 2px solid var(--fl-focus); outline-offset: 2px; }
+.fl-contact__ways button[aria-pressed="true"] { background: #fff; border-color: var(--fl-red-ink); box-shadow: inset 4px 0 0 var(--fl-red-ink); }
+.fl-contact__k { font-family: var(--fl-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fl-muted); }
+.fl-contact__ways strong { font-family: var(--fl-text); font-weight: 600; font-size: 1.0625rem; }
+.fl-contact__ways strong + span { font-size: .9375rem; line-height: 1.5; color: var(--fl-muted); }
+.fl-contact__note { margin-top: 32px; max-width: 520px; }
+
+.fl-contact__card { padding: 40px; position: sticky; top: calc(var(--fl-nav-h) + 32px); }
+.fl-contact__card .fl-form { max-width: none; gap: 18px; }
+.fl-contact__h { font-family: var(--fl-text); font-weight: 600; font-size: 1.375rem; letter-spacing: -.01em; margin: 0 0 4px; }
+.fl-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fl-form__row[hidden] { display: none; }
+.fl-contact__card .fl-form input[type="text"], .fl-contact__card .fl-form input[type="email"],
+.fl-contact__card .fl-form input[type="number"], .fl-contact__card .fl-form select,
+.fl-contact__card .fl-form textarea { background: #fff; }
+.fl-contact__send { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+.fl-contact__ok { text-align: center; padding: 24px 0; outline: none; }
+.fl-contact__ok[hidden] { display: none; }
+.fl-contact__ok .fl-body { margin: 8px auto 0; }
+.fl-contact__tick {
+  display: inline-grid; place-items: center; width: 56px; height: 56px; margin-bottom: 16px;
+  border-radius: 50%; background: var(--fl-ramp-even-ink); color: #fff; font-size: 1.5rem;
+}
+@media (max-width: 960px) {
+  .fl-contact__grid { grid-template-columns: 1fr; gap: 40px; }
+  .fl-contact__card { position: static; }
+}
+@media (max-width: 560px) {
+  .fl-contact__card { padding: 24px 20px; }
+  .fl-form__row { grid-template-columns: 1fr; }
+}
