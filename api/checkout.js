@@ -30,6 +30,10 @@ export default async function handler(req, res) {
 
     const session = await stripe().checkout.sessions.create({
       mode: 'payment',
+      // The account defaults to Managed Payments (Stripe as merchant of
+      // record), which is for digital goods and rejects custom_text. This is
+      // a shipped device sold by flacara, so opt out per session.
+      managed_payments: { enabled: false },
       line_items: [{
         price: price.id,
         quantity: 1,
